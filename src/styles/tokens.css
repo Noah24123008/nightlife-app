@@ -145,19 +145,56 @@ button {
   font-weight: 700;
 }
 
+.day-selector-envoltorio {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
 .day-selector {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 8px;
-  margin-bottom: 20px;
   scrollbar-width: none;
-  -webkit-mask-image: linear-gradient(to right, black 88%, transparent 100%);
-  mask-image: linear-gradient(to right, black 88%, transparent 100%);
+  -webkit-overflow-scrolling: touch;
 }
 
 .day-selector::-webkit-scrollbar {
   display: none;
+}
+
+.day-selector-flecha {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.day-selector-flecha--izquierda {
+  margin-right: 6px;
+}
+
+.day-selector-flecha--derecha {
+  margin-left: 6px;
+}
+
+/* Solo en dispositivos con puntero preciso (ratón): en táctil el gesto
+   nativo ya sirve, y las flechas sobrarían. */
+@media (hover: hover) and (pointer: fine) {
+  .day-selector-flecha {
+    display: flex;
+  }
 }
 
 .day-pill {

@@ -1,8 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getCiudadPorNombre, getLocalesPorCiudad, getVotosDelDia, getEventosDelDia, votarPorLocal, getFeedSocialHoy, getNumeroNotificacionesNoLeidas, getRecomendacionesSocialesHoy } from '../lib/api'
-import { buildDiasVisibles } from '../lib/dates'
+import {
+  getCiudadPorNombre,
+  getLocalesPorCiudad,
+  getVotosDelDia,
+  getEventosDelDia,
+  votarPorLocal,
+  getFeedSocialHoy,
+  getNumeroNotificacionesNoLeidas,
+  getRecomendacionesSocialesHoy,
+} from '../lib/api'
+import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
 import ActividadCard from '../components/ActividadCard'
@@ -10,7 +19,7 @@ import RecomendacionSocialCard from '../components/RecomendacionSocialCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const CIUDAD_ACTUAL = 'Gijón'
-const DIAS_VISIBLES = 5
+const DIAS_VISIBLES = 8
 const LIMITE_RANKING_INICIAL = 5
 const LIMITE_RECOMENDACIONES_INICIAL = 3
 const LIMITE_FEED_INICIAL = 4
@@ -21,11 +30,15 @@ export default function Inicio() {
   const dias = useMemo(() => buildDiasVisibles(new Date(), DIAS_VISIBLES), [])
   const [indiceDia, setIndiceDia] = useState(0)
   const diaSeleccionado = dias[indiceDia]
-  const esHoy = indiceDia === 0
+
+  const etiquetaTexto = useMemo(
+    () => etiquetaDiaTexto(diaSeleccionado.fecha, indiceDia),
+    [diaSeleccionado.fecha, indiceDia]
+  )
 
   const [ciudadId, setCiudadId] = useState(null)
   const [locales, setLocales] = useState([])
-  const [votosHoy, setVotosHoy] = useState([])
+  const [votosDia, setVotosDia] = useState([])
   const [eventosDia, setEventosDia] = useState([])
 
   const [cargandoBase, setCargandoBase] = useState(true)
@@ -76,46 +89,50 @@ export default function Inicio() {
     }
   }, [])
 
-  // Cargar votos (Hoy) o eventos (días futuros) según el día seleccionado
+  // Votos y eventos del día seleccionado (siempre ambos, sea cual sea el día)
   useEffect(() => {
     if (!ciudadId) return
     let activo = true
     async function cargarDia() {
       setCargandoDia(true)
       setError('')
-      if (esHoy) {
-        const { data, error: errVotos } = await getVotosDelDia(diaSeleccionado.fechaISO)
-        if (!activo) return
-        if (errVotos) {
-          setError(mensajeError(errVotos, 'No se pudo cargar el ranking de hoy.'))
-          if (esErrorDeAutenticacion(errVotos)) setTimeout(() => signOut(), 2000)
-        } else {
-          setVotosHoy(data ?? [])
-        }
+      const [
+        { data: votosData, error: errVotos },
+        { data: eventosData, error: errEventos },
+      ] = await Promise.all([
+        getVotosDelDia(diaSeleccionado.fechaISO),
+        getEventosDelDia(ciudadId, diaSeleccionado.fechaISO),
+      ])
+      if (!activo) return
+
+      if (errVotos) {
+        setError(mensajeError(errVotos, 'No se pudo cargar el ranking de este día.'))
+        if (esErrorDeAutenticacion(errVotos)) setTimeout(() => signOut(), 2000)
       } else {
-        const { data, error: errEventos } = await getEventosDelDia(ciudadId, diaSeleccionado.fechaISO)
-        if (!activo) return
-        if (errEventos) {
-          setError(mensajeError(errEventos, 'No se pudieron cargar los eventos de este día.'))
-          if (esErrorDeAutenticacion(errEventos)) setTimeout(() => signOut(), 2000)
-        } else {
-          setEventosDia(data ?? [])
-        }
+        setVotosDia(votosData ?? [])
       }
+
+      if (errEventos) {
+        setError((prev) => prev || mensajeError(errEventos, 'No se pudieron cargar los eventos de este día.'))
+        if (esErrorDeAutenticacion(errEventos)) setTimeout(() => signOut(), 2000)
+      } else {
+        setEventosDia(eventosData ?? [])
+      }
+
       setCargandoDia(false)
     }
     cargarDia()
     return () => {
       activo = false
     }
-  }, [ciudadId, diaSeleccionado.fechaISO, esHoy])
+  }, [ciudadId, diaSeleccionado.fechaISO])
 
-  // Feed social: no depende del día seleccionado, siempre es de hoy
+  // Feed social del día seleccionado
   useEffect(() => {
     let activo = true
     async function cargarFeed() {
       setCargandoFeed(true)
-      const { data, error: errFeed } = await getFeedSocialHoy()
+      const { data, error: errFeed } = await getFeedSocialHoy(diaSeleccionado.fechaISO)
       if (!activo) return
       if (errFeed) {
         setErrorFeed(mensajeError(errFeed, 'No se pudo cargar la actividad de la gente que sigues.'))
@@ -129,14 +146,14 @@ export default function Inicio() {
     return () => {
       activo = false
     }
-  }, [])
+  }, [diaSeleccionado.fechaISO])
 
-  // Recomendaciones sociales: tampoco dependen del día seleccionado
+  // Recomendaciones sociales del día seleccionado
   useEffect(() => {
     let activo = true
     async function cargarRecomendaciones() {
       setCargandoRecomendaciones(true)
-      const { data } = await getRecomendacionesSocialesHoy()
+      const { data } = await getRecomendacionesSocialesHoy(diaSeleccionado.fechaISO)
       if (!activo) return
       setRecomendaciones(data ?? [])
       setCargandoRecomendaciones(false)
@@ -145,7 +162,7 @@ export default function Inicio() {
     return () => {
       activo = false
     }
-  }, [])
+  }, [diaSeleccionado.fechaISO])
 
   // Contador de notificaciones no leídas para la campana de la cabecera
   useEffect(() => {
@@ -161,20 +178,27 @@ export default function Inicio() {
     }
   }, [])
 
-  const miVotoHoyLocalId = useMemo(
-    () => votosHoy.find((v) => v.usuario_id === user?.id)?.local_id ?? null,
-    [votosHoy, user]
+  // Al cambiar de día, no arrastrar los "ver más" expandidos del día anterior
+  useEffect(() => {
+    setMostrarRankingCompleto(false)
+    setMostrarTodasRecomendaciones(false)
+    setMostrarTodoFeed(false)
+  }, [indiceDia])
+
+  const miVotoLocalId = useMemo(
+    () => votosDia.find((v) => v.usuario_id === user?.id)?.local_id ?? null,
+    [votosDia, user]
   )
 
   const ranking = useMemo(() => {
     const conteos = new Map()
-    for (const v of votosHoy) {
+    for (const v of votosDia) {
       conteos.set(v.local_id, (conteos.get(v.local_id) ?? 0) + 1)
     }
     return locales
       .map((local) => ({ ...local, votos: conteos.get(local.id) ?? 0 }))
       .sort((a, b) => b.votos - a.votos)
-  }, [locales, votosHoy])
+  }, [locales, votosDia])
 
   const destinoTemporal = useMemo(
     () => locales.find((local) => local.nombre === 'Fiestas de Cimadevilla'),
@@ -195,7 +219,7 @@ export default function Inicio() {
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
     } else {
       const { data } = await getVotosDelDia(diaSeleccionado.fechaISO)
-      setVotosHoy(data ?? [])
+      setVotosDia(data ?? [])
     }
     setVotandoLocalId(null)
   }
@@ -217,10 +241,12 @@ export default function Inicio() {
         </div>
       </header>
 
-      <Link to="/hoy" className="banner-donde-va">
-        <span>🔥 Dónde va la gente hoy</span>
-        <span className="banner-flecha">→</span>
-      </Link>
+      {indiceDia === 0 && (
+        <Link to="/hoy" className="banner-donde-va">
+          <span>🔥 Dónde va la gente hoy</span>
+          <span className="banner-flecha">→</span>
+        </Link>
+      )}
 
       {destinoTemporal && (
         <Link to={`/locales/${destinoTemporal.id}`} className="banner-temporal">
@@ -238,124 +264,118 @@ export default function Inicio() {
 
       {error && <p className="auth-error">{error}</p>}
 
-      {esHoy ? (
-        cargandoBase || cargandoDia ? (
-          <p className="app-loading">Cargando ranking...</p>
-        ) : (
-          <>
-            {votosHoy.length === 0 && (
-              <p className="inicio-vacio">Todavía no hay votos hoy. ¡Sé el primero en decir a dónde vas!</p>
-            )}
-            <ul className="ranking">
-              {(mostrarRankingCompleto ? ranking : ranking.slice(0, LIMITE_RANKING_INICIAL)).map((local, index) => (
-                <li
-                  key={local.id}
-                  className={`local-item ${index === 0 ? 'local-item--destacado' : ''} ${
-                    miVotoHoyLocalId === local.id ? 'local-item--votado' : ''
-                  }`}
-                >
-                  <span className="rank-position">{index + 1}</span>
-                  <div className="local-info">
-                    <p className="venue-name">{local.nombre}</p>
-                    <p className="local-categoria">
-                      {local.categoria} · {local.votos} {local.votos === 1 ? 'persona va' : 'personas van'}
-                    </p>
-                  </div>
-                  <VotoButton
-                    votado={miVotoHoyLocalId === local.id}
-                    cargando={votandoLocalId === local.id}
-                    onClick={() => handleVotar(local.id)}
-                  />
+      {cargandoBase || cargandoDia ? (
+        <p className="app-loading">Cargando...</p>
+      ) : (
+        <>
+          <h2 className="ficha-subtitulo">Dónde va la gente {etiquetaTexto}</h2>
+          {votosDia.length === 0 && (
+            <p className="inicio-vacio">
+              Todavía no hay votos {etiquetaTexto}. ¡Sé el primero en decir a dónde vas!
+            </p>
+          )}
+          <ul className="ranking">
+            {(mostrarRankingCompleto ? ranking : ranking.slice(0, LIMITE_RANKING_INICIAL)).map((local, index) => (
+              <li
+                key={local.id}
+                className={`local-item ${index === 0 ? 'local-item--destacado' : ''} ${
+                  miVotoLocalId === local.id ? 'local-item--votado' : ''
+                }`}
+              >
+                <span className="rank-position">{index + 1}</span>
+                <div className="local-info">
+                  <p className="venue-name">{local.nombre}</p>
+                  <p className="local-categoria">
+                    {local.categoria} · {local.votos} {local.votos === 1 ? 'persona va' : 'personas van'}
+                  </p>
+                </div>
+                <VotoButton
+                  votado={miVotoLocalId === local.id}
+                  cargando={votandoLocalId === local.id}
+                  onClick={() => handleVotar(local.id)}
+                />
+              </li>
+            ))}
+          </ul>
+          {!mostrarRankingCompleto && ranking.length > LIMITE_RANKING_INICIAL && (
+            <button type="button" className="inicio-ver-mas" onClick={() => setMostrarRankingCompleto(true)}>
+              Ver todos los locales
+            </button>
+          )}
+
+          <h2 className="ficha-subtitulo">Eventos</h2>
+          {eventosDia.length === 0 ? (
+            <p className="inicio-vacio">No hay eventos programados para este día todavía.</p>
+          ) : (
+            <ul className="eventos-lista">
+              {eventosDia.map((evento) => (
+                <li key={evento.id}>
+                  <Link to={`/eventos/${evento.id}`} className="evento-item">
+                    <span className="evento-hora">{evento.hora_inicio?.slice(0, 5)}</span>
+                    <div>
+                      <p className="evento-nombre">{evento.nombre}</p>
+                      <p className="evento-local">{evento.locales?.nombre}</p>
+                    </div>
+                  </Link>
                 </li>
               ))}
             </ul>
-            {!mostrarRankingCompleto && ranking.length > LIMITE_RANKING_INICIAL && (
+          )}
+        </>
+      )}
+
+      <div className="recomendaciones-social">
+        <h2 className="ficha-subtitulo">Te puede interesar {etiquetaTexto}</h2>
+        {cargandoRecomendaciones ? (
+          <p className="app-loading">Cargando recomendaciones...</p>
+        ) : recomendaciones.length === 0 ? (
+          <p className="inicio-vacio">Sigue a más gente para descubrir dónde van {etiquetaTexto}</p>
+        ) : (
+          <>
+            <div className="recomendaciones-lista">
+              {(mostrarTodasRecomendaciones
+                ? recomendaciones
+                : recomendaciones.slice(0, LIMITE_RECOMENDACIONES_INICIAL)
+              ).map((r) => (
+                <RecomendacionSocialCard key={r.local_id} recomendacion={r} />
+              ))}
+            </div>
+            {!mostrarTodasRecomendaciones && recomendaciones.length > LIMITE_RECOMENDACIONES_INICIAL && (
               <button
                 type="button"
                 className="inicio-ver-mas"
-                onClick={() => setMostrarRankingCompleto(true)}
+                onClick={() => setMostrarTodasRecomendaciones(true)}
               >
-                Ver todos los locales
+                Ver más recomendaciones
               </button>
             )}
           </>
-        )
-      ) : cargandoDia ? (
-        <p className="app-loading">Cargando eventos...</p>
-      ) : eventosDia.length === 0 ? (
-        <p className="inicio-vacio">No hay eventos programados para este día todavía.</p>
-      ) : (
-        <ul className="eventos-lista">
-          {eventosDia.map((evento) => (
-            <li key={evento.id}>
-              <Link to={`/eventos/${evento.id}`} className="evento-item">
-                <span className="evento-hora">{evento.hora_inicio?.slice(0, 5)}</span>
-                <div>
-                  <p className="evento-nombre">{evento.nombre}</p>
-                  <p className="evento-local">{evento.locales?.nombre}</p>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+        )}
+      </div>
 
-      {esHoy && (
-        <div className="recomendaciones-social">
-          <h2 className="ficha-subtitulo">Te puede interesar hoy</h2>
-          {cargandoRecomendaciones ? (
-            <p className="app-loading">Cargando recomendaciones...</p>
-          ) : recomendaciones.length === 0 ? (
-            <p className="inicio-vacio">Sigue a más gente para descubrir dónde van hoy</p>
-          ) : (
-            <>
-              <div className="recomendaciones-lista">
-                {(mostrarTodasRecomendaciones
-                  ? recomendaciones
-                  : recomendaciones.slice(0, LIMITE_RECOMENDACIONES_INICIAL)
-                ).map((r) => (
-                  <RecomendacionSocialCard key={r.local_id} recomendacion={r} />
-                ))}
-              </div>
-              {!mostrarTodasRecomendaciones && recomendaciones.length > LIMITE_RECOMENDACIONES_INICIAL && (
-                <button
-                  type="button"
-                  className="inicio-ver-mas"
-                  onClick={() => setMostrarTodasRecomendaciones(true)}
-                >
-                  Ver más recomendaciones
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {esHoy && (
-        <div className="feed-social">
-          <h2 className="ficha-subtitulo">Actividad de la gente que sigues</h2>
-          {cargandoFeed ? (
-            <p className="app-loading">Cargando actividad...</p>
-          ) : errorFeed ? (
-            <p className="auth-error">{errorFeed}</p>
-          ) : feed.length === 0 ? (
-            <p className="inicio-vacio">La gente que sigues todavía no ha indicado dónde va hoy</p>
-          ) : (
-            <>
-              <div className="feed-lista">
-                {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
-                  <ActividadCard key={actividad.usuario_id} actividad={actividad} />
-                ))}
-              </div>
-              {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
-                <button type="button" className="inicio-ver-mas" onClick={() => setMostrarTodoFeed(true)}>
-                  Ver más actividad
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      )}
+      <div className="feed-social">
+        <h2 className="ficha-subtitulo">Actividad de la gente que sigues</h2>
+        {cargandoFeed ? (
+          <p className="app-loading">Cargando actividad...</p>
+        ) : errorFeed ? (
+          <p className="auth-error">{errorFeed}</p>
+        ) : feed.length === 0 ? (
+          <p className="inicio-vacio">La gente que sigues todavía no ha indicado dónde va {etiquetaTexto}</p>
+        ) : (
+          <>
+            <div className="feed-lista">
+              {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
+                <ActividadCard key={actividad.usuario_id} actividad={actividad} />
+              ))}
+            </div>
+            {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
+              <button type="button" className="inicio-ver-mas" onClick={() => setMostrarTodoFeed(true)}>
+                Ver más actividad
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

@@ -31,3 +31,14 @@ export function formatearFechaLarga(fechaISO) {
   const fecha = new Date(`${fechaISO}T00:00:00`)
   return fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'short' })
 }
+
+// Etiqueta en minúscula pensada para insertarse dentro de una frase
+// ("Dónde va la gente {etiquetaDiaTexto}"). Distinta de "etiqueta"
+// (la de las pastillas del DaySelector, en mayúscula y más corta):
+// son dos formatos para dos sitios distintos, no se sustituyen entre sí.
+export function etiquetaDiaTexto(fecha, index) {
+  if (index === 0) return 'hoy'
+  if (index === 1) return 'mañana'
+  const diaSemana = fecha.toLocaleDateString('es-ES', { weekday: 'long' })
+  return `el ${diaSemana}`
+}

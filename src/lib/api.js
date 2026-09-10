@@ -69,11 +69,10 @@ export async function getPerfilesPublicos(ids) {
   return { data: data ?? [], error }
 }
 
-export async function getPersonasQueVanHoy({ localId = null, eventoId = null } = {}) {
-  const { data, error } = await supabase.rpc('get_personas_que_van_hoy', {
-    p_local_id: localId,
-    p_evento_id: eventoId,
-  })
+export async function getPersonasQueVanHoy({ localId = null, eventoId = null, fecha } = {}) {
+  const params = { p_local_id: localId, p_evento_id: eventoId }
+  if (fecha) params.p_fecha = fecha
+  const { data, error } = await supabase.rpc('get_personas_que_van_hoy', params)
   return { data: data ?? [], error }
 }
 
@@ -139,8 +138,10 @@ export async function buscarPerfilesPublicos(termino) {
   return { data: data ?? [], error }
 }
 
-export async function getFeedSocialHoy() {
-  const { data, error } = await supabase.rpc('get_feed_social_hoy')
+export async function getFeedSocialHoy(fecha) {
+  const params = {}
+  if (fecha) params.p_fecha = fecha
+  const { data, error } = await supabase.rpc('get_feed_social_hoy', params)
   return { data: data ?? [], error }
 }
 
@@ -149,13 +150,17 @@ export async function getNotificaciones() {
   return { data: data ?? [], error }
 }
 
-export async function getDondeVaLaGenteHoy() {
-  const { data, error } = await supabase.rpc('get_donde_va_la_gente_hoy')
+export async function getDondeVaLaGenteHoy(fecha) {
+  const params = {}
+  if (fecha) params.p_fecha = fecha
+  const { data, error } = await supabase.rpc('get_donde_va_la_gente_hoy', params)
   return { data: data ?? [], error }
 }
 
-export async function getRecomendacionesSocialesHoy() {
-  const { data, error } = await supabase.rpc('get_recomendaciones_sociales_hoy')
+export async function getRecomendacionesSocialesHoy(fecha) {
+  const params = {}
+  if (fecha) params.p_fecha = fecha
+  const { data, error } = await supabase.rpc('get_recomendaciones_sociales_hoy', params)
   return { data: data ?? [], error }
 }
 

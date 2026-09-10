@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getEventoPorId, getVotosDelDia, votarPorLocal, getPersonasQueVanHoy } from '../lib/api'
-import { toISODate, formatearFechaLarga } from '../lib/dates'
+import { formatearFechaLarga } from '../lib/dates'
 import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
 import ImagenConFallback from '../components/ImagenConFallback'
@@ -15,10 +15,8 @@ export default function FichaEvento() {
   const navigate = useNavigate()
   const { user, signOut } = useAuth()
 
-  const hoyISO = useMemo(() => toISODate(new Date()), [])
-
   const [evento, setEvento] = useState(null)
-  const [votosHoy, setVotosHoy] = useState([])
+  const [votosDelDia, setVotosDelDia] = useState([])
   const [personas, setPersonas] = useState([])
   const [cargandoPersonas, setCargandoPersonas] = useState(false)
   const [mostrarTodasPersonas, setMostrarTodasPersonas] = useState(false)
@@ -26,16 +24,15 @@ export default function FichaEvento() {
   const [votando, setVotando] = useState(false)
   const [error, setError] = useState('')
 
+  // Primero se carga el evento; solo con su fecha real sabemos qué día de
+  // votos consultar (nunca "hoy" fijo, para no mezclar votos de otras fechas).
   useEffect(() => {
     let activo = true
     async function cargar() {
       setCargando(true)
       setError('')
-      const [
-        { data: eventoData, error: errEvento },
-        { data: votosData, error: errVotos },
-      ] = await Promise.all([getEventoPorId(id), getVotosDelDia(hoyISO)])
 
+      const { data: eventoData, error: errEvento } = await getEventoPorId(id)
       if (!activo) return
 
       if (errEvento || !eventoData) {
@@ -45,25 +42,38 @@ export default function FichaEvento() {
         return
       }
       setEvento(eventoData)
-      setVotosHoy(errVotos ? [] : votosData ?? [])
+
+      const { data: votosData, error: errVotos } = await getVotosDelDia(eventoData.fecha)
+      if (!activo) return
+      setVotosDelDia(errVotos ? [] : votosData ?? [])
       setCargando(false)
     }
     cargar()
     return () => {
       activo = false
     }
-  }, [id, hoyISO])
+  }, [id])
 
-  const miVotoHoyLocalId = useMemo(
-    () => votosHoy.find((v) => v.usuario_id === user?.id)?.local_id ?? null,
-    [votosHoy, user]
+  // El voto del usuario para la fecha del evento (si existe)
+  const miVoto = useMemo(
+    () => votosDelDia.find((v) => v.usuario_id === user?.id),
+    [votosDelDia, user]
   )
 
+  // "Voy a este evento" exige que el voto apunte específicamente a este
+  // evento, no solo a su local: alguien puede ir al local por otro evento,
+  // o sin evento, y eso no cuenta como ir a este evento en concreto.
+  const voyAEsteEvento = miVoto?.evento_id === evento?.id
+
   useEffect(() => {
+    if (!evento) return
     let activo = true
     async function cargarPersonas() {
       setCargandoPersonas(true)
-      const { data, error: errPersonas } = await getPersonasQueVanHoy({ eventoId: id })
+      const { data, error: errPersonas } = await getPersonasQueVanHoy({
+        eventoId: id,
+        fecha: evento.fecha,
+      })
       if (!activo) return
       setPersonas(errPersonas ? [] : data ?? [])
       setCargandoPersonas(false)
@@ -72,7 +82,7 @@ export default function FichaEvento() {
     return () => {
       activo = false
     }
-  }, [id, votosHoy])
+  }, [id, evento?.fecha, votosDelDia])
 
   async function handleVotar() {
     if (!user || !evento?.locales) return
@@ -81,15 +91,15 @@ export default function FichaEvento() {
     const { error: errVoto } = await votarPorLocal({
       usuarioId: user.id,
       localId: evento.locales.id,
-      fecha: hoyISO,
+      fecha: evento.fecha,
       eventoId: evento.id,
     })
     if (errVoto) {
       setError(mensajeError(errVoto, 'No se pudo registrar tu voto. Inténtalo de nuevo.'))
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
     } else {
-      const { data } = await getVotosDelDia(hoyISO)
-      setVotosHoy(data ?? [])
+      const { data } = await getVotosDelDia(evento.fecha)
+      setVotosDelDia(data ?? [])
     }
     setVotando(false)
   }
@@ -153,11 +163,7 @@ export default function FichaEvento() {
 
       <div className="ficha-voto">
         <p className="ficha-votos-hoy">Vota por este evento</p>
-        <VotoButton
-          votado={miVotoHoyLocalId === evento.locales.id}
-          cargando={votando}
-          onClick={handleVotar}
-        />
+        <VotoButton votado={voyAEsteEvento} cargando={votando} onClick={handleVotar} />
       </div>
 
       <div className="ficha-votantes">
