@@ -789,6 +789,75 @@ button {
   font-family: var(--font-body);
 }
 
+/* Destino temporal (Fiestas de Cimadevilla) */
+
+.badge-temporal {
+  display: inline-block;
+  background: var(--color-accent-warm);
+  color: var(--color-bg);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 4px;
+}
+
+.banner-temporal {
+  display: block;
+  background: linear-gradient(135deg, var(--color-surface), #26305a);
+  border: 2px solid var(--color-accent-warm);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+.banner-temporal-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.banner-temporal-zona {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.banner-temporal-titulo {
+  margin: 0 0 2px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.banner-temporal-subtitulo {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.banner-temporal-enlace {
+  display: inline-block;
+  color: var(--color-accent-warm);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.local-card--temporal {
+  border: 2px solid var(--color-accent-warm);
+  padding: 14px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--color-surface), #26305a);
+}
+
+.local-card--temporal .local-card-foto {
+  width: 64px;
+  height: 64px;
+}
+
 /* Pantalla /hoy */
 
 .local-hoy-enlace {

@@ -176,6 +176,11 @@ export default function Inicio() {
       .sort((a, b) => b.votos - a.votos)
   }, [locales, votosHoy])
 
+  const destinoTemporal = useMemo(
+    () => locales.find((local) => local.nombre === 'Fiestas de Cimadevilla'),
+    [locales]
+  )
+
   async function handleVotar(localId) {
     if (!user) return
     setVotandoLocalId(localId)
@@ -216,6 +221,18 @@ export default function Inicio() {
         <span>🔥 Dónde va la gente hoy</span>
         <span className="banner-flecha">→</span>
       </Link>
+
+      {destinoTemporal && (
+        <Link to={`/locales/${destinoTemporal.id}`} className="banner-temporal">
+          <div className="banner-temporal-cabecera">
+            <span className="badge-temporal">TEMPORAL</span>
+            <span className="banner-temporal-zona">Cimavilla</span>
+          </div>
+          <p className="banner-temporal-titulo">✨ {destinoTemporal.nombre}</p>
+          <p className="banner-temporal-subtitulo">Carpa especial este fin de semana</p>
+          <span className="banner-temporal-enlace">Ver ficha →</span>
+        </Link>
+      )}
 
       <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
 

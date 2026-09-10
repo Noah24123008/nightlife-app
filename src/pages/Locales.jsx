@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
 import ImagenConFallback from '../components/ImagenConFallback'
@@ -37,6 +37,15 @@ export default function Locales() {
     }
   }, [])
 
+  const destacado = useMemo(
+    () => locales.find((local) => local.nombre === 'Fiestas de Cimadevilla'),
+    [locales]
+  )
+  const normales = useMemo(
+    () => locales.filter((local) => local.nombre !== 'Fiestas de Cimadevilla'),
+    [locales]
+  )
+
   return (
     <div className="app-screen">
       <header className="screen-header">
@@ -50,25 +59,48 @@ export default function Locales() {
       ) : locales.length === 0 ? (
         <p className="inicio-vacio">Todavía no hay locales cargados para Gijón.</p>
       ) : (
-        <ul className="locales-lista">
-          {locales.map((local) => (
-            <li key={local.id}>
-              <Link to={`/locales/${local.id}`} className="local-card">
+        <>
+          {destacado && (
+            <>
+              <h2 className="ficha-subtitulo">Destacado este fin de semana</h2>
+              <Link to={`/locales/${destacado.id}`} className="local-card local-card--temporal">
                 <ImagenConFallback
-                  src={local.foto_url}
-                  alt={local.nombre}
+                  src={destacado.foto_url}
+                  alt={destacado.nombre}
                   className="local-card-foto"
                   placeholderClassName="local-card-foto local-card-foto--vacia"
                 />
                 <span className="local-card-info">
-                  <span className="venue-name">{local.nombre}</span>
-                  <span className="local-categoria">{local.categoria}</span>
-                  {local.direccion && <span className="local-direccion">{local.direccion}</span>}
+                  <span className="badge-temporal">TEMPORAL</span>
+                  <span className="venue-name">{destacado.nombre}</span>
+                  <span className="local-categoria">{destacado.categoria}</span>
+                  {destacado.direccion && <span className="local-direccion">{destacado.direccion}</span>}
                 </span>
               </Link>
-            </li>
-          ))}
-        </ul>
+            </>
+          )}
+
+          <h2 className="ficha-subtitulo">Todos los locales</h2>
+          <ul className="locales-lista">
+            {normales.map((local) => (
+              <li key={local.id}>
+                <Link to={`/locales/${local.id}`} className="local-card">
+                  <ImagenConFallback
+                    src={local.foto_url}
+                    alt={local.nombre}
+                    className="local-card-foto"
+                    placeholderClassName="local-card-foto local-card-foto--vacia"
+                  />
+                  <span className="local-card-info">
+                    <span className="venue-name">{local.nombre}</span>
+                    <span className="local-categoria">{local.categoria}</span>
+                    {local.direccion && <span className="local-direccion">{local.direccion}</span>}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   )
