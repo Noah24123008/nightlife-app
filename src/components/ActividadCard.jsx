@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import PersonaChip from './PersonaChip'
 
-export default function ActividadCard({ actividad }) {
+export default function ActividadCard({ actividad, etiquetaTexto }) {
   const destino = actividad.evento_id
     ? {
         enlace: `/eventos/${actividad.evento_id}`,
@@ -22,7 +22,7 @@ export default function ActividadCard({ actividad }) {
         }}
       />
       <p className="actividad-destino">
-        va hoy a <Link to={destino.enlace}>{destino.texto}</Link>
+        va {etiquetaTexto} a <Link to={destino.enlace}>{destino.texto}</Link>
       </p>
     </div>
   )

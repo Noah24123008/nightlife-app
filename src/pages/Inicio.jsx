@@ -337,7 +337,7 @@ export default function Inicio() {
                 ? recomendaciones
                 : recomendaciones.slice(0, LIMITE_RECOMENDACIONES_INICIAL)
               ).map((r) => (
-                <RecomendacionSocialCard key={r.local_id} recomendacion={r} />
+                <RecomendacionSocialCard key={r.local_id} recomendacion={r} fecha={diaSeleccionado.fechaISO} />
               ))}
             </div>
             {!mostrarTodasRecomendaciones && recomendaciones.length > LIMITE_RECOMENDACIONES_INICIAL && (
@@ -365,7 +365,7 @@ export default function Inicio() {
           <>
             <div className="feed-lista">
               {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
-                <ActividadCard key={actividad.usuario_id} actividad={actividad} />
+                <ActividadCard key={actividad.usuario_id} actividad={actividad} etiquetaTexto={etiquetaTexto} />
               ))}
             </div>
             {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
