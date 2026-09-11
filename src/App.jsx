@@ -17,6 +17,7 @@ import ListaSeguimiento from './pages/ListaSeguimiento'
 import Buscar from './pages/Buscar'
 import Notificaciones from './pages/Notificaciones'
 import DondeVaLaGente from './pages/DondeVaLaGente'
+import Social from './pages/Social'
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
             <Route path="/buscar" element={<Buscar />} />
             <Route path="/notificaciones" element={<Notificaciones />} />
             <Route path="/hoy" element={<DondeVaLaGente />} />
+            <Route path="/social" element={<Social />} />
           </Route>
         </Routes>
       </BrowserRouter>

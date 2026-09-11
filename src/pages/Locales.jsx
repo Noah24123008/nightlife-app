@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
+import MapaLocales from '../components/MapaLocales'
 
 const CIUDAD_ACTUAL = 'Gijón'
 
@@ -9,6 +10,7 @@ export default function Locales() {
   const [locales, setLocales] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
+  const [vista, setVista] = useState('lista')
 
   useEffect(() => {
     let activo = true
@@ -52,12 +54,33 @@ export default function Locales() {
         <span className="screen-title">Locales en Gijón</span>
       </header>
 
+      {!cargando && locales.length > 0 && (
+        <div className="vista-selector">
+          <button
+            type="button"
+            className={`vista-selector-btn ${vista === 'lista' ? 'vista-selector-btn--activo' : ''}`}
+            onClick={() => setVista('lista')}
+          >
+            Lista
+          </button>
+          <button
+            type="button"
+            className={`vista-selector-btn ${vista === 'mapa' ? 'vista-selector-btn--activo' : ''}`}
+            onClick={() => setVista('mapa')}
+          >
+            Mapa
+          </button>
+        </div>
+      )}
+
       {error && <p className="auth-error">{error}</p>}
 
       {cargando ? (
         <p className="app-loading">Cargando locales...</p>
       ) : locales.length === 0 ? (
         <p className="inicio-vacio">Todavía no hay locales cargados para Gijón.</p>
+      ) : vista === 'mapa' ? (
+        <MapaLocales locales={locales} />
       ) : (
         <>
           {destacado && (

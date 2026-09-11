@@ -192,6 +192,34 @@ export async function getAmigos(usuarioId) {
   return { data: data ?? [], error }
 }
 
+// Solicitudes pendientes que ha recibido usuarioId, con el perfil público
+// de cada solicitante ya incluido (una sola llamada a getPerfilesPublicos,
+// sin N+1). Se apoya en la RLS ya existente de solicitudes_amistad (solo
+// ves tus propias relaciones), sin necesitar ninguna función SQL nueva.
+export async function getSolicitudesPendientesRecibidas(usuarioId) {
+  const { data: solicitudes, error } = await supabase
+    .from('solicitudes_amistad')
+    .select('id, usuario_solicitante_id, creado_en')
+    .eq('usuario_receptor_id', usuarioId)
+    .eq('estado', 'pendiente')
+    .order('creado_en', { ascending: false })
+
+  if (error || !solicitudes || solicitudes.length === 0) {
+    return { data: [], error }
+  }
+
+  const { data: perfiles } = await getPerfilesPublicos(solicitudes.map((s) => s.usuario_solicitante_id))
+  const perfilesPorId = new Map((perfiles ?? []).map((p) => [p.id, p]))
+
+  const combinadas = solicitudes.map((s) => ({
+    solicitudId: s.id,
+    creadoEn: s.creado_en,
+    perfil: perfilesPorId.get(s.usuario_solicitante_id) ?? { id: s.usuario_solicitante_id },
+  }))
+
+  return { data: combinadas, error: null }
+}
+
 export async function buscarPerfilesPublicos(termino) {
   const limpio = termino.trim().replace(/^@/, '')
   if (limpio.length < 2) return { data: [], error: null }

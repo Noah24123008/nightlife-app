@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 const ITEMS = [
   { to: '/', label: 'Inicio', end: true },
   { to: '/locales', label: 'Locales', end: false },
-  { to: '/mapa', label: 'Mapa', end: false },
+  { to: '/social', label: 'Social', end: false },
   { to: '/perfil', label: 'Perfil', end: false },
 ]
 
