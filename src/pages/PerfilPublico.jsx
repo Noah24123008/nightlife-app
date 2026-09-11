@@ -6,11 +6,11 @@ import {
   getVotosDelDia,
   getLocalPorId,
   getEventoPorId,
-  compruebaSiSigo,
-  seguirUsuario,
-  dejarDeSeguirUsuario,
-  contarSeguidores,
-  contarSeguidos,
+  getAmigos,
+  consultarRelacionAmistad,
+  enviarSolicitudAmistad,
+  responderSolicitudAmistad,
+  eliminarRelacionAmistad,
 } from '../lib/api'
 import { toISODate } from '../lib/dates'
 import ImagenConFallback from '../components/ImagenConFallback'
@@ -23,15 +23,23 @@ export default function PerfilPublico() {
 
   const [perfil, setPerfil] = useState(null)
   const [destino, setDestino] = useState(null)
-  const [numSeguidores, setNumSeguidores] = useState(0)
-  const [numSeguidos, setNumSeguidos] = useState(0)
-  const [siguiendo, setSiguiendo] = useState(false)
-  const [cambiandoSeguir, setCambiandoSeguir] = useState(false)
+  const [numAmigos, setNumAmigos] = useState(0)
+  const [relacion, setRelacion] = useState(null)
+  const [cargandoAccion, setCargandoAccion] = useState(false)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
   const [noEncontrado, setNoEncontrado] = useState(false)
 
   const esMiPropioPerfil = user?.id === id
+
+  async function refrescarAmistad() {
+    const { data: amigosData } = await getAmigos(id)
+    setNumAmigos((amigosData ?? []).length)
+    if (user) {
+      const { data: relacionData } = await consultarRelacionAmistad(user.id, id)
+      setRelacion(relacionData ?? null)
+    }
+  }
 
   useEffect(() => {
     let activo = true
@@ -56,18 +64,14 @@ export default function PerfilPublico() {
       }
       setPerfil(perfilData)
 
-      const [{ count: seguidoresData }, { count: seguidosData }] = await Promise.all([
-        contarSeguidores(id),
-        contarSeguidos(id),
-      ])
+      const { data: amigosData } = await getAmigos(id)
       if (!activo) return
-      setNumSeguidores(seguidoresData ?? 0)
-      setNumSeguidos(seguidosData ?? 0)
+      setNumAmigos((amigosData ?? []).length)
 
       if (user && user.id !== id) {
-        const { siguiendo: sigo } = await compruebaSiSigo(user.id, id)
+        const { data: relacionData } = await consultarRelacionAmistad(user.id, id)
         if (!activo) return
-        setSiguiendo(sigo)
+        setRelacion(relacionData ?? null)
       }
 
       const { data: votosData, error: errVotos } = await getVotosDelDia(hoyISO)
@@ -101,32 +105,45 @@ export default function PerfilPublico() {
     }
   }, [id, hoyISO, user?.id])
 
-  async function handleSeguir() {
-    if (!user || esMiPropioPerfil) return
-    setCambiandoSeguir(true)
+  async function ejecutarAccionAmistad(accion, mensajeErrorFallback) {
+    setCargandoAccion(true)
     setError('')
-
-    if (siguiendo) {
-      const { error: errDejar } = await dejarDeSeguirUsuario(user.id, id)
-      if (errDejar) {
-        setError(mensajeError(errDejar, 'No se pudo dejar de seguir. Inténtalo de nuevo.'))
-        if (esErrorDeAutenticacion(errDejar)) setTimeout(() => signOut(), 2000)
-      } else {
-        setSiguiendo(false)
-        setNumSeguidores((n) => Math.max(0, n - 1))
-      }
+    const { error: err } = await accion()
+    if (err) {
+      setError(mensajeError(err, mensajeErrorFallback))
+      if (esErrorDeAutenticacion(err)) setTimeout(() => signOut(), 2000)
     } else {
-      const { error: errSeguir } = await seguirUsuario(user.id, id)
-      if (errSeguir && errSeguir.code !== '23505') {
-        setError(mensajeError(errSeguir, 'No se pudo seguir a este usuario. Inténtalo de nuevo.'))
-        if (esErrorDeAutenticacion(errSeguir)) setTimeout(() => signOut(), 2000)
-      } else {
-        setSiguiendo(true)
-        setNumSeguidores((n) => n + 1)
-      }
+      await refrescarAmistad()
     }
-    setCambiandoSeguir(false)
+    setCargandoAccion(false)
   }
+
+  const handleAgregarAmigo = () =>
+    ejecutarAccionAmistad(() => enviarSolicitudAmistad(id), 'No se pudo enviar la solicitud. Inténtalo de nuevo.')
+
+  const handleCancelar = () =>
+    ejecutarAccionAmistad(
+      () => eliminarRelacionAmistad(relacion.id),
+      'No se pudo cancelar la solicitud. Inténtalo de nuevo.'
+    )
+
+  const handleAceptar = () =>
+    ejecutarAccionAmistad(
+      () => responderSolicitudAmistad(relacion.id, true),
+      'No se pudo aceptar la solicitud. Inténtalo de nuevo.'
+    )
+
+  const handleRechazar = () =>
+    ejecutarAccionAmistad(
+      () => responderSolicitudAmistad(relacion.id, false),
+      'No se pudo rechazar la solicitud. Inténtalo de nuevo.'
+    )
+
+  const handleEliminarAmigo = () =>
+    ejecutarAccionAmistad(
+      () => eliminarRelacionAmistad(relacion.id),
+      'No se pudo eliminar la amistad. Inténtalo de nuevo.'
+    )
 
   if (cargando) {
     return (
@@ -168,25 +185,52 @@ export default function PerfilPublico() {
       </div>
 
       <div className="seguimiento-contadores">
-        <Link to={`/usuarios/${id}/seguidores`} className="seguimiento-contador">
-          <span className="seguimiento-numero">{numSeguidores}</span>
-          <span className="seguimiento-etiqueta">Seguidores</span>
-        </Link>
-        <Link to={`/usuarios/${id}/siguiendo`} className="seguimiento-contador">
-          <span className="seguimiento-numero">{numSeguidos}</span>
-          <span className="seguimiento-etiqueta">Siguiendo</span>
+        <Link to={`/usuarios/${id}/amigos`} className="seguimiento-contador">
+          <span className="seguimiento-numero">{numAmigos}</span>
+          <span className="seguimiento-etiqueta">Amigos</span>
         </Link>
       </div>
 
       {!esMiPropioPerfil && user && (
-        <button
-          type="button"
-          className={`seguir-btn ${siguiendo ? 'seguir-btn--activo' : ''}`}
-          onClick={handleSeguir}
-          disabled={cambiandoSeguir}
-        >
-          {cambiandoSeguir ? '...' : siguiendo ? 'Siguiendo ✓' : 'Seguir'}
-        </button>
+        <div className="amistad-acciones">
+          {!relacion || relacion.estado === 'rechazada' ? (
+            <button type="button" className="seguir-btn" onClick={handleAgregarAmigo} disabled={cargandoAccion}>
+              {cargandoAccion ? '...' : 'Añadir amigo'}
+            </button>
+          ) : relacion.estado === 'pendiente' && relacion.usuario_solicitante_id === user.id ? (
+            <>
+              <button type="button" className="seguir-btn seguir-btn--activo" disabled>
+                Solicitud enviada
+              </button>
+              <button type="button" className="amistad-eliminar" onClick={handleCancelar} disabled={cargandoAccion}>
+                {cargandoAccion ? '...' : 'Cancelar solicitud'}
+              </button>
+            </>
+          ) : relacion.estado === 'pendiente' ? (
+            <div className="amistad-respuesta">
+              <button type="button" className="amistad-aceptar" onClick={handleAceptar} disabled={cargandoAccion}>
+                Aceptar
+              </button>
+              <button type="button" className="amistad-rechazar" onClick={handleRechazar} disabled={cargandoAccion}>
+                Rechazar
+              </button>
+            </div>
+          ) : (
+            <>
+              <button type="button" className="seguir-btn seguir-btn--activo" disabled>
+                Amigos ✓
+              </button>
+              <button
+                type="button"
+                className="amistad-eliminar"
+                onClick={handleEliminarAmigo}
+                disabled={cargandoAccion}
+              >
+                {cargandoAccion ? '...' : 'Eliminar amigo'}
+              </button>
+            </>
+          )}
+        </div>
       )}
 
       <div className="ficha-voto">

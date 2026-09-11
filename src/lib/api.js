@@ -131,6 +131,52 @@ export async function getSeguidos(usuarioId) {
   return { data: data ?? [], error }
 }
 
+// --- Sistema de amistad (solicitudes_amistad) ---
+// seguirUsuario/dejarDeSeguirUsuario/compruebaSiSigo/contarSeguidores/
+// contarSeguidos/getSeguidores/getSeguidos (arriba) se quedan sin usar
+// desde el frontend nuevo, pero no se borran.
+
+export async function enviarSolicitudAmistad(destinatarioId) {
+  const { error } = await supabase.rpc('enviar_solicitud_amistad', { p_destinatario: destinatarioId })
+  return { error }
+}
+
+export async function responderSolicitudAmistad(solicitudId, aceptar) {
+  const { error } = await supabase.rpc('responder_solicitud_amistad', {
+    p_solicitud_id: solicitudId,
+    p_aceptar: aceptar,
+  })
+  return { error }
+}
+
+// Relación entre usuarioId y otroId, en cualquiera de las dos direcciones.
+// Como mucho puede existir una fila para esa pareja (restricción única de
+// solicitudes_amistad), así que "no hay relación" es un resultado válido
+// (data: null), no un error.
+export async function consultarRelacionAmistad(usuarioId, otroId) {
+  const { data, error } = await supabase
+    .from('solicitudes_amistad')
+    .select('id, usuario_solicitante_id, usuario_receptor_id, estado')
+    .or(
+      `and(usuario_solicitante_id.eq.${usuarioId},usuario_receptor_id.eq.${otroId}),and(usuario_solicitante_id.eq.${otroId},usuario_receptor_id.eq.${usuarioId})`
+    )
+    .maybeSingle()
+  return { data, error }
+}
+
+// Sirve tanto para cancelar una solicitud propia como para eliminar una
+// amistad ya aceptada: la policy de RLS decide qué se permite según el
+// estado de la fila y quién la llama.
+export async function eliminarRelacionAmistad(solicitudId) {
+  const { error } = await supabase.from('solicitudes_amistad').delete().eq('id', solicitudId)
+  return { error }
+}
+
+export async function getAmigos(usuarioId) {
+  const { data, error } = await supabase.rpc('get_amigos', { p_usuario_id: usuarioId })
+  return { data: data ?? [], error }
+}
+
 export async function buscarPerfilesPublicos(termino) {
   const limpio = termino.trim().replace(/^@/, '')
   if (limpio.length < 2) return { data: [], error: null }

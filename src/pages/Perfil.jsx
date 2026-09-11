@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getOCrearPerfil, guardarPerfil, subirAvatar, validarImagenAvatar, contarSeguidores, contarSeguidos } from '../lib/api'
+import { getOCrearPerfil, guardarPerfil, subirAvatar, validarImagenAvatar, getAmigos } from '../lib/api'
 import ImagenConFallback from '../components/ImagenConFallback'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -19,8 +19,7 @@ export default function Perfil() {
   const [nombreUsuario, setNombreUsuario] = useState('')
   const [fotoUrl, setFotoUrl] = useState('')
 
-  const [numSeguidores, setNumSeguidores] = useState(0)
-  const [numSeguidos, setNumSeguidos] = useState(0)
+  const [numAmigos, setNumAmigos] = useState(0)
 
   useEffect(() => {
     if (!user) return
@@ -39,13 +38,9 @@ export default function Perfil() {
         setFotoUrl(data.foto_url ?? '')
       }
 
-      const [{ count: seguidoresData }, { count: seguidosData }] = await Promise.all([
-        contarSeguidores(user.id),
-        contarSeguidos(user.id),
-      ])
+      const { data: amigosData } = await getAmigos(user.id)
       if (!activo) return
-      setNumSeguidores(seguidoresData ?? 0)
-      setNumSeguidos(seguidosData ?? 0)
+      setNumAmigos((amigosData ?? []).length)
 
       setCargando(false)
     }
@@ -148,13 +143,9 @@ export default function Perfil() {
       </div>
 
       <div className="seguimiento-contadores">
-        <Link to={`/usuarios/${user.id}/seguidores`} className="seguimiento-contador">
-          <span className="seguimiento-numero">{numSeguidores}</span>
-          <span className="seguimiento-etiqueta">Seguidores</span>
-        </Link>
-        <Link to={`/usuarios/${user.id}/siguiendo`} className="seguimiento-contador">
-          <span className="seguimiento-numero">{numSeguidos}</span>
-          <span className="seguimiento-etiqueta">Siguiendo</span>
+        <Link to={`/usuarios/${user.id}/amigos`} className="seguimiento-contador">
+          <span className="seguimiento-numero">{numAmigos}</span>
+          <span className="seguimiento-etiqueta">Amigos</span>
         </Link>
       </div>
 

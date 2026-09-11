@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getSeguidores, getSeguidos } from '../lib/api'
+import { getSeguidores, getSeguidos, getAmigos } from '../lib/api'
 import PersonaChip from '../components/PersonaChip'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
@@ -15,6 +15,11 @@ const CONFIG_POR_TIPO = {
     titulo: 'Siguiendo',
     vacio: 'Todavía no sigue a nadie',
     cargar: getSeguidos,
+  },
+  amigos: {
+    titulo: 'Amigos',
+    vacio: 'Todavía no tiene amigos',
+    cargar: getAmigos,
   },
 }
 

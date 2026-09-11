@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { getNotificaciones, marcarNotificacionLeida, marcarTodasNotificacionesLeidas } from '../lib/api'
+import {
+  getNotificaciones,
+  marcarNotificacionLeida,
+  marcarTodasNotificacionesLeidas,
+  responderSolicitudAmistad,
+} from '../lib/api'
 import NotificacionCard from '../components/NotificacionCard'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
@@ -11,25 +16,22 @@ export default function Notificaciones() {
   const [error, setError] = useState('')
   const [marcandoTodas, setMarcandoTodas] = useState(false)
 
+  async function cargarNotificaciones() {
+    setCargando(true)
+    setError('')
+    const { data, error: errNotis } = await getNotificaciones()
+    if (errNotis) {
+      setError(mensajeError(errNotis, 'No se pudieron cargar las notificaciones.'))
+      if (esErrorDeAutenticacion(errNotis)) setTimeout(() => signOut(), 2000)
+    } else {
+      setNotificaciones(data ?? [])
+    }
+    setCargando(false)
+  }
+
   useEffect(() => {
-    let activo = true
-    async function cargar() {
-      setCargando(true)
-      setError('')
-      const { data, error: errNotis } = await getNotificaciones()
-      if (!activo) return
-      if (errNotis) {
-        setError(mensajeError(errNotis, 'No se pudieron cargar las notificaciones.'))
-        if (esErrorDeAutenticacion(errNotis)) setTimeout(() => signOut(), 2000)
-      } else {
-        setNotificaciones(data ?? [])
-      }
-      setCargando(false)
-    }
-    cargar()
-    return () => {
-      activo = false
-    }
+    cargarNotificaciones()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleMarcarLeida(id) {
@@ -42,6 +44,22 @@ export default function Notificaciones() {
     setNotificaciones((prev) => prev.map((n) => ({ ...n, leida: true })))
     await marcarTodasNotificacionesLeidas()
     setMarcandoTodas(false)
+  }
+
+  // Tras aceptar/rechazar, la solicitud accionable se borra en el propio
+  // trigger de base de datos, así que recargar la lista completa ya basta
+  // para que la tarjeta desaparezca y (al volver a Inicio) el contador de
+  // la campana se recalcule con datos reales. Si la solicitud ya no
+  // estaba disponible (respondida desde otro sitio), no dejamos la
+  // pantalla atascada: mostramos un aviso y recargamos igualmente.
+  async function handleResponderSolicitud(notificacion, aceptar) {
+    setError('')
+    const { error: errResponder } = await responderSolicitudAmistad(notificacion.solicitud_amistad_id, aceptar)
+    if (errResponder) {
+      setError(mensajeError(errResponder, 'Esa solicitud ya no estaba disponible. Se ha actualizado la lista.'))
+      if (esErrorDeAutenticacion(errResponder)) setTimeout(() => signOut(), 2000)
+    }
+    await cargarNotificaciones()
   }
 
   const hayNoLeidas = notificaciones.some((n) => !n.leida)
@@ -66,7 +84,13 @@ export default function Notificaciones() {
       ) : (
         <div className="notificaciones-lista">
           {notificaciones.map((n) => (
-            <NotificacionCard key={n.id} notificacion={n} onMarcarLeida={() => handleMarcarLeida(n.id)} />
+            <NotificacionCard
+              key={n.id}
+              notificacion={n}
+              onMarcarLeida={() => handleMarcarLeida(n.id)}
+              onAceptar={() => handleResponderSolicitud(n, true)}
+              onRechazar={() => handleResponderSolicitud(n, false)}
+            />
           ))}
         </div>
       )}
