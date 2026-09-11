@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
-import ImagenConFallback from '../components/ImagenConFallback'
+import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 
 const CIUDAD_ACTUAL = 'Gijón'
 
@@ -64,12 +64,7 @@ export default function Locales() {
             <>
               <h2 className="ficha-subtitulo">Destacado este fin de semana</h2>
               <Link to={`/locales/${destacado.id}`} className="local-card local-card--temporal">
-                <ImagenConFallback
-                  src={destacado.foto_url}
-                  alt={destacado.nombre}
-                  className="local-card-foto"
-                  placeholderClassName="local-card-foto local-card-foto--vacia"
-                />
+                <FotoLocalMiniatura src={destacado.foto_url} alt={destacado.nombre} />
                 <span className="local-card-info">
                   <span className="badge-temporal">TEMPORAL</span>
                   <span className="venue-name">{destacado.nombre}</span>
@@ -85,12 +80,7 @@ export default function Locales() {
             {normales.map((local) => (
               <li key={local.id}>
                 <Link to={`/locales/${local.id}`} className="local-card">
-                  <ImagenConFallback
-                    src={local.foto_url}
-                    alt={local.nombre}
-                    className="local-card-foto"
-                    placeholderClassName="local-card-foto local-card-foto--vacia"
-                  />
+                  <FotoLocalMiniatura src={local.foto_url} alt={local.nombre} />
                   <span className="local-card-info">
                     <span className="venue-name">{local.nombre}</span>
                     <span className="local-categoria">{local.categoria}</span>

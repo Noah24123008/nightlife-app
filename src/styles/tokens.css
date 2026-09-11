@@ -430,16 +430,37 @@ button {
   color: inherit;
 }
 
-.local-card-foto {
+.local-card-foto-miniatura {
+  position: relative;
+  display: block;
   width: 56px;
   height: 56px;
   border-radius: 8px;
-  object-fit: cover;
+  overflow: hidden;
   flex: 0 0 auto;
   background: var(--color-bg);
 }
 
-.local-card-foto--vacia {
+.local-card-foto-miniatura-fondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(6px) brightness(0.6);
+  transform: scale(1.3);
+}
+
+.local-card-foto-miniatura-real {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.local-card-foto-miniatura--vacia {
   display: block;
   background: linear-gradient(135deg, var(--color-bg), var(--color-border));
 }
@@ -890,7 +911,7 @@ button {
   background: linear-gradient(135deg, var(--color-surface), #26305a);
 }
 
-.local-card--temporal .local-card-foto {
+.local-card--temporal .local-card-foto-miniatura {
   width: 64px;
   height: 64px;
 }
@@ -1087,6 +1108,45 @@ button {
 .ficha-foto--vacia {
   display: block;
   background: linear-gradient(135deg, var(--color-surface), var(--color-border));
+}
+
+/* Panorámico de FichaLocal: fondo desenfocado + foto completa sin recortar */
+
+.ficha-foto-panoramica {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--color-surface);
+  margin-bottom: 16px;
+}
+
+.ficha-foto-panoramica-fondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(18px) brightness(0.6);
+  transform: scale(1.15);
+}
+
+.ficha-foto-panoramica-real {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.ficha-foto-panoramica--vacia {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--color-surface), var(--color-border));
+  margin-bottom: 16px;
 }
 
 .ficha-nombre {
