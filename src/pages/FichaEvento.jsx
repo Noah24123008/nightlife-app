@@ -176,7 +176,7 @@ export default function FichaEvento() {
           <>
             <div className="votantes-lista">
               {(mostrarTodasPersonas ? personas : personas.slice(0, LIMITE_PERSONAS_VISIBLES)).map((perfil) => (
-                <PersonaChip key={perfil.id} perfil={perfil} mostrarSigues />
+                <PersonaChip key={perfil.id} perfil={perfil} />
               ))}
             </div>
             {!mostrarTodasPersonas && personas.length > LIMITE_PERSONAS_VISIBLES && (

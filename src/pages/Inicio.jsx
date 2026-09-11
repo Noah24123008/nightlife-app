@@ -135,7 +135,7 @@ export default function Inicio() {
       const { data, error: errFeed } = await getFeedSocialHoy(diaSeleccionado.fechaISO)
       if (!activo) return
       if (errFeed) {
-        setErrorFeed(mensajeError(errFeed, 'No se pudo cargar la actividad de la gente que sigues.'))
+        setErrorFeed(mensajeError(errFeed, 'No se pudo cargar la actividad de tus amigos.'))
         if (esErrorDeAutenticacion(errFeed)) setTimeout(() => signOut(), 2000)
       } else {
         setFeed(data ?? [])
@@ -329,7 +329,7 @@ export default function Inicio() {
         {cargandoRecomendaciones ? (
           <p className="app-loading">Cargando recomendaciones...</p>
         ) : recomendaciones.length === 0 ? (
-          <p className="inicio-vacio">Sigue a más gente para descubrir dónde van {etiquetaTexto}</p>
+          <p className="inicio-vacio">Hazte amigo de más gente para descubrir dónde van {etiquetaTexto}</p>
         ) : (
           <>
             <div className="recomendaciones-lista">
@@ -354,13 +354,13 @@ export default function Inicio() {
       </div>
 
       <div className="feed-social">
-        <h2 className="ficha-subtitulo">Actividad de la gente que sigues</h2>
+        <h2 className="ficha-subtitulo">Actividad de tus amigos</h2>
         {cargandoFeed ? (
           <p className="app-loading">Cargando actividad...</p>
         ) : errorFeed ? (
           <p className="auth-error">{errorFeed}</p>
         ) : feed.length === 0 ? (
-          <p className="inicio-vacio">La gente que sigues todavía no ha indicado dónde va {etiquetaTexto}</p>
+          <p className="inicio-vacio">Tus amigos todavía no han indicado dónde van {etiquetaTexto}</p>
         ) : (
           <>
             <div className="feed-lista">

@@ -199,7 +199,7 @@ export default function FichaLocal() {
           <>
             <div className="votantes-lista">
               {(mostrarTodosVotantes ? votantes : votantes.slice(0, LIMITE_VOTANTES_VISIBLES)).map((perfil) => (
-                <PersonaChip key={perfil.id} perfil={perfil} mostrarSigues />
+                <PersonaChip key={perfil.id} perfil={perfil} />
               ))}
             </div>
             {!mostrarTodosVotantes && votantes.length > LIMITE_VOTANTES_VISIBLES && (

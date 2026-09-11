@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom'
 import ImagenConFallback from './ImagenConFallback'
 
-export default function RecomendacionSocialCard({ recomendacion }) {
+export default function RecomendacionSocialCard({ recomendacion, fecha }) {
   const muestra = recomendacion.muestra_seguidos || []
+  const destino = fecha
+    ? `/locales/${recomendacion.local_id}?fecha=${fecha}`
+    : `/locales/${recomendacion.local_id}`
 
   return (
-    <Link to={`/locales/${recomendacion.local_id}`} className="recomendacion-card">
+    <Link to={destino} className="recomendacion-card">
       <p className="venue-name">{recomendacion.local_nombre}</p>
       <p className="local-categoria">
-        {recomendacion.seguidos_que_van}{' '}
-        {recomendacion.seguidos_que_van === 1 ? 'persona que sigues va' : 'personas que sigues van'} ·{' '}
+        {recomendacion.amigos_que_van}{' '}
+        {recomendacion.amigos_que_van === 1 ? 'amigo que va' : 'amigos que van'} ·{' '}
         {recomendacion.total_personas} {recomendacion.total_personas === 1 ? 'persona en total' : 'personas en total'}
       </p>
       {muestra.length > 0 && (

@@ -56,6 +56,21 @@ export async function getVotosDelDia(fechaISO) {
   return { data, error }
 }
 
+// A diferencia de getVotosDelDia (todos los votos del día, para ranking y
+// contadores), esta consulta va filtrada por usuario_id en el propio
+// where, así que la respuesta solo puede contener el voto del propio
+// usuario, nunca el de nadie más — útil para saber "¿ya soy una de las
+// personas contadas aquí?" sin revelar ninguna otra identidad.
+export async function getMiVotoDelDia(usuarioId, fechaISO) {
+  const { data, error } = await supabase
+    .from('votos')
+    .select('local_id, evento_id')
+    .eq('usuario_id', usuarioId)
+    .eq('fecha', fechaISO)
+    .maybeSingle()
+  return { data, error }
+}
+
 // Perfil público: solo trae campos no sensibles, vía la función de Supabase
 // que los limita explícitamente (nunca email, nunca otros datos internos).
 export async function getPerfilPublico(id) {

@@ -649,16 +649,6 @@ button {
   max-width: 140px;
 }
 
-.persona-chip-sigues {
-  flex: 0 0 auto;
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--color-accent-warm);
-  border: 1px solid var(--color-accent-warm);
-  border-radius: 999px;
-  padding: 1px 6px;
-}
-
 .votantes-ver-todos {
   display: block;
   margin-top: 10px;
@@ -1009,7 +999,7 @@ button {
 }
 
 .mini-avatares-mas {
-  margin-left: 8px;
+  margin: 4px 0 0;
   font-size: 11px;
   color: var(--color-text-muted);
 }
