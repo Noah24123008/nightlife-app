@@ -10,6 +10,12 @@
 
   --font-display: 'Unbounded', sans-serif; /* solo nombres destacados, posiciones de ranking, títulos */
   --font-body: 'Manrope', sans-serif; /* resto de textos y elementos funcionales */
+
+  /* 10px (padding superior) + 44px (min-height de .bottom-nav-item) +
+     10px (padding inferior, sin contar la zona segura) = 64px. Si se
+     cambia el padding o el min-height de abajo, actualizar este valor
+     también para que .app-screen siga reservando el espacio correcto. */
+  --bottom-nav-height: 64px;
 }
 
 * {
@@ -128,7 +134,7 @@ button {
 .app-screen {
   max-width: 480px;
   margin: 0 auto;
-  padding: 20px 16px 90px;
+  padding: 20px 16px calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 16px);
   min-height: 100vh;
 }
 
@@ -379,6 +385,7 @@ button {
   left: 0;
   right: 0;
   bottom: 0;
+  z-index: 100;
   max-width: 480px;
   margin: 0 auto;
   display: flex;
