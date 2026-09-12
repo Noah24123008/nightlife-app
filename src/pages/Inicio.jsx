@@ -7,14 +7,12 @@ import {
   getVotosDelDia,
   getEventosDelDia,
   votarPorLocal,
-  getFeedSocialHoy,
   getNumeroNotificacionesNoLeidas,
   getRecomendacionesSocialesHoy,
 } from '../lib/api'
 import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
-import ActividadCard from '../components/ActividadCard'
 import RecomendacionSocialCard from '../components/RecomendacionSocialCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -22,7 +20,6 @@ const CIUDAD_ACTUAL = 'Gijón'
 const DIAS_VISIBLES = 8
 const LIMITE_RANKING_INICIAL = 5
 const LIMITE_RECOMENDACIONES_INICIAL = 3
-const LIMITE_FEED_INICIAL = 4
 
 export default function Inicio() {
   const { user, signOut } = useAuth()
@@ -46,10 +43,6 @@ export default function Inicio() {
   const [votandoLocalId, setVotandoLocalId] = useState(null)
   const [error, setError] = useState('')
 
-  const [feed, setFeed] = useState([])
-  const [cargandoFeed, setCargandoFeed] = useState(true)
-  const [errorFeed, setErrorFeed] = useState('')
-
   const [recomendaciones, setRecomendaciones] = useState([])
   const [cargandoRecomendaciones, setCargandoRecomendaciones] = useState(true)
 
@@ -57,7 +50,6 @@ export default function Inicio() {
 
   const [mostrarRankingCompleto, setMostrarRankingCompleto] = useState(false)
   const [mostrarTodasRecomendaciones, setMostrarTodasRecomendaciones] = useState(false)
-  const [mostrarTodoFeed, setMostrarTodoFeed] = useState(false)
 
   // Cargar la ciudad y sus locales una sola vez
   useEffect(() => {
@@ -127,27 +119,6 @@ export default function Inicio() {
     }
   }, [ciudadId, diaSeleccionado.fechaISO])
 
-  // Feed social del día seleccionado
-  useEffect(() => {
-    let activo = true
-    async function cargarFeed() {
-      setCargandoFeed(true)
-      const { data, error: errFeed } = await getFeedSocialHoy(diaSeleccionado.fechaISO)
-      if (!activo) return
-      if (errFeed) {
-        setErrorFeed(mensajeError(errFeed, 'No se pudo cargar la actividad de tus amigos.'))
-        if (esErrorDeAutenticacion(errFeed)) setTimeout(() => signOut(), 2000)
-      } else {
-        setFeed(data ?? [])
-      }
-      setCargandoFeed(false)
-    }
-    cargarFeed()
-    return () => {
-      activo = false
-    }
-  }, [diaSeleccionado.fechaISO])
-
   // Recomendaciones sociales del día seleccionado
   useEffect(() => {
     let activo = true
@@ -182,7 +153,6 @@ export default function Inicio() {
   useEffect(() => {
     setMostrarRankingCompleto(false)
     setMostrarTodasRecomendaciones(false)
-    setMostrarTodoFeed(false)
   }, [indiceDia])
 
   const miVotoLocalId = useMemo(
@@ -234,9 +204,6 @@ export default function Inicio() {
             {numNoLeidas > 0 && (
               <span className="badge-no-leidas">{numNoLeidas > 9 ? '9+' : numNoLeidas}</span>
             )}
-          </Link>
-          <Link to="/buscar" className="header-icono-buscar" aria-label="Buscar personas">
-            🔍
           </Link>
         </div>
       </header>
@@ -347,30 +314,6 @@ export default function Inicio() {
                 onClick={() => setMostrarTodasRecomendaciones(true)}
               >
                 Ver más recomendaciones
-              </button>
-            )}
-          </>
-        )}
-      </div>
-
-      <div className="feed-social">
-        <h2 className="ficha-subtitulo">Actividad de tus amigos</h2>
-        {cargandoFeed ? (
-          <p className="app-loading">Cargando actividad...</p>
-        ) : errorFeed ? (
-          <p className="auth-error">{errorFeed}</p>
-        ) : feed.length === 0 ? (
-          <p className="inicio-vacio">Tus amigos todavía no han indicado dónde van {etiquetaTexto}</p>
-        ) : (
-          <>
-            <div className="feed-lista">
-              {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
-                <ActividadCard key={actividad.usuario_id} actividad={actividad} etiquetaTexto={etiquetaTexto} />
-              ))}
-            </div>
-            {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
-              <button type="button" className="inicio-ver-mas" onClick={() => setMostrarTodoFeed(true)}>
-                Ver más actividad
               </button>
             )}
           </>

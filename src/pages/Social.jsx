@@ -1,16 +1,38 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getSolicitudesPendientesRecibidas, responderSolicitudAmistad } from '../lib/api'
+import { getSolicitudesPendientesRecibidas, responderSolicitudAmistad, getFeedSocialHoy } from '../lib/api'
+import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
+import DaySelector from '../components/DaySelector'
 import PersonaChip from '../components/PersonaChip'
+import ActividadCard from '../components/ActividadCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
+
+const DIAS_VISIBLES = 8
+const LIMITE_FEED_INICIAL = 4
 
 export default function Social() {
   const { user, signOut } = useAuth()
+
   const [solicitudes, setSolicitudes] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
   const [procesandoId, setProcesandoId] = useState(null)
+
+  // Selector de día propio de esta pantalla: controla únicamente el bloque
+  // de actividad de amigos de aquí abajo, nada más de Social.
+  const dias = useMemo(() => buildDiasVisibles(new Date(), DIAS_VISIBLES), [])
+  const [indiceDia, setIndiceDia] = useState(0)
+  const diaSeleccionado = dias[indiceDia]
+  const etiquetaTexto = useMemo(
+    () => etiquetaDiaTexto(diaSeleccionado.fecha, indiceDia),
+    [diaSeleccionado.fecha, indiceDia]
+  )
+
+  const [feed, setFeed] = useState([])
+  const [cargandoFeed, setCargandoFeed] = useState(true)
+  const [errorFeed, setErrorFeed] = useState('')
+  const [mostrarTodoFeed, setMostrarTodoFeed] = useState(false)
 
   async function cargarSolicitudes() {
     setCargando(true)
@@ -29,6 +51,33 @@ export default function Social() {
     cargarSolicitudes()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  // Actividad de amigos del día seleccionado en el selector de esta pantalla
+  useEffect(() => {
+    let activo = true
+    async function cargarFeed() {
+      setCargandoFeed(true)
+      setErrorFeed('')
+      const { data, error: errFeed } = await getFeedSocialHoy(diaSeleccionado.fechaISO)
+      if (!activo) return
+      if (errFeed) {
+        setErrorFeed(mensajeError(errFeed, 'No se pudo cargar la actividad de tus amigos.'))
+        if (esErrorDeAutenticacion(errFeed)) setTimeout(() => signOut(), 2000)
+      } else {
+        setFeed(data ?? [])
+      }
+      setCargandoFeed(false)
+    }
+    cargarFeed()
+    return () => {
+      activo = false
+    }
+  }, [diaSeleccionado.fechaISO])
+
+  // Al cambiar de día, no arrastrar el "ver más" expandido del día anterior
+  useEffect(() => {
+    setMostrarTodoFeed(false)
+  }, [indiceDia])
 
   async function handleResponder(solicitudId, aceptar) {
     setProcesandoId(solicitudId)
@@ -91,6 +140,30 @@ export default function Social() {
             </div>
           ))}
         </div>
+      )}
+
+      <h2 className="ficha-subtitulo">Actividad de tus amigos</h2>
+      <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
+
+      {cargandoFeed ? (
+        <p className="app-loading">Cargando actividad...</p>
+      ) : errorFeed ? (
+        <p className="auth-error">{errorFeed}</p>
+      ) : feed.length === 0 ? (
+        <p className="inicio-vacio">Tus amigos todavía no han indicado dónde van {etiquetaTexto}</p>
+      ) : (
+        <>
+          <div className="feed-lista">
+            {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
+              <ActividadCard key={actividad.usuario_id} actividad={actividad} etiquetaTexto={etiquetaTexto} />
+            ))}
+          </div>
+          {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
+            <button type="button" className="inicio-ver-mas" onClick={() => setMostrarTodoFeed(true)}>
+              Ver más actividad
+            </button>
+          )}
+        </>
       )}
     </div>
   )
