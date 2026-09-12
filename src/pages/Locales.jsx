@@ -58,14 +58,14 @@ export default function Locales() {
         <div className="vista-selector">
           <button
             type="button"
-            className={`vista-selector-btn ${vista === 'lista' ? 'vista-selector-btn--activo' : ''}`}
+            className={`glass-chip ${vista === 'lista' ? 'glass-chip--active' : ''}`}
             onClick={() => setVista('lista')}
           >
             Lista
           </button>
           <button
             type="button"
-            className={`vista-selector-btn ${vista === 'mapa' ? 'vista-selector-btn--activo' : ''}`}
+            className={`glass-chip ${vista === 'mapa' ? 'glass-chip--active' : ''}`}
             onClick={() => setVista('mapa')}
           >
             Mapa

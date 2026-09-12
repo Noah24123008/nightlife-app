@@ -98,10 +98,10 @@ export default function Social() {
       </header>
 
       <div className="social-accesos">
-        <Link to="/buscar" className="social-acceso">
+        <Link to="/buscar" className="social-acceso glass-surface">
           🔍 Buscar personas
         </Link>
-        <Link to={`/usuarios/${user.id}/amigos`} className="social-acceso">
+        <Link to={`/usuarios/${user.id}/amigos`} className="social-acceso glass-surface">
           👥 Mis amigos
         </Link>
       </div>

@@ -18,7 +18,7 @@ export default function BackButton() {
   }
 
   return (
-    <button type="button" className="ficha-volver" onClick={handleClick}>
+    <button type="button" className="glass-btn back-btn" onClick={handleClick}>
       ← Atrás
     </button>
   )

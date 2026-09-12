@@ -11,15 +11,119 @@
   --font-display: 'Unbounded', sans-serif; /* solo nombres destacados, posiciones de ranking, títulos */
   --font-body: 'Manrope', sans-serif; /* resto de textos y elementos funcionales */
 
-  /* 10px (padding superior) + 44px (min-height de .bottom-nav-item) +
-     10px (padding inferior, sin contar la zona segura) = 64px. Si se
-     cambia el padding o el min-height de abajo, actualizar este valor
-     también para que .app-screen siga reservando el espacio correcto. */
-  --bottom-nav-height: 64px;
+  /* 8px (padding superior) + 44px (min-height de .bottom-nav-item) +
+     8px (padding inferior) = 60px. La zona segura y el hueco flotante de
+     16px se añaden aparte (en el "bottom" del propio BottomNav y en el
+     padding-bottom de .app-screen), no aquí. Si se cambia el padding o
+     el min-height de abajo, actualizar este valor también. */
+  --bottom-nav-height: 60px;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* ============================================================
+   Sistema "glass" reutilizable — mismo lenguaje visual que el
+   BottomNav (cristal translúcido + blur + estado activo en negro).
+   Pensado para usarse en cualquier pantalla, no solo Inicio, por
+   eso vive aquí como clase global y no anidada bajo .inicio-v2.
+   ============================================================ */
+
+.glass-surface {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 6px 20px rgba(20, 30, 50, 0.1);
+}
+
+.glass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 40px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.08);
+  border-radius: 999px;
+  padding: 9px 18px;
+  color: #15151a;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.glass-btn--active {
+  background: rgba(21, 21, 26, 0.92);
+  border-color: rgba(21, 21, 26, 0.92);
+  color: #fff;
+}
+
+.glass-btn:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* "Vas aquí ✓" llega con disabled=true a la vez que activo=true (un
+   estado ya confirmado, no uno a la espera) — sin esto, la opacidad de
+   arriba diluía el negro sólido de .glass-btn--active a un gris. */
+.glass-btn--active:disabled {
+  opacity: 1;
+}
+
+.glass-chip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.06);
+  border-radius: 16px;
+  padding: 13px 20px;
+  color: #55596a;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.glass-chip--active {
+  background: rgba(21, 21, 26, 0.92);
+  border-color: rgba(21, 21, 26, 0.92);
+  color: #fff;
+  font-weight: 700;
+}
+
+.glass-icon-btn {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.1);
+  color: #15151a;
+  font-size: 17px;
+  text-decoration: none;
+}
+
+.back-btn {
+  margin-bottom: 16px;
 }
 
 body {
@@ -134,7 +238,7 @@ button {
 .app-screen {
   max-width: 480px;
   margin: 0 auto;
-  padding: 20px 16px calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 16px);
+  padding: 20px 16px calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 36px);
   min-height: 100vh;
 }
 
@@ -173,18 +277,6 @@ button {
 
 .day-selector-flecha {
   display: none;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
 }
 
 .day-selector-flecha--izquierda {
@@ -201,24 +293,6 @@ button {
   .day-selector-flecha {
     display: flex;
   }
-}
-
-.day-pill {
-  flex: 0 0 auto;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 999px;
-  padding: 8px 16px;
-  color: var(--color-text-muted);
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.day-pill--activo {
-  background: var(--color-accent-warm);
-  color: var(--color-bg);
-  border-color: var(--color-accent-warm);
-  font-weight: 700;
 }
 
 .inicio-vacio {
@@ -309,33 +383,6 @@ button {
   font-size: 13px;
 }
 
-.voto-btn {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  background: var(--color-accent-warm);
-  color: var(--color-bg);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.voto-btn--activo {
-  background: transparent;
-  border: 1px solid var(--color-accent-warm);
-  color: var(--color-accent-warm);
-  cursor: default;
-}
-
-.voto-btn:disabled {
-  opacity: 0.7;
-}
-
 .eventos-lista {
   list-style: none;
   margin: 0;
@@ -382,34 +429,46 @@ button {
 
 .bottom-nav {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   z-index: 100;
-  max-width: 480px;
-  margin: 0 auto;
+  width: calc(100% - 40px);
+  max-width: 448px;
   display: flex;
   justify-content: space-around;
-  background: var(--color-surface);
-  border-top: 1px solid var(--color-border);
-  padding: 10px 0 calc(10px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 28px;
+  box-shadow: 0 12px 35px rgba(20, 30, 50, 0.16);
+  padding: 8px 6px;
 }
 
 .bottom-nav-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 3px;
   min-height: 44px;
-  color: var(--color-text-muted);
+  color: #9aa0ad;
   text-decoration: none;
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 6px 14px;
+  padding: 6px 16px;
+  border-radius: 18px;
+}
+
+.bottom-nav-icono {
+  display: flex;
 }
 
 .bottom-nav-item--activo {
-  color: var(--color-accent-warm);
+  color: #fff;
+  background: rgba(21, 21, 26, 0.92);
 }
 
 /* Pantalla Locales */
@@ -418,25 +477,6 @@ button {
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
-}
-
-.vista-selector-btn {
-  flex: 1;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 10px;
-  color: var(--color-text-muted);
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.vista-selector-btn--activo {
-  background: var(--color-accent-warm);
-  border-color: var(--color-accent-warm);
-  color: var(--color-bg);
 }
 
 .social-accesos {
@@ -448,9 +488,7 @@ button {
 
 .social-acceso {
   display: block;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 14px;
   color: var(--color-text);
   font-family: var(--font-body);
@@ -553,19 +591,6 @@ button {
 }
 
 /* Ficha de local */
-
-.ficha-volver {
-  display: inline-block;
-  background: none;
-  border: none;
-  padding: 0;
-  color: var(--color-text-muted);
-  text-decoration: none;
-  font-family: var(--font-body);
-  font-size: 14px;
-  cursor: pointer;
-  margin-bottom: 16px;
-}
 
 .ficha-datos a {
   color: var(--color-accent-warm);
@@ -1308,4 +1333,333 @@ button {
 .ficha-subtitulo {
   font-size: 16px;
   margin: 0 0 12px;
+}
+
+/* ============================================================
+   INICIO — rediseño visual (fase 1, mocks)
+   Todo aquí va anidado bajo .inicio-v2 a propósito: DaySelector,
+   VotoButton, .ranking, .local-item, .venue-name, .local-categoria,
+   .mini-avatares, .inicio-ver-mas, .inicio-vacio y .ficha-subtitulo
+   los usan también Locales, Social, FichaLocal, FichaEvento, etc. —
+   así que todo lo nuevo se queda contenido en Inicio y ningún otro
+   sitio se ve afectado.
+   ============================================================ */
+
+.inicio-v2 {
+  --inicio-bg: #faf9f7;
+  --inicio-card-bg: #ffffff;
+  --inicio-text: #15151a;
+  --inicio-text-muted: #8a8f9c;
+  --inicio-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 36px);
+  background: var(--inicio-bg);
+  color: var(--inicio-text);
+}
+
+.inicio-v2-hero {
+  position: relative;
+  overflow: hidden;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 26px;
+  height: 300px;
+  display: flex;
+  align-items: flex-start;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: 74% 34%;
+  /* Silueta orgánica en vez de un simple border-radius: la base baja
+     más por la izquierda y termina antes por la derecha, con varios
+     puntos para simular una curva suave en vez de un corte recto. El
+     fondo claro de .inicio-v2 se ve a través de la zona recortada. */
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% 72%,
+    88% 78%,
+    76% 83%,
+    64% 87%,
+    52% 91%,
+    40% 94%,
+    28% 97%,
+    16% 99%,
+    6% 100%,
+    0% 100%
+  );
+  color: #fff;
+}
+
+.inicio-v2-hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(10, 12, 24, 0.62) 0%,
+    rgba(10, 12, 24, 0.22) 40%,
+    rgba(10, 12, 24, 0.08) 65%,
+    rgba(10, 12, 24, 0.28) 100%
+  );
+}
+
+.inicio-v2-hero-contenido {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.inicio-v2-hero-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.inicio-v2-hero-ciudad {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.inicio-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+.inicio-v2-seccion {
+  margin-top: 28px;
+}
+
+.inicio-v2-seccion-titulo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--inicio-text);
+  margin: 0 0 12px;
+}
+
+/* Selector de días: gap propio de Inicio (glass-chip/glass-icon-btn ya
+   aportan el resto del estilo, de forma global) */
+.inicio-v2 .day-selector {
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+/* Tarjeta "Destacado" (banner temporal existente) con foto real de fondo */
+.inicio-v2-destacado-card {
+  position: relative;
+  display: block;
+  height: 210px;
+  margin-top: 20px;
+  border-radius: 24px;
+  overflow: hidden;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+  color: #fff;
+}
+
+.inicio-v2-destacado-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  /* clave: sin esto, un contenedor flex en columna estira a sus hijos
+     (badge incluido) para llenar todo el ancho por defecto — es lo que
+     convertía el badge "TEMPORAL" en una barra completa. */
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 14px;
+  /* Degradado suave y localizado solo en la parte baja, para leer el
+     texto sin panel ni blur — la foto se ve completa y limpia. */
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    rgba(0, 0, 0, 0) 65%
+  );
+}
+
+.inicio-v2-destacado-overlay .badge-temporal {
+  font-size: 9px;
+  padding: 1px 7px;
+  margin-bottom: 0;
+}
+
+.inicio-v2-destacado-titulo {
+  margin: 1px 0 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.inicio-v2-destacado-subtitulo {
+  margin: 0;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.inicio-v2-destacado-enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 5px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.inicio-v2-banner-hoy {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 20px;
+  box-shadow: 0 10px 24px rgba(20, 30, 50, 0.1);
+  color: var(--inicio-text);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.inicio-v2-banner-hoy-flecha {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  line-height: 1;
+  padding: 0;
+  margin: 0;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.92);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.inicio-v2-ranking-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 34px 0 16px;
+}
+
+.inicio-v2-ranking-header-acento {
+  display: block;
+  width: 5px;
+  height: 26px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--color-accent-warm), #ef7a3f);
+}
+
+.inicio-v2-ranking-header-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.2px;
+  color: var(--inicio-text);
+}
+
+/* Ranking: tarjetas blancas grandes, en vez de filas oscuras */
+.inicio-v2 .ranking {
+  gap: 12px;
+}
+
+.inicio-v2 .local-item {
+  background: var(--inicio-card-bg);
+  border: 1px solid var(--inicio-border);
+  border-radius: 20px;
+  padding: 14px;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.inicio-v2 .local-item--votado {
+  border-color: var(--color-accent-warm);
+}
+
+.inicio-v2 .rank-position {
+  min-width: 22px;
+  color: var(--inicio-text-muted);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.inicio-v2 .local-item--destacado .rank-position {
+  color: var(--color-accent-warm);
+}
+
+.inicio-v2 .local-card-foto-miniatura {
+  width: 64px;
+  height: 64px;
+}
+
+.inicio-v2 .venue-name {
+  color: var(--inicio-text);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.inicio-v2 .local-categoria {
+  color: var(--inicio-text-muted);
+  font-size: 13px;
+}
+
+/* Eventos */
+.inicio-v2 .evento-item {
+  background: var(--inicio-card-bg);
+  border: 1px solid var(--inicio-border);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.inicio-v2 .evento-nombre {
+  color: var(--inicio-text);
+}
+
+.inicio-v2 .evento-local {
+  color: var(--inicio-text-muted);
+}
+
+/* Recomendaciones */
+.inicio-v2 .recomendacion-card {
+  background: var(--inicio-card-bg);
+  border: 1px solid var(--inicio-border);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.inicio-v2 .inicio-vacio {
+  color: var(--inicio-text-muted);
+}
+
+.inicio-v2 .app-loading {
+  color: var(--inicio-text-muted);
+}
+
+.inicio-v2 .inicio-ver-mas {
+  border-color: var(--inicio-border);
+  color: var(--inicio-text);
+}
+
+.inicio-v2 .auth-error {
+  background: #fdecea;
+  color: #b3261e;
+  border-radius: 12px;
+  padding: 10px 12px;
 }

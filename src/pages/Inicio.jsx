@@ -14,7 +14,9 @@ import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
 import RecomendacionSocialCard from '../components/RecomendacionSocialCard'
+import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
+import gijonHero from '../assets/gijon-hero.png'
 
 const CIUDAD_ACTUAL = 'Gijón'
 const DIAS_VISIBLES = 8
@@ -195,129 +197,148 @@ export default function Inicio() {
   }
 
   return (
-    <div className="app-screen">
-      <header className="screen-header">
-        <span className="screen-title">Gijón</span>
-        <div className="header-iconos">
-          <Link to="/notificaciones" className="header-icono-campana" aria-label="Notificaciones">
-            🔔
-            {numNoLeidas > 0 && (
-              <span className="badge-no-leidas">{numNoLeidas > 9 ? '9+' : numNoLeidas}</span>
-            )}
-          </Link>
-        </div>
-      </header>
+    <div className="app-screen inicio-v2">
+      <div className="inicio-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
+        <div className="inicio-v2-hero-overlay" aria-hidden="true" />
 
-      {indiceDia === 0 && (
-        <Link to="/hoy" className="banner-donde-va">
-          <span>🔥 Dónde va la gente hoy</span>
-          <span className="banner-flecha">→</span>
-        </Link>
-      )}
-
-      {destinoTemporal && (
-        <Link to={`/locales/${destinoTemporal.id}`} className="banner-temporal">
-          <div className="banner-temporal-cabecera">
-            <span className="badge-temporal">TEMPORAL</span>
-            <span className="banner-temporal-zona">Cimavilla</span>
+        <div className="inicio-v2-hero-contenido">
+          <div className="inicio-v2-hero-header">
+            <h1 className="inicio-v2-hero-ciudad">Gijón</h1>
+            <Link to="/notificaciones" className="glass-icon-btn" aria-label="Notificaciones">
+              🔔
+              {numNoLeidas > 0 && (
+                <span className="badge-no-leidas">{numNoLeidas > 9 ? '9+' : numNoLeidas}</span>
+              )}
+            </Link>
           </div>
-          <p className="banner-temporal-titulo">✨ {destinoTemporal.nombre}</p>
-          <p className="banner-temporal-subtitulo">Carpa especial este fin de semana</p>
-          <span className="banner-temporal-enlace">Ver ficha →</span>
-        </Link>
-      )}
+        </div>
+      </div>
 
-      <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
+      <div className="inicio-v2-contenido">
+        <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
 
-      {error && <p className="auth-error">{error}</p>}
+        {destinoTemporal && (
+          <Link
+            to={`/locales/${destinoTemporal.id}`}
+            className="inicio-v2-destacado-card"
+            style={destinoTemporal.foto_url ? { backgroundImage: `url(${destinoTemporal.foto_url})` } : undefined}
+          >
+            <div className="inicio-v2-destacado-overlay">
+              <span className="badge-temporal">TEMPORAL</span>
+              <p className="inicio-v2-destacado-titulo">✨ {destinoTemporal.nombre}</p>
+              <p className="inicio-v2-destacado-subtitulo">Carpa especial este fin de semana</p>
+              <span className="inicio-v2-destacado-enlace">Ver ficha →</span>
+            </div>
+          </Link>
+        )}
 
-      {cargandoBase || cargandoDia ? (
-        <p className="app-loading">Cargando...</p>
-      ) : (
-        <>
-          <h2 className="ficha-subtitulo">Dónde va la gente {etiquetaTexto}</h2>
-          {votosDia.length === 0 && (
-            <p className="inicio-vacio">
-              Todavía no hay votos {etiquetaTexto}. ¡Sé el primero en decir a dónde vas!
-            </p>
-          )}
-          <ul className="ranking">
-            {(mostrarRankingCompleto ? ranking : ranking.slice(0, LIMITE_RANKING_INICIAL)).map((local, index) => (
-              <li
-                key={local.id}
-                className={`local-item ${index === 0 ? 'local-item--destacado' : ''} ${
-                  miVotoLocalId === local.id ? 'local-item--votado' : ''
-                }`}
-              >
-                <span className="rank-position">{index + 1}</span>
-                <div className="local-info">
-                  <p className="venue-name">{local.nombre}</p>
-                  <p className="local-categoria">
-                    {local.categoria} · {local.votos} {local.votos === 1 ? 'persona va' : 'personas van'}
-                  </p>
-                </div>
-                <VotoButton
-                  votado={miVotoLocalId === local.id}
-                  cargando={votandoLocalId === local.id}
-                  onClick={() => handleVotar(local.id)}
-                />
-              </li>
-            ))}
-          </ul>
-          {!mostrarRankingCompleto && ranking.length > LIMITE_RANKING_INICIAL && (
-            <button type="button" className="inicio-ver-mas" onClick={() => setMostrarRankingCompleto(true)}>
-              Ver todos los locales
-            </button>
-          )}
+        {indiceDia === 0 && (
+          <Link to="/hoy" className="inicio-v2-banner-hoy">
+            <span>🔥 Dónde va la gente hoy</span>
+            <span className="inicio-v2-banner-hoy-flecha" aria-hidden="true">
+              →
+            </span>
+          </Link>
+        )}
 
-          <h2 className="ficha-subtitulo">Eventos</h2>
-          {eventosDia.length === 0 ? (
-            <p className="inicio-vacio">No hay eventos programados para este día todavía.</p>
-          ) : (
-            <ul className="eventos-lista">
-              {eventosDia.map((evento) => (
-                <li key={evento.id}>
-                  <Link to={`/eventos/${evento.id}`} className="evento-item">
-                    <span className="evento-hora">{evento.hora_inicio?.slice(0, 5)}</span>
-                    <div>
-                      <p className="evento-nombre">{evento.nombre}</p>
-                      <p className="evento-local">{evento.locales?.nombre}</p>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </>
-      )}
+        {error && <p className="auth-error">{error}</p>}
 
-      <div className="recomendaciones-social">
-        <h2 className="ficha-subtitulo">Te puede interesar {etiquetaTexto}</h2>
-        {cargandoRecomendaciones ? (
-          <p className="app-loading">Cargando recomendaciones...</p>
-        ) : recomendaciones.length === 0 ? (
-          <p className="inicio-vacio">Hazte amigo de más gente para descubrir dónde van {etiquetaTexto}</p>
+        {cargandoBase || cargandoDia ? (
+          <p className="app-loading">Cargando...</p>
         ) : (
           <>
-            <div className="recomendaciones-lista">
-              {(mostrarTodasRecomendaciones
-                ? recomendaciones
-                : recomendaciones.slice(0, LIMITE_RECOMENDACIONES_INICIAL)
-              ).map((r) => (
-                <RecomendacionSocialCard key={r.local_id} recomendacion={r} fecha={diaSeleccionado.fechaISO} />
-              ))}
-            </div>
-            {!mostrarTodasRecomendaciones && recomendaciones.length > LIMITE_RECOMENDACIONES_INICIAL && (
-              <button
-                type="button"
-                className="inicio-ver-mas"
-                onClick={() => setMostrarTodasRecomendaciones(true)}
-              >
-                Ver más recomendaciones
-              </button>
-            )}
+            <section className="inicio-v2-seccion">
+              <div className="inicio-v2-ranking-header">
+                <span className="inicio-v2-ranking-header-acento" aria-hidden="true" />
+                <h2 className="inicio-v2-ranking-header-titulo">Dónde va la gente {etiquetaTexto}</h2>
+              </div>
+              {votosDia.length === 0 && (
+                <p className="inicio-vacio">
+                  Todavía no hay votos {etiquetaTexto}. ¡Sé el primero en decir a dónde vas!
+                </p>
+              )}
+              <ul className="ranking">
+                {(mostrarRankingCompleto ? ranking : ranking.slice(0, LIMITE_RANKING_INICIAL)).map((local, index) => (
+                  <li
+                    key={local.id}
+                    className={`local-item ${index === 0 ? 'local-item--destacado' : ''} ${
+                      miVotoLocalId === local.id ? 'local-item--votado' : ''
+                    }`}
+                  >
+                    <span className="rank-position">{index + 1}</span>
+                    <FotoLocalMiniatura src={local.foto_url} alt={local.nombre} />
+                    <div className="local-info">
+                      <p className="venue-name">{local.nombre}</p>
+                      <p className="local-categoria">
+                        {local.categoria} · {local.votos} {local.votos === 1 ? 'persona va' : 'personas van'}
+                      </p>
+                    </div>
+                    <VotoButton
+                      votado={miVotoLocalId === local.id}
+                      cargando={votandoLocalId === local.id}
+                      onClick={() => handleVotar(local.id)}
+                    />
+                  </li>
+                ))}
+              </ul>
+              {!mostrarRankingCompleto && ranking.length > LIMITE_RANKING_INICIAL && (
+                <button type="button" className="inicio-ver-mas" onClick={() => setMostrarRankingCompleto(true)}>
+                  Ver todos los locales
+                </button>
+              )}
+            </section>
+
+            <section className="inicio-v2-seccion">
+              <h2 className="inicio-v2-seccion-titulo">Eventos</h2>
+              {eventosDia.length === 0 ? (
+                <p className="inicio-vacio">No hay eventos programados para este día todavía.</p>
+              ) : (
+                <ul className="eventos-lista">
+                  {eventosDia.map((evento) => (
+                    <li key={evento.id}>
+                      <Link to={`/eventos/${evento.id}`} className="evento-item">
+                        <span className="evento-hora">{evento.hora_inicio?.slice(0, 5)}</span>
+                        <div>
+                          <p className="evento-nombre">{evento.nombre}</p>
+                          <p className="evento-local">{evento.locales?.nombre}</p>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
           </>
         )}
+
+        <section className="inicio-v2-seccion recomendaciones-social">
+          <h2 className="inicio-v2-seccion-titulo">Te puede interesar {etiquetaTexto}</h2>
+          {cargandoRecomendaciones ? (
+            <p className="app-loading">Cargando recomendaciones...</p>
+          ) : recomendaciones.length === 0 ? (
+            <p className="inicio-vacio">Hazte amigo de más gente para descubrir dónde van {etiquetaTexto}</p>
+          ) : (
+            <>
+              <div className="recomendaciones-lista">
+                {(mostrarTodasRecomendaciones
+                  ? recomendaciones
+                  : recomendaciones.slice(0, LIMITE_RECOMENDACIONES_INICIAL)
+                ).map((r) => (
+                  <RecomendacionSocialCard key={r.local_id} recomendacion={r} fecha={diaSeleccionado.fechaISO} />
+                ))}
+              </div>
+              {!mostrarTodasRecomendaciones && recomendaciones.length > LIMITE_RECOMENDACIONES_INICIAL && (
+                <button
+                  type="button"
+                  className="inicio-ver-mas"
+                  onClick={() => setMostrarTodasRecomendaciones(true)}
+                >
+                  Ver más recomendaciones
+                </button>
+              )}
+            </>
+          )}
+        </section>
       </div>
     </div>
   )

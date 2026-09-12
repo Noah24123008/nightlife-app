@@ -35,7 +35,7 @@ export default function DaySelector({ dias, indiceSeleccionado, onSeleccionar })
       {puedeIzquierda && (
         <button
           type="button"
-          className="day-selector-flecha day-selector-flecha--izquierda"
+          className="glass-icon-btn day-selector-flecha day-selector-flecha--izquierda"
           onClick={() => desplazar(-1)}
           aria-label="Días anteriores"
         >
@@ -48,7 +48,7 @@ export default function DaySelector({ dias, indiceSeleccionado, onSeleccionar })
           <button
             key={dia.fechaISO}
             type="button"
-            className={`day-pill ${index === indiceSeleccionado ? 'day-pill--activo' : ''}`}
+            className={`glass-chip ${index === indiceSeleccionado ? 'glass-chip--active' : ''}`}
             onClick={() => onSeleccionar(index)}
           >
             {dia.etiqueta}
@@ -59,7 +59,7 @@ export default function DaySelector({ dias, indiceSeleccionado, onSeleccionar })
       {puedeDerecha && (
         <button
           type="button"
-          className="day-selector-flecha day-selector-flecha--derecha"
+          className="glass-icon-btn day-selector-flecha day-selector-flecha--derecha"
           onClick={() => desplazar(1)}
           aria-label="Días siguientes"
         >

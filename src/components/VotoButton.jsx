@@ -2,7 +2,7 @@ export default function VotoButton({ votado, cargando, onClick, disabled }) {
   return (
     <button
       type="button"
-      className={`voto-btn ${votado ? 'voto-btn--activo' : ''}`}
+      className={`glass-btn ${votado ? 'glass-btn--active' : ''}`}
       onClick={onClick}
       disabled={disabled || cargando || votado}
     >
