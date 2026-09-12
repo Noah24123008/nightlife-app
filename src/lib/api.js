@@ -91,65 +91,12 @@ export async function getPersonasQueVanHoy({ localId = null, eventoId = null, fe
   return { data: data ?? [], error }
 }
 
-export async function compruebaSiSigo(seguidorId, seguidoId) {
-  const { data, error } = await supabase
-    .from('seguimientos')
-    .select('seguidor_id')
-    .eq('seguidor_id', seguidorId)
-    .eq('seguido_id', seguidoId)
-    .maybeSingle()
-  return { siguiendo: !!data, error }
-}
-
-export async function seguirUsuario(seguidorId, seguidoId) {
-  const { error } = await supabase
-    .from('seguimientos')
-    .insert({ seguidor_id: seguidorId, seguido_id: seguidoId })
-  return { error }
-}
-
-export async function dejarDeSeguirUsuario(seguidorId, seguidoId) {
-  const { error } = await supabase
-    .from('seguimientos')
-    .delete()
-    .eq('seguidor_id', seguidorId)
-    .eq('seguido_id', seguidoId)
-  return { error }
-}
-
-export async function contarSeguidores(usuarioId) {
-  const { count, error } = await supabase
-    .from('seguimientos')
-    .select('*', { count: 'exact', head: true })
-    .eq('seguido_id', usuarioId)
-  return { count: count ?? 0, error }
-}
-
-export async function contarSeguidos(usuarioId) {
-  const { count, error } = await supabase
-    .from('seguimientos')
-    .select('*', { count: 'exact', head: true })
-    .eq('seguidor_id', usuarioId)
-  return { count: count ?? 0, error }
-}
-
-// Listas de seguidores/seguidos en una sola llamada segura (ver migración
-// 0007): unen seguimientos con profiles en el propio SQL y solo devuelven
-// campos públicos.
-export async function getSeguidores(usuarioId) {
-  const { data, error } = await supabase.rpc('get_seguidores', { usuario_id: usuarioId })
-  return { data: data ?? [], error }
-}
-
-export async function getSeguidos(usuarioId) {
-  const { data, error } = await supabase.rpc('get_seguidos', { usuario_id: usuarioId })
-  return { data: data ?? [], error }
-}
-
 // --- Sistema de amistad (solicitudes_amistad) ---
-// seguirUsuario/dejarDeSeguirUsuario/compruebaSiSigo/contarSeguidores/
-// contarSeguidos/getSeguidores/getSeguidos (arriba) se quedan sin usar
-// desde el frontend nuevo, pero no se borran.
+// El sistema antiguo de seguir (seguirUsuario, dejarDeSeguirUsuario,
+// compruebaSiSigo, contarSeguidores, contarSeguidos, getSeguidores,
+// getSeguidos) se retiró de aquí al no tener ya ningún llamador en el
+// frontend. La tabla "seguimientos" y sus RPC siguen existiendo en
+// Supabase por compatibilidad histórica, sin tocar.
 
 export async function enviarSolicitudAmistad(destinatarioId) {
   const { error } = await supabase.rpc('enviar_solicitud_amistad', { p_destinatario: destinatarioId })

@@ -1,27 +1,24 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getSeguidores, getSeguidos, getAmigos } from '../lib/api'
+import { getAmigos } from '../lib/api'
 import PersonaChip from '../components/PersonaChip'
 import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
+// "seguidores" y "siguiendo" se conservan solo por compatibilidad con URLs
+// antiguas (ya no hay ningún enlace de la app hacia ellas): muestran
+// exactamente la misma lista de amigos que "amigos", no un sistema aparte.
+const CONFIG_AMIGOS = {
+  titulo: 'Amigos',
+  vacio: 'Todavía no tiene amigos',
+  cargar: getAmigos,
+}
+
 const CONFIG_POR_TIPO = {
-  seguidores: {
-    titulo: 'Seguidores',
-    vacio: 'Todavía no tiene seguidores',
-    cargar: getSeguidores,
-  },
-  siguiendo: {
-    titulo: 'Siguiendo',
-    vacio: 'Todavía no sigue a nadie',
-    cargar: getSeguidos,
-  },
-  amigos: {
-    titulo: 'Amigos',
-    vacio: 'Todavía no tiene amigos',
-    cargar: getAmigos,
-  },
+  amigos: CONFIG_AMIGOS,
+  seguidores: CONFIG_AMIGOS,
+  siguiendo: CONFIG_AMIGOS,
 }
 
 export default function ListaSeguimiento() {
