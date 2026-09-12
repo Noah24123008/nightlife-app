@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { buscarPerfilesPublicos } from '../lib/api'
 import PersonaChip from '../components/PersonaChip'
+import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -48,9 +48,7 @@ export default function Buscar() {
 
   return (
     <div className="app-screen">
-      <Link to="/" className="ficha-volver">
-        ← Inicio
-      </Link>
+      <BackButton />
 
       <header className="screen-header">
         <span className="screen-title">Buscar</span>

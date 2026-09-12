@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { getSeguidores, getSeguidos, getAmigos } from '../lib/api'
 import PersonaChip from '../components/PersonaChip'
+import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -57,6 +58,7 @@ export default function ListaSeguimiento() {
   if (!config) {
     return (
       <div className="app-screen">
+        <BackButton />
         <p className="inicio-vacio">Esta página no existe.</p>
       </div>
     )
@@ -64,9 +66,7 @@ export default function ListaSeguimiento() {
 
   return (
     <div className="app-screen">
-      <Link to={`/usuarios/${id}`} className="ficha-volver">
-        ← Perfil
-      </Link>
+      <BackButton />
 
       <header className="screen-header">
         <span className="screen-title">{config.titulo}</span>

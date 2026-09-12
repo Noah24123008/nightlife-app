@@ -14,6 +14,7 @@ import {
 } from '../lib/api'
 import { toISODate } from '../lib/dates'
 import ImagenConFallback from '../components/ImagenConFallback'
+import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 export default function PerfilPublico() {
@@ -148,6 +149,7 @@ export default function PerfilPublico() {
   if (cargando) {
     return (
       <div className="app-screen">
+        <BackButton />
         <p className="app-loading">Cargando perfil...</p>
       </div>
     )
@@ -156,6 +158,7 @@ export default function PerfilPublico() {
   if (noEncontrado) {
     return (
       <div className="app-screen">
+        <BackButton />
         <p className="inicio-vacio">Usuario no encontrado.</p>
       </div>
     )
@@ -163,6 +166,8 @@ export default function PerfilPublico() {
 
   return (
     <div className="app-screen">
+      <BackButton />
+
       <header className="screen-header">
         <span className="screen-title">Perfil</span>
       </header>

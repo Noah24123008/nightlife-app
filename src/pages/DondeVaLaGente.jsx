@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { getDondeVaLaGenteHoy, getMiVotoDelDia } from '../lib/api'
 import { toISODate } from '../lib/dates'
 import LocalHoyCard from '../components/LocalHoyCard'
+import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -42,9 +42,7 @@ export default function DondeVaLaGente() {
 
   return (
     <div className="app-screen">
-      <Link to="/" className="ficha-volver">
-        ← Inicio
-      </Link>
+      <BackButton />
 
       <header className="screen-header">
         <span className="screen-title">Dónde va la gente hoy</span>

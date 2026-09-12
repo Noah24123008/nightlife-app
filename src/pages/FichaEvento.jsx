@@ -1,18 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getEventoPorId, getVotosDelDia, votarPorLocal, getPersonasQueVanHoy } from '../lib/api'
 import { formatearFechaLarga } from '../lib/dates'
 import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
 import ImagenConFallback from '../components/ImagenConFallback'
+import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const LIMITE_PERSONAS_VISIBLES = 8
 
 export default function FichaEvento() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const { user, signOut } = useAuth()
 
   const [evento, setEvento] = useState(null)
@@ -107,6 +107,7 @@ export default function FichaEvento() {
   if (cargando) {
     return (
       <div className="app-screen">
+        <BackButton />
         <p className="app-loading">Cargando evento...</p>
       </div>
     )
@@ -115,9 +116,7 @@ export default function FichaEvento() {
   if (!evento || !evento.locales) {
     return (
       <div className="app-screen">
-        <button type="button" className="ficha-volver" onClick={() => navigate(-1)}>
-          ← Volver
-        </button>
+        <BackButton />
         {error && <p className="auth-error">{error}</p>}
         <p className="inicio-vacio">No hemos encontrado este evento.</p>
       </div>
@@ -126,9 +125,7 @@ export default function FichaEvento() {
 
   return (
     <div className="app-screen">
-      <button type="button" className="ficha-volver" onClick={() => navigate(-1)}>
-        ← Volver
-      </button>
+      <BackButton />
 
       <ImagenConFallback
         src={evento.foto_url}

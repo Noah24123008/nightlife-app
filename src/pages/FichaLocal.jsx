@@ -6,6 +6,7 @@ import { toISODate, addDays, formatearFechaLarga, etiquetaDiaTexto } from '../li
 import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
 import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
+import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const LIMITE_VOTANTES_VISIBLES = 8
@@ -136,6 +137,7 @@ export default function FichaLocal() {
   if (cargando) {
     return (
       <div className="app-screen">
+        <BackButton />
         <p className="app-loading">Cargando local...</p>
       </div>
     )
@@ -144,9 +146,7 @@ export default function FichaLocal() {
   if (!local) {
     return (
       <div className="app-screen">
-        <Link to="/locales" className="ficha-volver">
-          ← Locales
-        </Link>
+        <BackButton />
         {error && <p className="auth-error">{error}</p>}
         <p className="inicio-vacio">No hemos encontrado este local.</p>
       </div>
@@ -155,9 +155,7 @@ export default function FichaLocal() {
 
   return (
     <div className="app-screen">
-      <Link to="/locales" className="ficha-volver">
-        ← Locales
-      </Link>
+      <BackButton />
 
       <FotoLocalPanoramica src={local.foto_url} alt={local.nombre} />
 

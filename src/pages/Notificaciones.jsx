@@ -6,6 +6,7 @@ import {
   responderSolicitudAmistad,
 } from '../lib/api'
 import NotificacionCard from '../components/NotificacionCard'
+import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -66,6 +67,8 @@ export default function Notificaciones() {
 
   return (
     <div className="app-screen">
+      <BackButton />
+
       <header className="screen-header screen-header--notificaciones">
         <span className="screen-title">Notificaciones</span>
         {hayNoLeidas && (
