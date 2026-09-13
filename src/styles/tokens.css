@@ -156,45 +156,64 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background: #faf9f7;
+  color: #15151a;
 }
 
 .auth-title {
-  font-size: 28px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
   margin: 0 0 24px;
+  color: #15151a;
 }
 
 .auth-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: #ffffff;
+  border: 1px solid #efeeec;
+  border-radius: 22px;
+  padding: 22px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
 }
 
 .auth-form label {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
-  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a8f9c;
 }
 
 .auth-form input {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 12px 14px;
-  color: var(--color-text);
+  background: #faf9f7;
+  border: 1px solid #efeeec;
+  border-radius: 12px;
+  padding: 13px 14px;
+  color: #15151a;
   font-size: 16px;
+  font-family: var(--font-body);
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: rgba(21, 21, 26, 0.35);
+  background: #ffffff;
 }
 
 .auth-form button {
   margin-top: 8px;
-  background: var(--color-accent-warm);
-  color: var(--color-bg);
+  background: rgba(21, 21, 26, 0.92);
+  color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 14px;
+  border-radius: 999px;
+  padding: 15px;
   font-weight: 700;
   font-size: 16px;
+  font-family: var(--font-body);
   cursor: pointer;
 }
 
@@ -218,12 +237,13 @@ button {
 .auth-switch {
   margin-top: 20px;
   font-size: 14px;
-  color: var(--color-text-muted);
+  color: #8a8f9c;
   text-align: center;
 }
 
 .auth-switch a {
-  color: var(--color-accent-warm);
+  color: #15151a;
+  font-weight: 600;
   text-decoration: none;
 }
 
@@ -2999,4 +3019,41 @@ button {
 
 .perfil-v2 .app-loading {
   color: var(--pv-text-muted);
+}
+
+/* ============================================================
+   LOGIN — hero exclusivo de esta pantalla.
+   Register/ForgotPassword/ResetPassword comparten el mismo sistema
+   .auth-* ya migrado al tema claro arriba, pero sin hero: solo Login
+   necesita este contenedor aparte, para no tocar los otros tres.
+   ============================================================ */
+
+.login-v2 {
+  max-width: none;
+  padding: 0;
+  justify-content: flex-start;
+}
+
+.login-v2-hero {
+  position: relative;
+  height: 220px;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: 74% 34%;
+  border-radius: 0 0 32px 32px;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+
+.login-v2-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 24, 0.3) 0%, rgba(10, 12, 24, 0.05) 55%, rgba(10, 12, 24, 0.18) 100%);
+}
+
+.login-v2-contenido {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 20px 32px;
 }
