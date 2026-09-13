@@ -483,7 +483,27 @@ button {
 }
 
 .bottom-nav-icono {
+  position: relative;
   display: flex;
+}
+
+.bottom-nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  background: #ff3b30;
+  color: #fff;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
 }
 
 .bottom-nav-item--activo {

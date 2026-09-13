@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import MapaLocales from '../components/MapaLocales'
-import gijonHero from '../assets/gijon-hero.png'
+import fiestaHero from '../assets/fiestahero.png'
 
 const CIUDAD_ACTUAL = 'Gijón'
 
@@ -51,7 +51,7 @@ export default function Locales() {
 
   return (
     <div className="app-screen locales-v2">
-      <div className="locales-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
+      <div className="locales-v2-hero" style={{ backgroundImage: `url(${fiestaHero})` }}>
         <div className="locales-v2-hero-overlay" aria-hidden="true" />
         <div className="locales-v2-hero-contenido">
           <h1 className="locales-v2-hero-titulo">Gijón</h1>

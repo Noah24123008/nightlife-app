@@ -13,7 +13,7 @@ const DIAS_VISIBLES = 8
 const LIMITE_FEED_INICIAL = 4
 
 export default function Social() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, refrescarSolicitudesPendientes } = useAuth()
 
   const [solicitudes, setSolicitudes] = useState([])
   const [cargando, setCargando] = useState(true)
@@ -89,6 +89,7 @@ export default function Social() {
       if (esErrorDeAutenticacion(err)) setTimeout(() => signOut(), 2000)
     }
     await cargarSolicitudes()
+    await refrescarSolicitudesPendientes(user.id)
     setProcesandoId(null)
   }
 

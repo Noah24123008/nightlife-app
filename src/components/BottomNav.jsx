@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const ITEMS = [
   {
@@ -50,6 +51,8 @@ const ITEMS = [
 ]
 
 export default function BottomNav() {
+  const { numSolicitudesPendientes } = useAuth()
+
   return (
     <nav className="bottom-nav">
       {ITEMS.map((item) => (
@@ -59,7 +62,14 @@ export default function BottomNav() {
           end={item.end}
           className={({ isActive }) => `bottom-nav-item ${isActive ? 'bottom-nav-item--activo' : ''}`}
         >
-          <span className="bottom-nav-icono">{item.icon}</span>
+          <span className="bottom-nav-icono">
+            {item.icon}
+            {item.to === '/social' && numSolicitudesPendientes > 0 && (
+              <span className="bottom-nav-badge">
+                {numSolicitudesPendientes > 9 ? '9+' : numSolicitudesPendientes}
+              </span>
+            )}
+          </span>
           <span className="bottom-nav-label">{item.label}</span>
         </NavLink>
       ))}

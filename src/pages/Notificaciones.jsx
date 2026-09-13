@@ -11,7 +11,7 @@ import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 export default function Notificaciones() {
-  const { signOut } = useAuth()
+  const { user, signOut, refrescarSolicitudesPendientes } = useAuth()
   const [notificaciones, setNotificaciones] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
@@ -61,6 +61,7 @@ export default function Notificaciones() {
       if (esErrorDeAutenticacion(errResponder)) setTimeout(() => signOut(), 2000)
     }
     await cargarNotificaciones()
+    if (user) await refrescarSolicitudesPendientes(user.id)
   }
 
   const hayNoLeidas = notificaciones.some((n) => !n.leida)
