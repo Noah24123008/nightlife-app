@@ -66,37 +66,39 @@ export default function Notificaciones() {
   const hayNoLeidas = notificaciones.some((n) => !n.leida)
 
   return (
-    <div className="app-screen">
-      <BackButton />
+    <div className="app-screen notificaciones-v2">
+      <div className="notificaciones-v2-contenido">
+        <BackButton />
 
-      <header className="screen-header screen-header--notificaciones">
-        <span className="screen-title">Notificaciones</span>
-        {hayNoLeidas && (
-          <button type="button" className="marcar-todas-btn" onClick={handleMarcarTodas} disabled={marcandoTodas}>
-            Marcar todas como leídas
-          </button>
+        <header className="screen-header screen-header--notificaciones">
+          <span className="screen-title">Notificaciones</span>
+          {hayNoLeidas && (
+            <button type="button" className="marcar-todas-btn" onClick={handleMarcarTodas} disabled={marcandoTodas}>
+              Marcar todas como leídas
+            </button>
+          )}
+        </header>
+
+        {error && <p className="auth-error">{error}</p>}
+
+        {cargando ? (
+          <p className="app-loading">Cargando notificaciones...</p>
+        ) : notificaciones.length === 0 ? (
+          <p className="inicio-vacio">No tienes notificaciones</p>
+        ) : (
+          <div className="notificaciones-lista">
+            {notificaciones.map((n) => (
+              <NotificacionCard
+                key={n.id}
+                notificacion={n}
+                onMarcarLeida={() => handleMarcarLeida(n.id)}
+                onAceptar={() => handleResponderSolicitud(n, true)}
+                onRechazar={() => handleResponderSolicitud(n, false)}
+              />
+            ))}
+          </div>
         )}
-      </header>
-
-      {error && <p className="auth-error">{error}</p>}
-
-      {cargando ? (
-        <p className="app-loading">Cargando notificaciones...</p>
-      ) : notificaciones.length === 0 ? (
-        <p className="inicio-vacio">No tienes notificaciones</p>
-      ) : (
-        <div className="notificaciones-lista">
-          {notificaciones.map((n) => (
-            <NotificacionCard
-              key={n.id}
-              notificacion={n}
-              onMarcarLeida={() => handleMarcarLeida(n.id)}
-              onAceptar={() => handleResponderSolicitud(n, true)}
-              onRechazar={() => handleResponderSolicitud(n, false)}
-            />
-          ))}
-        </div>
-      )}
+      </div>
     </div>
   )
 }

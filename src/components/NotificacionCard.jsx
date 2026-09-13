@@ -66,10 +66,10 @@ export default function NotificacionCard({ notificacion, onMarcarLeida, onAcepta
 
       {esSolicitudAmistad && (
         <div className="amistad-respuesta">
-          <button type="button" className="amistad-aceptar" onClick={handleAceptar} disabled={procesando}>
+          <button type="button" className="glass-btn glass-btn--active" onClick={handleAceptar} disabled={procesando}>
             {procesando ? '...' : 'Aceptar'}
           </button>
-          <button type="button" className="amistad-rechazar" onClick={handleRechazar} disabled={procesando}>
+          <button type="button" className="glass-btn" onClick={handleRechazar} disabled={procesando}>
             {procesando ? '...' : 'Rechazar'}
           </button>
         </div>
