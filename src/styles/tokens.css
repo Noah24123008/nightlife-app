@@ -2333,41 +2333,16 @@ button {
   color: var(--sv-text);
 }
 
-.social-v2-hero {
-  position: relative;
-  overflow: hidden;
-  height: 190px;
-  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 0;
-  display: flex;
-  align-items: flex-start;
-  background-color: #1b2440;
-  background-size: cover;
-  background-position: 74% 34%;
-  border-radius: 0 0 32px 32px;
-  color: #fff;
-}
-
-.social-v2-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 24, 0.55) 0%, rgba(10, 12, 24, 0.15) 55%, rgba(10, 12, 24, 0.05) 100%);
-}
-
-.social-v2-hero-contenido {
-  position: relative;
-  z-index: 1;
-}
-
-.social-v2-hero-titulo {
-  margin: 0;
+.social-v2-titulo {
+  margin: 4px 0 20px;
   font-family: var(--font-display);
-  font-size: 30px;
+  font-size: 26px;
   font-weight: 800;
-  color: #fff;
+  color: var(--sv-text);
 }
 
 .social-v2-contenido {
-  padding: 20px 16px 0;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 16px 0;
 }
 
 .social-v2-buscador {
@@ -2768,46 +2743,20 @@ button {
   color: var(--pv-text);
 }
 
-.perfil-v2-hero {
-  position: relative;
-  overflow: hidden;
-  height: 170px;
-  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 0;
-  display: flex;
-  align-items: flex-start;
-  background-color: #1b2440;
-  background-size: cover;
-  background-position: 74% 34%;
-  border-radius: 0 0 32px 32px;
-  color: #fff;
-}
-
-.perfil-v2-hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(10, 12, 24, 0.55) 0%, rgba(10, 12, 24, 0.15) 55%, rgba(10, 12, 24, 0.05) 100%);
-}
-
-.perfil-v2-hero-contenido {
-  position: relative;
-  z-index: 1;
-}
-
-.perfil-v2-hero-titulo {
-  margin: 0;
+.perfil-v2-titulo {
+  margin: 0 0 4px;
+  text-align: left;
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: var(--pv-text);
 }
 
-/* Avatar superpuesto entre el hero y el contenido claro */
 .perfil-v2-avatar-wrap {
   position: relative;
   display: flex;
   justify-content: center;
-  margin-top: -56px;
-  z-index: 2;
+  margin: 16px 0 12px;
 }
 
 .perfil-v2 .perfil-foto.perfil-v2-avatar,
@@ -2841,7 +2790,7 @@ button {
 }
 
 .perfil-v2-contenido {
-  padding: 12px 16px 0;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 16px 0;
   text-align: center;
 }
 

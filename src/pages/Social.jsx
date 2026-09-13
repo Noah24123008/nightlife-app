@@ -7,7 +7,6 @@ import DaySelector from '../components/DaySelector'
 import PersonaChip from '../components/PersonaChip'
 import ActividadCard from '../components/ActividadCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
-import gijonHero from '../assets/gijon-hero.png'
 
 const DIAS_VISIBLES = 8
 const LIMITE_FEED_INICIAL = 4
@@ -95,14 +94,9 @@ export default function Social() {
 
   return (
     <div className="app-screen social-v2">
-      <div className="social-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
-        <div className="social-v2-hero-overlay" aria-hidden="true" />
-        <div className="social-v2-hero-contenido">
-          <h1 className="social-v2-hero-titulo">Social</h1>
-        </div>
-      </div>
-
       <div className="social-v2-contenido">
+        <h1 className="social-v2-titulo">Social</h1>
+
         <Link to="/buscar" className="social-v2-buscador">
           <span className="social-v2-buscador-icono" aria-hidden="true">
             🔍

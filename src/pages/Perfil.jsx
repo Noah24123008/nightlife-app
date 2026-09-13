@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext'
 import { getOCrearPerfil, guardarPerfil, subirAvatar, validarImagenAvatar, getAmigos } from '../lib/api'
 import ImagenConFallback from '../components/ImagenConFallback'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
-import gijonHero from '../assets/gijon-hero.png'
 
 export default function Perfil() {
   const { user, signOut } = useAuth()
@@ -126,39 +125,34 @@ export default function Perfil() {
 
   return (
     <div className="app-screen perfil-v2">
-      <div className="perfil-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
-        <div className="perfil-v2-hero-overlay" aria-hidden="true" />
-        <div className="perfil-v2-hero-contenido">
-          <h1 className="perfil-v2-hero-titulo">Perfil</h1>
-        </div>
-      </div>
-
-      <div className="perfil-v2-avatar-wrap">
-        <ImagenConFallback
-          src={fotoUrl}
-          alt="Foto de perfil"
-          className="perfil-foto perfil-v2-avatar"
-          placeholderClassName="perfil-foto perfil-foto--vacia perfil-v2-avatar"
-        />
-        <input
-          ref={inputArchivoRef}
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          onChange={handleArchivo}
-          className="perfil-input-archivo"
-        />
-        <button
-          type="button"
-          className="perfil-v2-avatar-camara"
-          onClick={() => inputArchivoRef.current?.click()}
-          disabled={subiendoFoto}
-          aria-label={subiendoFoto ? 'Subiendo foto...' : 'Cambiar foto de perfil'}
-        >
-          📷
-        </button>
-      </div>
-
       <div className="perfil-v2-contenido">
+        <h1 className="perfil-v2-titulo">Perfil</h1>
+
+        <div className="perfil-v2-avatar-wrap">
+          <ImagenConFallback
+            src={fotoUrl}
+            alt="Foto de perfil"
+            className="perfil-foto perfil-v2-avatar"
+            placeholderClassName="perfil-foto perfil-foto--vacia perfil-v2-avatar"
+          />
+          <input
+            ref={inputArchivoRef}
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleArchivo}
+            className="perfil-input-archivo"
+          />
+          <button
+            type="button"
+            className="perfil-v2-avatar-camara"
+            onClick={() => inputArchivoRef.current?.click()}
+            disabled={subiendoFoto}
+            aria-label={subiendoFoto ? 'Subiendo foto...' : 'Cambiar foto de perfil'}
+          >
+            📷
+          </button>
+        </div>
+
         <h2 className="perfil-v2-nombre">{nombre || 'Sin nombre'}</h2>
         {nombreUsuario && <p className="perfil-v2-usuario">@{nombreUsuario}</p>}
 
