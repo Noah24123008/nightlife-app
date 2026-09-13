@@ -41,32 +41,31 @@ export default function DondeVaLaGente() {
   }, [user?.id, hoyISO])
 
   return (
-    <div className="app-screen">
-      <BackButton />
+    <div className="app-screen donde-va-v2">
+      <div className="donde-va-v2-contenido">
+        <BackButton />
+        <h1 className="donde-va-v2-titulo">Dónde va la gente hoy</h1>
 
-      <header className="screen-header">
-        <span className="screen-title">Dónde va la gente hoy</span>
-      </header>
+        {error && <p className="auth-error">{error}</p>}
 
-      {error && <p className="auth-error">{error}</p>}
-
-      {cargando ? (
-        <p className="app-loading">Cargando...</p>
-      ) : locales.length === 0 ? (
-        <p className="inicio-vacio">Todavía nadie ha indicado dónde va hoy</p>
-      ) : (
-        <ul className="ranking">
-          {locales.map((local, index) => (
-            <LocalHoyCard
-              key={local.local_id}
-              local={local}
-              posicion={index + 1}
-              destacado={index === 0}
-              yoVotadoAqui={miVotoLocalId === local.local_id}
-            />
-          ))}
-        </ul>
-      )}
+        {cargando ? (
+          <p className="app-loading">Cargando...</p>
+        ) : locales.length === 0 ? (
+          <p className="inicio-vacio">Todavía nadie ha indicado dónde va hoy</p>
+        ) : (
+          <ul className="ranking">
+            {locales.map((local, index) => (
+              <LocalHoyCard
+                key={local.local_id}
+                local={local}
+                posicion={index + 1}
+                destacado={index === 0}
+                yoVotadoAqui={miVotoLocalId === local.local_id}
+              />
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 }

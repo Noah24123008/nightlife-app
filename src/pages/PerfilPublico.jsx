@@ -148,104 +148,106 @@ export default function PerfilPublico() {
 
   if (cargando) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        <p className="app-loading">Cargando perfil...</p>
+      <div className="app-screen perfil-publico-v2">
+        <div className="perfil-publico-v2-contenido">
+          <BackButton />
+          <p className="app-loading">Cargando perfil...</p>
+        </div>
       </div>
     )
   }
 
   if (noEncontrado) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        <p className="inicio-vacio">Usuario no encontrado.</p>
+      <div className="app-screen perfil-publico-v2">
+        <div className="perfil-publico-v2-contenido">
+          <BackButton />
+          <p className="inicio-vacio">Usuario no encontrado.</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="app-screen">
-      <BackButton />
+    <div className="app-screen perfil-publico-v2">
+      <div className="perfil-publico-v2-contenido">
+        <BackButton />
 
-      <header className="screen-header">
-        <span className="screen-title">Perfil</span>
-      </header>
+        {error && <p className="auth-error">{error}</p>}
 
-      {error && <p className="auth-error">{error}</p>}
+        <div className="perfil-foto-preview">
+          <ImagenConFallback
+            src={perfil.foto_url}
+            alt={perfil.nombre || 'Foto de perfil'}
+            className="perfil-foto"
+            placeholderClassName="perfil-foto perfil-foto--vacia"
+          />
+        </div>
 
-      <div className="perfil-foto-preview">
-        <ImagenConFallback
-          src={perfil.foto_url}
-          alt={perfil.nombre || 'Foto de perfil'}
-          className="perfil-foto"
-          placeholderClassName="perfil-foto perfil-foto--vacia"
-        />
-      </div>
+        <div className="perfil-publico-datos">
+          <h1 className="venue-name">{perfil.nombre || 'Sin nombre'}</h1>
+          {perfil.nombre_usuario && <p className="local-categoria">@{perfil.nombre_usuario}</p>}
+          <p className="perfil-nota">Gijón</p>
+        </div>
 
-      <div className="perfil-publico-datos">
-        <h1 className="venue-name">{perfil.nombre || 'Sin nombre'}</h1>
-        {perfil.nombre_usuario && <p className="local-categoria">@{perfil.nombre_usuario}</p>}
-        <p className="perfil-nota">Gijón</p>
-      </div>
+        <div className="seguimiento-contadores">
+          <Link to={`/usuarios/${id}/amigos`} className="seguimiento-contador">
+            <span className="seguimiento-numero">{numAmigos}</span>
+            <span className="seguimiento-etiqueta">Amigos</span>
+          </Link>
+        </div>
 
-      <div className="seguimiento-contadores">
-        <Link to={`/usuarios/${id}/amigos`} className="seguimiento-contador">
-          <span className="seguimiento-numero">{numAmigos}</span>
-          <span className="seguimiento-etiqueta">Amigos</span>
-        </Link>
-      </div>
-
-      {!esMiPropioPerfil && user && (
-        <div className="amistad-acciones">
-          {!relacion || relacion.estado === 'rechazada' ? (
-            <button type="button" className="seguir-btn" onClick={handleAgregarAmigo} disabled={cargandoAccion}>
-              {cargandoAccion ? '...' : 'Añadir amigo'}
-            </button>
-          ) : relacion.estado === 'pendiente' && relacion.usuario_solicitante_id === user.id ? (
-            <>
-              <button type="button" className="seguir-btn seguir-btn--activo" disabled>
-                Solicitud enviada
+        {!esMiPropioPerfil && user && (
+          <div className="amistad-acciones">
+            {!relacion || relacion.estado === 'rechazada' ? (
+              <button type="button" className="glass-btn perfil-publico-v2-btn-principal" onClick={handleAgregarAmigo} disabled={cargandoAccion}>
+                {cargandoAccion ? '...' : 'Añadir amigo'}
               </button>
-              <button type="button" className="amistad-eliminar" onClick={handleCancelar} disabled={cargandoAccion}>
-                {cargandoAccion ? '...' : 'Cancelar solicitud'}
-              </button>
-            </>
-          ) : relacion.estado === 'pendiente' ? (
-            <div className="amistad-respuesta">
-              <button type="button" className="amistad-aceptar" onClick={handleAceptar} disabled={cargandoAccion}>
-                Aceptar
-              </button>
-              <button type="button" className="amistad-rechazar" onClick={handleRechazar} disabled={cargandoAccion}>
-                Rechazar
-              </button>
-            </div>
+            ) : relacion.estado === 'pendiente' && relacion.usuario_solicitante_id === user.id ? (
+              <>
+                <button type="button" className="glass-btn glass-btn--active perfil-publico-v2-btn-principal" disabled>
+                  Solicitud enviada
+                </button>
+                <button type="button" className="amistad-eliminar" onClick={handleCancelar} disabled={cargandoAccion}>
+                  {cargandoAccion ? '...' : 'Cancelar solicitud'}
+                </button>
+              </>
+            ) : relacion.estado === 'pendiente' ? (
+              <div className="amistad-respuesta">
+                <button type="button" className="glass-btn glass-btn--active" onClick={handleAceptar} disabled={cargandoAccion}>
+                  Aceptar
+                </button>
+                <button type="button" className="glass-btn" onClick={handleRechazar} disabled={cargandoAccion}>
+                  Rechazar
+                </button>
+              </div>
+            ) : (
+              <>
+                <button type="button" className="glass-btn glass-btn--active perfil-publico-v2-btn-principal" disabled>
+                  Amigos ✓
+                </button>
+                <button
+                  type="button"
+                  className="amistad-eliminar"
+                  onClick={handleEliminarAmigo}
+                  disabled={cargandoAccion}
+                >
+                  {cargandoAccion ? '...' : 'Eliminar amigo'}
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        <div className="ficha-voto">
+          {destino ? (
+            <p className="ficha-votos-hoy">
+              Hoy va a: <Link to={destino.enlace}>{destino.texto}</Link>
+            </p>
           ) : (
-            <>
-              <button type="button" className="seguir-btn seguir-btn--activo" disabled>
-                Amigos ✓
-              </button>
-              <button
-                type="button"
-                className="amistad-eliminar"
-                onClick={handleEliminarAmigo}
-                disabled={cargandoAccion}
-              >
-                {cargandoAccion ? '...' : 'Eliminar amigo'}
-              </button>
-            </>
+            <p className="ficha-votos-hoy">Todavía no ha indicado dónde va hoy</p>
           )}
         </div>
-      )}
-
-      <div className="ficha-voto">
-        {destino ? (
-          <p className="ficha-votos-hoy">
-            Hoy va a: <Link to={destino.enlace}>{destino.texto}</Link>
-          </p>
-        ) : (
-          <p className="ficha-votos-hoy">Todavía no ha indicado dónde va hoy</p>
-        )}
       </div>
     </div>
   )

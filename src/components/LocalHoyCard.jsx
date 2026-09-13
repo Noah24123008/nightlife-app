@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ImagenConFallback from './ImagenConFallback'
+import FotoLocalMiniatura from './FotoLocalMiniatura'
 
 export default function LocalHoyCard({ local, posicion, destacado, yoVotadoAqui = false }) {
   const muestra = local.muestra_perfiles || []
@@ -14,6 +15,7 @@ export default function LocalHoyCard({ local, posicion, destacado, yoVotadoAqui 
     <li className={`local-item ${destacado ? 'local-item--destacado' : ''}`}>
       <Link to={`/locales/${local.local_id}`} className="local-hoy-enlace">
         <span className="rank-position">{posicion}</span>
+        <FotoLocalMiniatura src={local.foto_url} alt={local.local_nombre} />
         <div className="local-info">
           <p className="venue-name">{local.local_nombre}</p>
           <p className="local-categoria">
@@ -48,6 +50,9 @@ export default function LocalHoyCard({ local, posicion, destacado, yoVotadoAqui 
             </p>
           )}
         </div>
+        <span className="donde-va-v2-chevron" aria-hidden="true">
+          ›
+        </span>
       </Link>
     </li>
   )

@@ -47,37 +47,47 @@ export default function Buscar() {
   const terminoValido = termino.trim().length >= 2
 
   return (
-    <div className="app-screen">
-      <BackButton />
+    <div className="app-screen buscar-v2">
+      <div className="buscar-v2-contenido">
+        <BackButton />
 
-      <header className="screen-header">
-        <span className="screen-title">Buscar</span>
-      </header>
+        <h1 className="buscar-v2-titulo">Buscar</h1>
 
-      <input
-        type="text"
-        className="buscar-input"
-        placeholder="Nombre o @usuario"
-        value={termino}
-        onChange={(e) => setTermino(e.target.value)}
-        autoFocus
-      />
-
-      {!terminoValido ? (
-        <p className="inicio-vacio">Busca personas por nombre o usuario.</p>
-      ) : buscando ? (
-        <p className="app-loading">Buscando...</p>
-      ) : error ? (
-        <p className="auth-error">{error}</p>
-      ) : resultados.length === 0 ? (
-        <p className="inicio-vacio">No se encontraron usuarios.</p>
-      ) : (
-        <div className="votantes-lista votantes-lista--columna">
-          {resultados.map((perfil) => (
-            <PersonaChip key={perfil.id} perfil={perfil} />
-          ))}
+        <div className="buscar-v2-input-wrap">
+          <span className="buscar-v2-input-icono" aria-hidden="true">
+            🔍
+          </span>
+          <input
+            type="text"
+            className="buscar-v2-input"
+            placeholder="Nombre o @usuario"
+            value={termino}
+            onChange={(e) => setTermino(e.target.value)}
+            autoFocus
+          />
         </div>
-      )}
+
+        {!terminoValido ? (
+          <p className="inicio-vacio">Busca personas por nombre o usuario.</p>
+        ) : buscando ? (
+          <p className="app-loading">Buscando...</p>
+        ) : error ? (
+          <p className="auth-error">{error}</p>
+        ) : resultados.length === 0 ? (
+          <p className="inicio-vacio">No se encontraron usuarios.</p>
+        ) : (
+          <div className="votantes-lista votantes-lista--columna">
+            {resultados.map((perfil) => (
+              <div key={perfil.id} className="buscar-v2-fila">
+                <PersonaChip perfil={perfil} />
+                <span className="buscar-v2-chevron" aria-hidden="true">
+                  ›
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

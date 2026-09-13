@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import { getOCrearPerfil, guardarPerfil, subirAvatar, validarImagenAvatar, getAmigos } from '../lib/api'
 import ImagenConFallback from '../components/ImagenConFallback'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
+import gijonHero from '../assets/gijon-hero.png'
 
 export default function Perfil() {
   const { user, signOut } = useAuth()
@@ -117,39 +118,28 @@ export default function Perfil() {
 
   if (cargando) {
     return (
-      <div className="app-screen">
+      <div className="app-screen perfil-v2">
         <p className="app-loading">Cargando perfil...</p>
       </div>
     )
   }
 
   return (
-    <div className="app-screen">
-      <header className="screen-header">
-        <span className="screen-title">Perfil</span>
-      </header>
+    <div className="app-screen perfil-v2">
+      <div className="perfil-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
+        <div className="perfil-v2-hero-overlay" aria-hidden="true" />
+        <div className="perfil-v2-hero-contenido">
+          <h1 className="perfil-v2-hero-titulo">Perfil</h1>
+        </div>
+      </div>
 
-      <Link to={`/usuarios/${user.id}`} className="perfil-ver-publico">
-        Ver mi perfil público
-      </Link>
-
-      <div className="perfil-foto-preview">
+      <div className="perfil-v2-avatar-wrap">
         <ImagenConFallback
           src={fotoUrl}
           alt="Foto de perfil"
-          className="perfil-foto"
-          placeholderClassName="perfil-foto perfil-foto--vacia"
+          className="perfil-foto perfil-v2-avatar"
+          placeholderClassName="perfil-foto perfil-foto--vacia perfil-v2-avatar"
         />
-      </div>
-
-      <div className="seguimiento-contadores">
-        <Link to={`/usuarios/${user.id}/amigos`} className="seguimiento-contador">
-          <span className="seguimiento-numero">{numAmigos}</span>
-          <span className="seguimiento-etiqueta">Amigos</span>
-        </Link>
-      </div>
-
-      <div className="perfil-foto-acciones">
         <input
           ref={inputArchivoRef}
           type="file"
@@ -159,45 +149,101 @@ export default function Perfil() {
         />
         <button
           type="button"
-          className="perfil-cambiar-foto"
+          className="perfil-v2-avatar-camara"
           onClick={() => inputArchivoRef.current?.click()}
           disabled={subiendoFoto}
+          aria-label={subiendoFoto ? 'Subiendo foto...' : 'Cambiar foto de perfil'}
         >
-          {subiendoFoto ? 'Subiendo...' : 'Cambiar foto'}
+          📷
         </button>
       </div>
 
-      {error && <p className="auth-error">{error}</p>}
-      {mensajeExito && <p className="auth-info">{mensajeExito}</p>}
+      <div className="perfil-v2-contenido">
+        <h2 className="perfil-v2-nombre">{nombre || 'Sin nombre'}</h2>
+        {nombreUsuario && <p className="perfil-v2-usuario">@{nombreUsuario}</p>}
 
-      <form className="auth-form" onSubmit={handleGuardar}>
-        <label>
-          Nombre
-          <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
-        </label>
-        <label>
-          Nombre de usuario
-          <input
-            value={nombreUsuario}
-            onChange={(e) => setNombreUsuario(e.target.value)}
-            placeholder="p. ej. laura_gijon"
-          />
-        </label>
-        <label>
-          Email
-          <input value={user?.email ?? ''} disabled />
-        </label>
+        <div className="perfil-v2-stats">
+          <Link to={`/usuarios/${user.id}/amigos`} className="perfil-v2-stat-card">
+            <span className="perfil-v2-stat-icono" aria-hidden="true">
+              👥
+            </span>
+            <span className="perfil-v2-stat-numero">{numAmigos}</span>
+            <span className="perfil-v2-stat-etiqueta">Amigos</span>
+          </Link>
+        </div>
 
-        <p className="perfil-nota">Ciudad: Gijón (por ahora es la única ciudad disponible)</p>
+        <Link to={`/usuarios/${user.id}`} className="perfil-v2-acceso">
+          <span className="perfil-v2-acceso-icono" aria-hidden="true">
+            👁️
+          </span>
+          <span className="perfil-v2-acceso-texto">Ver mi perfil público</span>
+          <span className="perfil-v2-chevron" aria-hidden="true">
+            ›
+          </span>
+        </Link>
 
-        <button type="submit" disabled={guardando}>
-          {guardando ? 'Guardando...' : 'Guardar cambios'}
+        {error && <p className="auth-error">{error}</p>}
+        {mensajeExito && <p className="auth-info">{mensajeExito}</p>}
+
+        <h2 className="perfil-v2-seccion-titulo">Información personal</h2>
+
+        <form className="auth-form perfil-v2-form" onSubmit={handleGuardar}>
+          <label className="perfil-v2-campo">
+            <span className="perfil-v2-campo-icono" aria-hidden="true">
+              👤
+            </span>
+            <span className="perfil-v2-campo-textos">
+              <span className="perfil-v2-campo-label">Nombre</span>
+              <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
+            </span>
+          </label>
+
+          <label className="perfil-v2-campo">
+            <span className="perfil-v2-campo-icono" aria-hidden="true">
+              @
+            </span>
+            <span className="perfil-v2-campo-textos">
+              <span className="perfil-v2-campo-label">Nombre de usuario</span>
+              <input
+                value={nombreUsuario}
+                onChange={(e) => setNombreUsuario(e.target.value)}
+                placeholder="p. ej. laura_gijon"
+              />
+            </span>
+          </label>
+
+          <label className="perfil-v2-campo">
+            <span className="perfil-v2-campo-icono" aria-hidden="true">
+              ✉️
+            </span>
+            <span className="perfil-v2-campo-textos">
+              <span className="perfil-v2-campo-label">Email</span>
+              <input value={user?.email ?? ''} disabled />
+            </span>
+          </label>
+
+          <label className="perfil-v2-campo">
+            <span className="perfil-v2-campo-icono" aria-hidden="true">
+              📍
+            </span>
+            <span className="perfil-v2-campo-textos">
+              <span className="perfil-v2-campo-label">Ciudad</span>
+              <input value="Gijón" disabled />
+            </span>
+            <span className="perfil-v2-campo-candado" aria-hidden="true">
+              🔒
+            </span>
+          </label>
+
+          <button type="submit" className="perfil-v2-guardar" disabled={guardando}>
+            {guardando ? 'Guardando...' : 'Guardar cambios'}
+          </button>
+        </form>
+
+        <button type="button" className="perfil-salir" onClick={signOut}>
+          Cerrar sesión
         </button>
-      </form>
-
-      <button type="button" className="perfil-salir" onClick={signOut}>
-        Cerrar sesión
-      </button>
+      </div>
     </div>
   )
 }

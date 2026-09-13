@@ -54,34 +54,41 @@ export default function ListaSeguimiento() {
 
   if (!config) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        <p className="inicio-vacio">Esta página no existe.</p>
+      <div className="app-screen amigos-v2">
+        <div className="amigos-v2-contenido">
+          <BackButton />
+          <p className="inicio-vacio">Esta página no existe.</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="app-screen">
-      <BackButton />
+    <div className="app-screen amigos-v2">
+      <div className="amigos-v2-contenido">
+        <BackButton />
 
-      <header className="screen-header">
-        <span className="screen-title">{config.titulo}</span>
-      </header>
+        <h1 className="amigos-v2-titulo">{config.titulo}</h1>
 
-      {error && <p className="auth-error">{error}</p>}
+        {error && <p className="auth-error">{error}</p>}
 
-      {cargando ? (
-        <p className="app-loading">Cargando...</p>
-      ) : personas.length === 0 ? (
-        <p className="inicio-vacio">{config.vacio}</p>
-      ) : (
-        <div className="votantes-lista votantes-lista--columna">
-          {personas.map((persona) => (
-            <PersonaChip key={persona.id} perfil={persona} />
-          ))}
-        </div>
-      )}
+        {cargando ? (
+          <p className="app-loading">Cargando...</p>
+        ) : personas.length === 0 ? (
+          <p className="inicio-vacio">{config.vacio}</p>
+        ) : (
+          <div className="votantes-lista votantes-lista--columna">
+            {personas.map((persona) => (
+              <div key={persona.id} className="amigos-v2-fila">
+                <PersonaChip perfil={persona} />
+                <span className="amigos-v2-chevron" aria-hidden="true">
+                  ›
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

@@ -7,6 +7,7 @@ import DaySelector from '../components/DaySelector'
 import PersonaChip from '../components/PersonaChip'
 import ActividadCard from '../components/ActividadCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
+import gijonHero from '../assets/gijon-hero.png'
 
 const DIAS_VISIBLES = 8
 const LIMITE_FEED_INICIAL = 4
@@ -92,79 +93,97 @@ export default function Social() {
   }
 
   return (
-    <div className="app-screen">
-      <header className="screen-header">
-        <span className="screen-title">Social</span>
-      </header>
-
-      <div className="social-accesos">
-        <Link to="/buscar" className="social-acceso glass-surface">
-          🔍 Buscar personas
-        </Link>
-        <Link to={`/usuarios/${user.id}/amigos`} className="social-acceso glass-surface">
-          👥 Mis amigos
-        </Link>
+    <div className="app-screen social-v2">
+      <div className="social-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
+        <div className="social-v2-hero-overlay" aria-hidden="true" />
+        <div className="social-v2-hero-contenido">
+          <h1 className="social-v2-hero-titulo">Social</h1>
+        </div>
       </div>
 
-      <h2 className="ficha-subtitulo">Solicitudes pendientes</h2>
+      <div className="social-v2-contenido">
+        <Link to="/buscar" className="social-v2-buscador">
+          <span className="social-v2-buscador-icono" aria-hidden="true">
+            🔍
+          </span>
+          <span>Buscar personas</span>
+        </Link>
 
-      {error && <p className="auth-error">{error}</p>}
+        <Link to={`/usuarios/${user.id}/amigos`} className="social-v2-acceso">
+          <span className="social-v2-acceso-icono" aria-hidden="true">
+            👥
+          </span>
+          <span className="social-v2-acceso-texto">Mis amigos</span>
+          <span className="social-v2-chevron" aria-hidden="true">
+            ›
+          </span>
+        </Link>
 
-      {cargando ? (
-        <p className="app-loading">Cargando solicitudes...</p>
-      ) : solicitudes.length === 0 ? (
-        <p className="inicio-vacio">No tienes solicitudes de amistad pendientes</p>
-      ) : (
-        <div className="social-solicitudes">
-          {solicitudes.map((s) => (
-            <div key={s.solicitudId} className="social-solicitud-card">
-              <PersonaChip perfil={s.perfil} />
-              <div className="amistad-respuesta">
-                <button
-                  type="button"
-                  className="amistad-aceptar"
-                  onClick={() => handleResponder(s.solicitudId, true)}
-                  disabled={procesandoId === s.solicitudId}
-                >
-                  {procesandoId === s.solicitudId ? '...' : 'Aceptar'}
-                </button>
-                <button
-                  type="button"
-                  className="amistad-rechazar"
-                  onClick={() => handleResponder(s.solicitudId, false)}
-                  disabled={procesandoId === s.solicitudId}
-                >
-                  {procesandoId === s.solicitudId ? '...' : 'Rechazar'}
-                </button>
+        <h2 className="social-v2-seccion-titulo">Solicitudes pendientes</h2>
+
+        {error && <p className="auth-error">{error}</p>}
+
+        {cargando ? (
+          <p className="app-loading">Cargando solicitudes...</p>
+        ) : solicitudes.length === 0 ? (
+          <div className="social-v2-vacio">
+            <span className="social-v2-vacio-icono" aria-hidden="true">
+              👥
+            </span>
+            <p className="inicio-vacio">No tienes solicitudes de amistad pendientes</p>
+          </div>
+        ) : (
+          <div className="social-solicitudes">
+            {solicitudes.map((s) => (
+              <div key={s.solicitudId} className="social-solicitud-card">
+                <PersonaChip perfil={s.perfil} />
+                <div className="amistad-respuesta">
+                  <button
+                    type="button"
+                    className="glass-btn glass-btn--active"
+                    onClick={() => handleResponder(s.solicitudId, true)}
+                    disabled={procesandoId === s.solicitudId}
+                  >
+                    {procesandoId === s.solicitudId ? '...' : 'Aceptar'}
+                  </button>
+                  <button
+                    type="button"
+                    className="glass-btn"
+                    onClick={() => handleResponder(s.solicitudId, false)}
+                    disabled={procesandoId === s.solicitudId}
+                  >
+                    {procesandoId === s.solicitudId ? '...' : 'Rechazar'}
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <h2 className="ficha-subtitulo">Actividad de tus amigos</h2>
-      <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
-
-      {cargandoFeed ? (
-        <p className="app-loading">Cargando actividad...</p>
-      ) : errorFeed ? (
-        <p className="auth-error">{errorFeed}</p>
-      ) : feed.length === 0 ? (
-        <p className="inicio-vacio">Tus amigos todavía no han indicado dónde van {etiquetaTexto}</p>
-      ) : (
-        <>
-          <div className="feed-lista">
-            {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
-              <ActividadCard key={actividad.usuario_id} actividad={actividad} etiquetaTexto={etiquetaTexto} />
             ))}
           </div>
-          {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
-            <button type="button" className="inicio-ver-mas" onClick={() => setMostrarTodoFeed(true)}>
-              Ver más actividad
-            </button>
-          )}
-        </>
-      )}
+        )}
+
+        <h2 className="social-v2-seccion-titulo">Actividad de tus amigos</h2>
+        <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
+
+        {cargandoFeed ? (
+          <p className="app-loading">Cargando actividad...</p>
+        ) : errorFeed ? (
+          <p className="auth-error">{errorFeed}</p>
+        ) : feed.length === 0 ? (
+          <p className="inicio-vacio">Tus amigos todavía no han indicado dónde van {etiquetaTexto}</p>
+        ) : (
+          <>
+            <div className="feed-lista">
+              {(mostrarTodoFeed ? feed : feed.slice(0, LIMITE_FEED_INICIAL)).map((actividad) => (
+                <ActividadCard key={actividad.usuario_id} actividad={actividad} etiquetaTexto={etiquetaTexto} />
+              ))}
+            </div>
+            {!mostrarTodoFeed && feed.length > LIMITE_FEED_INICIAL && (
+              <button type="button" className="inicio-ver-mas" onClick={() => setMostrarTodoFeed(true)}>
+                Ver más actividad
+              </button>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

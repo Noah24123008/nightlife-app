@@ -799,31 +799,6 @@ button {
   font-size: 12px;
 }
 
-.seguir-btn {
-  display: block;
-  width: 100%;
-  margin-bottom: 24px;
-  background: var(--color-accent-warm);
-  color: var(--color-bg);
-  border: none;
-  border-radius: 8px;
-  padding: 12px;
-  font-family: var(--font-body);
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.seguir-btn--activo {
-  background: transparent;
-  border: 1px solid var(--color-accent-warm);
-  color: var(--color-accent-warm);
-}
-
-.seguir-btn:disabled {
-  opacity: 0.7;
-}
-
 .amistad-acciones {
   margin-bottom: 24px;
 }
@@ -2189,4 +2164,839 @@ button {
 .ficha-evento-v2 .inicio-vacio,
 .ficha-evento-v2 .app-loading {
   color: var(--fe-text-muted);
+}
+
+/* ============================================================
+   /HOY (Dónde va la gente) — rediseño visual
+   .local-item, .rank-position, .venue-name, .local-categoria,
+   .mini-avatares, .mini-avatar, .mini-avatares-mas se comparten con
+   Inicio y RecomendacionSocialCard, así que todo va anidado bajo
+   .donde-va-v2, igual que en el resto del rediseño.
+   ============================================================ */
+
+.donde-va-v2 {
+  --dv-bg: #faf9f7;
+  --dv-card-bg: #ffffff;
+  --dv-text: #15151a;
+  --dv-text-muted: #8a8f9c;
+  --dv-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 44px);
+  background: var(--dv-bg);
+  color: var(--dv-text);
+}
+
+.donde-va-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+.donde-va-v2-titulo {
+  margin: 16px 0 20px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--dv-text);
+}
+
+.donde-va-v2 .ranking {
+  gap: 12px;
+}
+
+.donde-va-v2 .local-item {
+  background: var(--dv-card-bg);
+  border: 1px solid var(--dv-border);
+  border-radius: 20px;
+  padding: 11px 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.donde-va-v2 .mini-avatares {
+  margin-top: 3px;
+}
+
+.donde-va-v2 .local-card-foto-miniatura {
+  width: 64px;
+  height: 64px;
+}
+
+/* Puesto #1: acento cálido, sin cambiar ningún dato ni añadir badges */
+.donde-va-v2 .local-item--destacado {
+  background: var(--dv-card-bg);
+  border: 1.5px solid var(--color-accent-warm);
+  box-shadow: 0 4px 14px rgba(245, 166, 35, 0.16);
+}
+
+.donde-va-v2 .rank-position {
+  min-width: 22px;
+  color: var(--dv-text-muted);
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.donde-va-v2 .local-item--destacado .rank-position {
+  color: var(--color-accent-warm);
+  font-size: 19px;
+}
+
+.donde-va-v2 .venue-name {
+  color: var(--dv-text);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.donde-va-v2 .local-categoria {
+  color: var(--dv-text-muted);
+  font-size: 13px;
+}
+
+.donde-va-v2 .mini-avatar {
+  border-color: var(--dv-card-bg);
+}
+
+.donde-va-v2 .mini-avatares-mas {
+  color: var(--dv-text-muted);
+}
+
+.donde-va-v2 .inicio-vacio,
+.donde-va-v2 .app-loading {
+  color: var(--dv-text-muted);
+}
+
+.donde-va-v2-chevron {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--dv-text-muted);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* ============================================================
+   SOCIAL — rediseño visual
+   .ficha-subtitulo, .feed-lista, .inicio-ver-mas, .persona-chip,
+   .amistad-respuesta/.amistad-aceptar/.amistad-rechazar,
+   .social-acceso, .social-solicitud-card se comparten con otras
+   pantallas (Inicio, PerfilPublico, NotificacionCard), así que todo
+   va anidado bajo .social-v2.
+   ============================================================ */
+
+.social-v2 {
+  --sv-bg: #faf9f7;
+  --sv-card-bg: #ffffff;
+  --sv-text: #15151a;
+  --sv-text-muted: #8a8f9c;
+  --sv-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 44px);
+  background: var(--sv-bg);
+  color: var(--sv-text);
+}
+
+.social-v2-hero {
+  position: relative;
+  overflow: hidden;
+  height: 190px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 0;
+  display: flex;
+  align-items: flex-start;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: 74% 34%;
+  border-radius: 0 0 32px 32px;
+  color: #fff;
+}
+
+.social-v2-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 24, 0.55) 0%, rgba(10, 12, 24, 0.15) 55%, rgba(10, 12, 24, 0.05) 100%);
+}
+
+.social-v2-hero-contenido {
+  position: relative;
+  z-index: 1;
+}
+
+.social-v2-hero-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.social-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+.social-v2-buscador {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.06);
+  color: var(--sv-text-muted);
+  font-family: var(--font-body);
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.social-v2-buscador-icono {
+  font-size: 16px;
+}
+
+.social-v2-acceso {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--sv-card-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: var(--sv-text);
+}
+
+.social-v2-acceso-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.06);
+  font-size: 18px;
+  flex: 0 0 auto;
+}
+
+.social-v2-acceso-texto {
+  flex: 1;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.social-v2-chevron {
+  flex: 0 0 auto;
+  color: var(--sv-text-muted);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.social-v2-seccion-titulo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--sv-text);
+  margin: 0 0 12px;
+}
+
+.social-v2-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  padding: 36px 20px;
+  margin-bottom: 28px;
+  background: var(--sv-card-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.social-v2-vacio-icono {
+  font-size: 32px;
+  opacity: 0.4;
+}
+
+.social-v2-vacio .inicio-vacio {
+  margin: 0;
+}
+
+.social-v2 .social-solicitudes {
+  margin-bottom: 28px;
+}
+
+.social-v2 .social-solicitud-card {
+  background: var(--sv-card-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.social-v2 .persona-chip {
+  color: var(--sv-text);
+}
+
+.social-v2 .amistad-rechazar {
+  border-color: var(--sv-border);
+  color: var(--sv-text-muted);
+}
+
+.social-v2 .feed-lista {
+  gap: 12px;
+}
+
+.social-v2 .actividad-card {
+  background: var(--sv-card-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.social-v2 .actividad-destino {
+  color: var(--sv-text);
+}
+
+.social-v2 .inicio-ver-mas {
+  border-color: var(--sv-border);
+  color: var(--sv-text);
+}
+
+.social-v2 .inicio-vacio,
+.social-v2 .app-loading {
+  color: var(--sv-text-muted);
+}
+
+.social-v2 .day-selector-envoltorio {
+  margin-top: 20px;
+}
+
+.social-v2 .day-selector {
+  padding: 6px 6px 8px;
+}
+
+/* ============================================================
+   BUSCAR — rediseño visual
+   ============================================================ */
+
+.buscar-v2 {
+  --bs-bg: #faf9f7;
+  --bs-card-bg: #ffffff;
+  --bs-text: #15151a;
+  --bs-text-muted: #8a8f9c;
+  --bs-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 44px);
+  background: var(--bs-bg);
+  color: var(--bs-text);
+}
+
+.buscar-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+.buscar-v2-titulo {
+  margin: 16px 0 20px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--bs-text);
+}
+
+.buscar-v2-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(20, 30, 50, 0.06);
+}
+
+.buscar-v2-input-icono {
+  font-size: 16px;
+  flex: 0 0 auto;
+}
+
+.buscar-v2-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  color: var(--bs-text);
+  font-size: 15px;
+  font-family: var(--font-body);
+}
+
+.buscar-v2-input::placeholder {
+  color: var(--bs-text-muted);
+}
+
+.buscar-v2 .persona-chip {
+  background: var(--bs-card-bg);
+  border: 1px solid var(--bs-border);
+  color: var(--bs-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  flex: 1;
+}
+
+.buscar-v2-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.buscar-v2-chevron {
+  flex: 0 0 auto;
+  color: var(--bs-text-muted);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.buscar-v2 .inicio-vacio,
+.buscar-v2 .app-loading {
+  color: var(--bs-text-muted);
+}
+
+/* ============================================================
+   AMIGOS (/usuarios/:id/amigos) — rediseño visual
+   ============================================================ */
+
+.amigos-v2 {
+  --am-bg: #faf9f7;
+  --am-card-bg: #ffffff;
+  --am-text: #15151a;
+  --am-text-muted: #8a8f9c;
+  --am-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 44px);
+  background: var(--am-bg);
+  color: var(--am-text);
+}
+
+.amigos-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+.amigos-v2-titulo {
+  margin: 16px 0 20px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--am-text);
+}
+
+.amigos-v2 .persona-chip {
+  background: var(--am-card-bg);
+  border: 1px solid var(--am-border);
+  color: var(--am-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  flex: 1;
+}
+
+.amigos-v2-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amigos-v2-chevron {
+  flex: 0 0 auto;
+  color: var(--am-text-muted);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.amigos-v2 .inicio-vacio,
+.amigos-v2 .app-loading {
+  color: var(--am-text-muted);
+}
+
+/* ============================================================
+   PERFIL PÚBLICO — rediseño visual
+   .perfil-foto, .venue-name, .local-categoria, .perfil-nota,
+   .seguimiento-contadores, .amistad-eliminar, .amistad-respuesta,
+   .ficha-voto se comparten con Perfil propio, Inicio, FichaLocal,
+   FichaEvento y Social, así que van anidados bajo .perfil-publico-v2.
+   ============================================================ */
+
+.perfil-publico-v2 {
+  --pp-bg: #faf9f7;
+  --pp-card-bg: #ffffff;
+  --pp-text: #15151a;
+  --pp-text-muted: #8a8f9c;
+  --pp-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 44px);
+  background: var(--pp-bg);
+  color: var(--pp-text);
+}
+
+.perfil-publico-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+.perfil-publico-v2 .perfil-foto-preview {
+  margin-top: 12px;
+}
+
+.perfil-publico-v2 .perfil-foto,
+.perfil-publico-v2 .perfil-foto--vacia {
+  width: 108px;
+  height: 108px;
+  border: 3px solid var(--pp-card-bg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.perfil-publico-v2 .venue-name {
+  color: var(--pp-text);
+  font-size: 24px;
+}
+
+.perfil-publico-v2 .local-categoria {
+  color: var(--pp-text-muted);
+}
+
+.perfil-publico-v2 .perfil-nota {
+  color: var(--pp-text-muted);
+}
+
+.perfil-publico-v2 .seguimiento-numero {
+  color: var(--pp-text);
+}
+
+.perfil-publico-v2 .seguimiento-etiqueta {
+  color: var(--pp-text-muted);
+}
+
+.perfil-publico-v2-btn-principal {
+  width: 100%;
+}
+
+.perfil-publico-v2 .amistad-eliminar {
+  color: var(--pp-text-muted);
+}
+
+.perfil-publico-v2 .amistad-rechazar {
+  color: var(--pp-text-muted);
+}
+
+.perfil-publico-v2 .ficha-voto {
+  background: var(--pp-card-bg);
+  border: 1px solid var(--pp-border);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  display: block;
+}
+
+.perfil-publico-v2 .ficha-votos-hoy {
+  color: var(--pp-text);
+}
+
+.perfil-publico-v2 .inicio-vacio,
+.perfil-publico-v2 .app-loading {
+  color: var(--pp-text-muted);
+}
+
+/* ============================================================
+   PERFIL PROPIO — rediseño visual
+   .auth-form, .perfil-foto-preview, .perfil-foto, .seguimiento-*,
+   .perfil-nota, .perfil-salir, .auth-error/.auth-info se comparten
+   con Login/Register/ForgotPassword/ResetPassword y con
+   PerfilPublico.jsx, así que todo va anidado bajo .perfil-v2. Los
+   selectores de campos usan dos clases (.perfil-v2 .perfil-v2-campo)
+   a propósito, para tener más especificidad que ".auth-form label"
+   y ".auth-form input" y así ganar el cascade sin usar !important.
+   ============================================================ */
+
+.perfil-v2 {
+  --pv-bg: #faf9f7;
+  --pv-card-bg: #ffffff;
+  --pv-text: #15151a;
+  --pv-text-muted: #8a8f9c;
+  --pv-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 64px);
+  background: var(--pv-bg);
+  color: var(--pv-text);
+}
+
+.perfil-v2-hero {
+  position: relative;
+  overflow: hidden;
+  height: 170px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 0;
+  display: flex;
+  align-items: flex-start;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: 74% 34%;
+  border-radius: 0 0 32px 32px;
+  color: #fff;
+}
+
+.perfil-v2-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 24, 0.55) 0%, rgba(10, 12, 24, 0.15) 55%, rgba(10, 12, 24, 0.05) 100%);
+}
+
+.perfil-v2-hero-contenido {
+  position: relative;
+  z-index: 1;
+}
+
+.perfil-v2-hero-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+}
+
+/* Avatar superpuesto entre el hero y el contenido claro */
+.perfil-v2-avatar-wrap {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-top: -56px;
+  z-index: 2;
+}
+
+.perfil-v2 .perfil-foto.perfil-v2-avatar,
+.perfil-v2 .perfil-foto--vacia.perfil-v2-avatar {
+  width: 108px;
+  height: 108px;
+  border: 3px solid var(--pv-card-bg);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.perfil-v2-avatar-camara {
+  position: absolute;
+  right: calc(50% - 54px - 6px);
+  bottom: -2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.92);
+  border: 2px solid var(--pv-card-bg);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.perfil-v2-avatar-camara:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.perfil-v2-contenido {
+  padding: 12px 16px 0;
+  text-align: center;
+}
+
+.perfil-v2-nombre {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--pv-text);
+}
+
+.perfil-v2-usuario {
+  margin: 2px 0 20px;
+  color: var(--pv-text-muted);
+  font-size: 14px;
+}
+
+.perfil-v2-stats {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.perfil-v2-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 96px;
+  padding: 14px 20px;
+  background: var(--pv-card-bg);
+  border: 1px solid var(--pv-border);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+}
+
+.perfil-v2-stat-icono {
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+
+.perfil-v2-stat-numero {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--pv-text);
+}
+
+.perfil-v2-stat-etiqueta {
+  font-size: 12px;
+  color: var(--pv-text-muted);
+}
+
+.perfil-v2-acceso {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--pv-card-bg);
+  border: 1px solid var(--pv-border);
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: var(--pv-text);
+  text-align: left;
+}
+
+.perfil-v2-acceso-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.06);
+  font-size: 17px;
+  flex: 0 0 auto;
+}
+
+.perfil-v2-acceso-texto {
+  flex: 1;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.perfil-v2-chevron {
+  flex: 0 0 auto;
+  color: var(--pv-text-muted);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.perfil-v2-seccion-titulo {
+  margin: 4px 0 12px;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--pv-text);
+}
+
+.perfil-v2 .perfil-v2-form {
+  background: var(--pv-card-bg);
+  border: 1px solid var(--pv-border);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  gap: 14px;
+}
+
+.perfil-v2 .perfil-v2-campo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--pv-text-muted);
+}
+
+.perfil-v2-campo-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--pv-bg);
+  font-size: 14px;
+  flex: 0 0 auto;
+}
+
+.perfil-v2-campo-textos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.perfil-v2-campo-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pv-text-muted);
+}
+
+.perfil-v2-campo-candado {
+  flex: 0 0 auto;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.perfil-v2 .auth-form .perfil-v2-campo input {
+  background: var(--pv-bg);
+  border: 1px solid var(--pv-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--pv-text);
+  font-size: 15px;
+}
+
+.perfil-v2 .auth-form .perfil-v2-campo input:disabled {
+  opacity: 0.7;
+}
+
+.perfil-v2 .perfil-nota {
+  text-align: left;
+  color: var(--pv-text-muted);
+  margin: -6px 0 4px;
+}
+
+.perfil-v2 .auth-form .perfil-v2-guardar {
+  margin-top: 4px;
+  background: rgba(21, 21, 26, 0.92);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 15px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.perfil-v2 .perfil-salir {
+  background: none;
+  border: 1px solid var(--pv-border);
+  color: var(--pv-text-muted);
+  border-radius: 14px;
+}
+
+.perfil-v2 .auth-error,
+.perfil-v2 .auth-info {
+  text-align: left;
+}
+
+.perfil-v2 .app-loading {
+  color: var(--pv-text-muted);
 }
