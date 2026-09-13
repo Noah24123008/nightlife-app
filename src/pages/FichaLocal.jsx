@@ -6,6 +6,7 @@ import { toISODate, addDays, formatearFechaLarga, etiquetaDiaTexto } from '../li
 import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
 import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
+import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -136,101 +137,116 @@ export default function FichaLocal() {
 
   if (cargando) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        <p className="app-loading">Cargando local...</p>
+      <div className="app-screen ficha-local-v2">
+        <div className="ficha-local-v2-contenido">
+          <BackButton />
+          <p className="app-loading">Cargando local...</p>
+        </div>
       </div>
     )
   }
 
   if (!local) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        {error && <p className="auth-error">{error}</p>}
-        <p className="inicio-vacio">No hemos encontrado este local.</p>
+      <div className="app-screen ficha-local-v2">
+        <div className="ficha-local-v2-contenido">
+          <BackButton />
+          {error && <p className="auth-error">{error}</p>}
+          <p className="inicio-vacio">No hemos encontrado este local.</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="app-screen">
-      <BackButton />
-
-      <FotoLocalPanoramica src={local.foto_url} alt={local.nombre} />
-
-      <h1 className="venue-name ficha-nombre">{local.nombre}</h1>
-      <p className="local-categoria">{local.categoria}</p>
-
-      {error && <p className="auth-error">{error}</p>}
-
-      <div className="ficha-datos">
-        {local.direccion && (
-          <p>
-            <strong>Dirección: </strong>
-            {local.direccion}
-          </p>
-        )}
-        {local.horario && (
-          <p>
-            <strong>Horario: </strong>
-            {local.horario}
-          </p>
-        )}
-        {local.descripcion && <p className="ficha-descripcion">{local.descripcion}</p>}
+    <div className="app-screen ficha-local-v2">
+      <div className="ficha-local-v2-hero">
+        <FotoLocalPanoramica src={local.foto_url} alt={local.nombre} />
+        <div className="ficha-local-v2-hero-back">
+          <BackButton />
+        </div>
       </div>
 
-      <div className="ficha-voto">
-        <p className="ficha-votos-hoy">
-          {votosDeEsteLocal} {votosDeEsteLocal === 1 ? 'persona va' : 'personas van'} {etiquetaTexto}
-        </p>
-        <VotoButton votado={miVotoLocalId === local.id} cargando={votando} onClick={handleVotar} />
-      </div>
+      <div className="ficha-local-v2-contenido">
+        <h1 className="venue-name ficha-nombre">{local.nombre}</h1>
+        <p className="local-categoria">{local.categoria}</p>
 
-      <div className="ficha-votantes">
-        <h2 className="ficha-subtitulo">Quién va {etiquetaTexto}</h2>
-        {cargandoVotantes ? (
-          <p className="app-loading">Cargando...</p>
-        ) : votantes.length === 0 ? (
-          <p className="inicio-vacio">Todavía nadie ha indicado que va {etiquetaTexto}.</p>
+        {error && <p className="auth-error">{error}</p>}
+
+        <div className="ficha-datos">
+          {local.direccion && (
+            <p>
+              <strong>Dirección: </strong>
+              {local.direccion}
+            </p>
+          )}
+          {local.horario && (
+            <p>
+              <strong>Horario: </strong>
+              {local.horario}
+            </p>
+          )}
+          {local.descripcion && <p className="ficha-descripcion">{local.descripcion}</p>}
+        </div>
+
+        <div className="ficha-voto">
+          <p className="ficha-votos-hoy">
+            {votosDeEsteLocal} {votosDeEsteLocal === 1 ? 'persona va' : 'personas van'} {etiquetaTexto}
+          </p>
+          <VotoButton votado={miVotoLocalId === local.id} cargando={votando} onClick={handleVotar} />
+        </div>
+
+        <div className="ficha-votantes">
+          <h2 className="ficha-subtitulo">Quién va {etiquetaTexto}</h2>
+          {cargandoVotantes ? (
+            <p className="app-loading">Cargando...</p>
+          ) : votantes.length === 0 ? (
+            <p className="inicio-vacio">Todavía nadie ha indicado que va {etiquetaTexto}.</p>
+          ) : (
+            <>
+              <div className="votantes-lista">
+                {(mostrarTodosVotantes ? votantes : votantes.slice(0, LIMITE_VOTANTES_VISIBLES)).map((perfil) => (
+                  <PersonaChip key={perfil.id} perfil={perfil} />
+                ))}
+              </div>
+              {!mostrarTodosVotantes && votantes.length > LIMITE_VOTANTES_VISIBLES && (
+                <button
+                  type="button"
+                  className="votantes-ver-todos"
+                  onClick={() => setMostrarTodosVotantes(true)}
+                >
+                  +{votantes.length - LIMITE_VOTANTES_VISIBLES} más
+                </button>
+              )}
+            </>
+          )}
+        </div>
+
+        <h2 className="ficha-subtitulo">Próximos eventos</h2>
+        {eventos.length === 0 ? (
+          <p className="inicio-vacio">Este local no tiene eventos programados todavía.</p>
         ) : (
-          <>
-            <div className="votantes-lista">
-              {(mostrarTodosVotantes ? votantes : votantes.slice(0, LIMITE_VOTANTES_VISIBLES)).map((perfil) => (
-                <PersonaChip key={perfil.id} perfil={perfil} />
-              ))}
-            </div>
-            {!mostrarTodosVotantes && votantes.length > LIMITE_VOTANTES_VISIBLES && (
-              <button
-                type="button"
-                className="votantes-ver-todos"
-                onClick={() => setMostrarTodosVotantes(true)}
-              >
-                +{votantes.length - LIMITE_VOTANTES_VISIBLES} más
-              </button>
-            )}
-          </>
+          <ul className="eventos-lista">
+            {eventos.map((evento) => (
+              <li key={evento.id}>
+                <Link to={`/eventos/${evento.id}`} className="evento-item">
+                  <FotoLocalMiniatura src={evento.foto_url || local.foto_url} alt={evento.nombre} />
+                  <div className="ficha-local-v2-evento-info">
+                    <p className="evento-nombre">{evento.nombre}</p>
+                    <p className="evento-local">
+                      {formatearFechaLarga(evento.fecha)}
+                      {evento.hora_inicio ? ` · ${evento.hora_inicio.slice(0, 5)}` : ''}
+                    </p>
+                  </div>
+                  <span className="ficha-local-v2-chevron" aria-hidden="true">
+                    ›
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         )}
       </div>
-
-      <h2 className="ficha-subtitulo">Próximos eventos</h2>
-      {eventos.length === 0 ? (
-        <p className="inicio-vacio">Este local no tiene eventos programados todavía.</p>
-      ) : (
-        <ul className="eventos-lista">
-          {eventos.map((evento) => (
-            <li key={evento.id}>
-              <Link to={`/eventos/${evento.id}`} className="evento-item">
-                <span className="evento-hora">{evento.hora_inicio?.slice(0, 5)}</span>
-                <div>
-                  <p className="evento-nombre">{evento.nombre}</p>
-                  <p className="evento-local">{formatearFechaLarga(evento.fecha)}</p>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
     </div>
   )
 }

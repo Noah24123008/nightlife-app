@@ -1040,18 +1040,6 @@ button {
   font-size: 13px;
 }
 
-.local-card--temporal {
-  border: 2px solid var(--color-accent-warm);
-  padding: 14px;
-  margin-bottom: 20px;
-  background: linear-gradient(135deg, var(--color-surface), #26305a);
-}
-
-.local-card--temporal .local-card-foto-miniatura {
-  width: 64px;
-  height: 64px;
-}
-
 /* Pantalla /hoy */
 
 .local-hoy-enlace {
@@ -1662,4 +1650,543 @@ button {
   color: #b3261e;
   border-radius: 12px;
   padding: 10px 12px;
+}
+
+/* ============================================================
+   LOCALES — rediseño visual (mock de referencia)
+   Igual que en Inicio: todo lo que toca clases compartidas
+   (.venue-name, .local-categoria, .ficha-subtitulo, .mapa-contenedor,
+   .perfil-nota) va anidado bajo .locales-v2 para no afectar a
+   FichaLocal, PerfilPublico, FichaEvento, Inicio, etc.
+   ============================================================ */
+
+.locales-v2 {
+  --loc-bg: #faf9f7;
+  --loc-card-bg: #ffffff;
+  --loc-text: #15151a;
+  --loc-text-muted: #8a8f9c;
+  --loc-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 36px);
+  background: var(--loc-bg);
+  color: var(--loc-text);
+}
+
+.locales-v2-hero {
+  position: relative;
+  overflow: hidden;
+  height: 210px;
+  padding: calc(18px + env(safe-area-inset-top, 0px)) 20px 0;
+  display: flex;
+  align-items: flex-start;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: 74% 34%;
+  border-radius: 0 0 32px 32px;
+  color: #fff;
+}
+
+.locales-v2-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 24, 0.55) 0%, rgba(10, 12, 24, 0.15) 55%, rgba(10, 12, 24, 0.05) 100%);
+}
+
+.locales-v2-hero-contenido {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.locales-v2-hero-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.locales-v2-contenido {
+  padding: 20px 16px 0;
+}
+
+/* Selector Lista/Mapa: mismas glass-chip globales, pero más anchas y
+   repartidas a partes iguales, como en la referencia */
+.locales-v2 .vista-selector {
+  gap: 10px;
+  margin: 4px 0 24px;
+}
+
+.locales-v2 .vista-selector .glass-chip {
+  flex: 1;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 20px;
+  font-size: 15px;
+}
+
+.locales-v2 .ficha-subtitulo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--loc-text);
+}
+
+/* Tarjeta "Destacado" con foto real de fondo, igual que en Inicio pero
+   con clases propias para no tocar nada de esa pantalla */
+.locales-v2-destacado-card {
+  position: relative;
+  display: block;
+  height: 190px;
+  margin-bottom: 24px;
+  border-radius: 22px;
+  overflow: hidden;
+  background-color: #1b2440;
+  background-size: cover;
+  background-position: center;
+  text-decoration: none;
+  color: #fff;
+}
+
+.locales-v2-destacado-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 3px;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.68) 0%, rgba(0, 0, 0, 0.25) 45%, rgba(0, 0, 0, 0) 75%);
+}
+
+.locales-v2-destacado-titulo {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.locales-v2-destacado-meta {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.locales-v2-destacado-flecha {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  line-height: 1;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #15151a;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Tarjetas de la lista de locales */
+.locales-v2 .locales-lista {
+  gap: 12px;
+}
+
+.locales-v2 .local-card {
+  background: var(--loc-card-bg);
+  border: 1px solid var(--loc-border);
+  border-radius: 20px;
+  padding: 14px;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.locales-v2 .local-card-foto-miniatura {
+  width: 68px;
+  height: 68px;
+}
+
+.locales-v2 .venue-name {
+  color: var(--loc-text);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.locales-v2 .local-categoria {
+  color: var(--loc-text-muted);
+  font-size: 13px;
+}
+
+.locales-v2 .local-direccion {
+  color: var(--loc-text-muted);
+  font-size: 12px;
+}
+
+.locales-v2-chevron {
+  flex: 0 0 auto;
+  color: var(--loc-text-muted);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Vista Mapa: mismo contenedor, adaptado al fondo claro */
+.locales-v2 .mapa-contenedor {
+  border-radius: 20px;
+  border-color: var(--loc-border);
+}
+
+.locales-v2 .perfil-nota {
+  color: var(--loc-text-muted);
+}
+
+.locales-v2 .app-loading,
+.locales-v2 .inicio-vacio,
+.locales-v2 .auth-error {
+  color: var(--loc-text-muted);
+}
+
+/* ============================================================
+   FICHA DE LOCAL — rediseño visual (mock de referencia)
+   .ficha-nombre, .ficha-datos, .ficha-voto, .ficha-votos-hoy,
+   .ficha-votantes, .votantes-lista, .persona-chip, .ficha-subtitulo,
+   .eventos-lista, .evento-item, .evento-nombre, .evento-local,
+   .venue-name, .local-categoria, .inicio-vacio, .app-loading se
+   comparten con FichaEvento/PerfilPublico/Inicio — por eso todo va
+   anidado bajo .ficha-local-v2, igual que en Inicio/Locales.
+   ============================================================ */
+
+.ficha-local-v2 {
+  --fl-bg: #faf9f7;
+  --fl-card-bg: #ffffff;
+  --fl-text: #15151a;
+  --fl-text-muted: #8a8f9c;
+  --fl-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 44px);
+  background: var(--fl-bg);
+  color: var(--fl-text);
+}
+
+.ficha-local-v2-hero {
+  position: relative;
+}
+
+.ficha-local-v2-hero-back {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  left: 16px;
+  z-index: 2;
+}
+
+.ficha-local-v2-hero-back .back-btn {
+  margin-bottom: 0;
+}
+
+.ficha-local-v2-contenido {
+  padding: 14px 16px 0;
+}
+
+.ficha-local-v2 .ficha-foto-panoramica,
+.ficha-local-v2 .ficha-foto-panoramica--vacia {
+  height: 220px;
+  margin: 0;
+  border-radius: 0 0 28px 28px;
+}
+
+.ficha-local-v2 .venue-name,
+.ficha-local-v2 .ficha-nombre {
+  color: var(--fl-text);
+  font-size: 26px;
+}
+
+.ficha-local-v2 .local-categoria {
+  color: var(--fl-text-muted);
+  font-size: 14px;
+}
+
+.ficha-local-v2 .ficha-datos {
+  color: var(--fl-text);
+}
+
+.ficha-local-v2 .ficha-datos strong {
+  color: var(--fl-text-muted);
+}
+
+.ficha-local-v2 .ficha-descripcion {
+  color: var(--fl-text-muted);
+}
+
+.ficha-local-v2 .ficha-voto {
+  background: var(--fl-card-bg);
+  border: 1px solid var(--fl-border);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.ficha-local-v2 .ficha-votos-hoy {
+  color: var(--fl-text);
+  font-size: 16px;
+}
+
+.ficha-local-v2 .ficha-subtitulo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fl-text);
+}
+
+.ficha-local-v2 .ficha-votantes {
+  background: var(--fl-card-bg);
+  border: 1px solid var(--fl-border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ficha-local-v2 .ficha-votantes .ficha-subtitulo {
+  margin-bottom: 16px;
+}
+
+.ficha-local-v2 .persona-chip {
+  background: var(--fl-bg);
+  border: 1px solid var(--fl-border);
+  color: var(--fl-text);
+}
+
+.ficha-local-v2 .votantes-ver-todos {
+  color: var(--fl-text);
+}
+
+.ficha-local-v2 .inicio-vacio,
+.ficha-local-v2 .app-loading {
+  color: var(--fl-text-muted);
+}
+
+.ficha-local-v2 .eventos-lista {
+  gap: 12px;
+}
+
+.ficha-local-v2 .evento-item {
+  background: var(--fl-card-bg);
+  border: 1px solid var(--fl-border);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  align-items: center;
+}
+
+.ficha-local-v2 .evento-item .local-card-foto-miniatura {
+  width: 84px;
+  height: 60px;
+}
+
+.ficha-local-v2-evento-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.ficha-local-v2 .evento-nombre {
+  color: var(--fl-text);
+  font-weight: 700;
+}
+
+.ficha-local-v2 .evento-local {
+  color: var(--fl-text-muted);
+}
+
+.ficha-local-v2-chevron {
+  flex: 0 0 auto;
+  margin-left: auto;
+  color: var(--fl-text-muted);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   FICHA DE EVENTO — rediseño visual (mock de referencia)
+   Igual que en FichaLocal: .ficha-nombre, .ficha-datos, .ficha-voto,
+   .ficha-votos-hoy, .ficha-votantes, .votantes-lista, .persona-chip,
+   .ficha-subtitulo, .venue-name, .ficha-descripcion se comparten con
+   otras pantallas, así que todo va anidado bajo .ficha-evento-v2.
+   ============================================================ */
+
+.ficha-evento-v2 {
+  --fe-bg: #faf9f7;
+  --fe-card-bg: #ffffff;
+  --fe-text: #15151a;
+  --fe-text-muted: #8a8f9c;
+  --fe-border: #efeeec;
+
+  padding: 0 0 calc(var(--bottom-nav-height) + env(safe-area-inset-bottom, 0px) + 64px);
+  background: var(--fe-bg);
+  color: var(--fe-text);
+}
+
+.ficha-evento-v2-hero {
+  position: relative;
+}
+
+.ficha-evento-v2-hero-back {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  left: 16px;
+  z-index: 2;
+}
+
+.ficha-evento-v2-hero-back .back-btn {
+  margin-bottom: 0;
+}
+
+.ficha-evento-v2-contenido {
+  padding: 16px 16px 0;
+}
+
+.ficha-evento-v2 .ficha-foto-panoramica,
+.ficha-evento-v2 .ficha-foto-panoramica--vacia {
+  height: 250px;
+  margin: 0;
+  border-radius: 0 0 28px 28px;
+}
+
+.ficha-evento-v2 .ficha-foto-panoramica-fondo {
+  filter: blur(14px) brightness(0.65);
+  transform: scale(1.1);
+}
+
+.ficha-evento-v2-fecha-chip {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.06);
+  color: var(--fe-text);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.ficha-evento-v2 .venue-name,
+.ficha-evento-v2 .ficha-nombre {
+  color: var(--fe-text);
+  font-size: 24px;
+}
+
+.ficha-evento-v2-local {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  color: var(--fe-text);
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+}
+
+.ficha-evento-v2-direccion {
+  margin: 2px 0 0;
+  color: var(--fe-text-muted);
+  font-size: 13px;
+}
+
+.ficha-evento-v2 .ficha-voto {
+  background: var(--fe-card-bg);
+  border: 1px solid var(--fe-border);
+  border-radius: 20px;
+  padding: 16px;
+  margin-top: 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.ficha-evento-v2 .ficha-votos-hoy {
+  color: var(--fe-text);
+  font-size: 15px;
+}
+
+.ficha-evento-v2 .ficha-voto .glass-btn {
+  padding: 11px 22px;
+  font-size: 15px;
+}
+
+.ficha-evento-v2-info-fila {
+  display: flex;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.ficha-evento-v2-info-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--fe-card-bg);
+  border: 1px solid var(--fe-border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ficha-evento-v2-info-icono {
+  font-size: 18px;
+}
+
+.ficha-evento-v2-info-titulo {
+  margin: 0;
+  font-size: 11px;
+  color: var(--fe-text-muted);
+  font-weight: 600;
+}
+
+.ficha-evento-v2-info-valor {
+  margin: 0;
+  font-size: 13px;
+  color: var(--fe-text);
+  font-weight: 700;
+}
+
+.ficha-evento-v2 .ficha-descripcion {
+  background: var(--fe-card-bg);
+  border: 1px solid var(--fe-border);
+  border-radius: 16px;
+  padding: 14px;
+  margin: 0 0 20px;
+  color: var(--fe-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.ficha-evento-v2 .ficha-votantes {
+  background: var(--fe-card-bg);
+  border: 1px solid var(--fe-border);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.ficha-evento-v2 .ficha-votantes .ficha-subtitulo {
+  margin-bottom: 16px;
+}
+
+.ficha-evento-v2 .persona-chip {
+  background: var(--fe-bg);
+  border: 1px solid var(--fe-border);
+  color: var(--fe-text);
+}
+
+.ficha-evento-v2 .votantes-ver-todos {
+  color: var(--fe-text);
+}
+
+.ficha-evento-v2 .inicio-vacio,
+.ficha-evento-v2 .app-loading {
+  color: var(--fe-text-muted);
 }

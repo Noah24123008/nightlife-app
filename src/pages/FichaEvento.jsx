@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getEventoPorId, getVotosDelDia, votarPorLocal, getPersonasQueVanHoy } from '../lib/api'
 import { formatearFechaLarga } from '../lib/dates'
+import { useEffect, useMemo, useState } from 'react'
 import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
-import ImagenConFallback from '../components/ImagenConFallback'
+import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
 import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -106,87 +106,99 @@ export default function FichaEvento() {
 
   if (cargando) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        <p className="app-loading">Cargando evento...</p>
+      <div className="app-screen ficha-evento-v2">
+        <div className="ficha-evento-v2-contenido">
+          <BackButton />
+          <p className="app-loading">Cargando evento...</p>
+        </div>
       </div>
     )
   }
 
   if (!evento || !evento.locales) {
     return (
-      <div className="app-screen">
-        <BackButton />
-        {error && <p className="auth-error">{error}</p>}
-        <p className="inicio-vacio">No hemos encontrado este evento.</p>
+      <div className="app-screen ficha-evento-v2">
+        <div className="ficha-evento-v2-contenido">
+          <BackButton />
+          {error && <p className="auth-error">{error}</p>}
+          <p className="inicio-vacio">No hemos encontrado este evento.</p>
+        </div>
       </div>
     )
   }
 
+  const tieneHorario = Boolean(evento.hora_inicio || evento.hora_fin)
+
   return (
-    <div className="app-screen">
-      <BackButton />
-
-      <ImagenConFallback
-        src={evento.foto_url}
-        alt={evento.nombre}
-        className="ficha-foto"
-        placeholderClassName="ficha-foto ficha-foto--vacia"
-      />
-
-      <h1 className="venue-name ficha-nombre">{evento.nombre}</h1>
-      <p className="local-categoria">
-        {formatearFechaLarga(evento.fecha)}
-        {evento.hora_inicio ? ` · ${evento.hora_inicio.slice(0, 5)}` : ''}
-        {evento.hora_fin ? ` - ${evento.hora_fin.slice(0, 5)}` : ''}
-      </p>
-
-      {error && <p className="auth-error">{error}</p>}
-
-      {evento.descripcion && <p className="ficha-descripcion">{evento.descripcion}</p>}
-
-      <div className="ficha-datos">
-        <p>
-          <strong>Local: </strong>
-          <Link to={`/locales/${evento.locales.id}`}>{evento.locales.nombre}</Link>
-        </p>
-        {evento.locales.direccion && (
-          <p>
-            <strong>Dirección: </strong>
-            {evento.locales.direccion}
-          </p>
-        )}
+    <div className="app-screen ficha-evento-v2">
+      <div className="ficha-evento-v2-hero">
+        <FotoLocalPanoramica src={evento.foto_url || evento.locales.foto_url} alt={evento.nombre} />
+        <div className="ficha-evento-v2-hero-back">
+          <BackButton />
+        </div>
       </div>
 
-      <div className="ficha-voto">
-        <p className="ficha-votos-hoy">Vota por este evento</p>
-        <VotoButton votado={voyAEsteEvento} cargando={votando} onClick={handleVotar} />
-      </div>
+      <div className="ficha-evento-v2-contenido">
+        <span className="ficha-evento-v2-fecha-chip">{formatearFechaLarga(evento.fecha)}</span>
 
-      <div className="ficha-votantes">
-        <h2 className="ficha-subtitulo">Quién va a este evento</h2>
-        {cargandoPersonas ? (
-          <p className="app-loading">Cargando...</p>
-        ) : personas.length === 0 ? (
-          <p className="inicio-vacio">Todavía nadie ha indicado que va a este evento.</p>
-        ) : (
-          <>
-            <div className="votantes-lista">
-              {(mostrarTodasPersonas ? personas : personas.slice(0, LIMITE_PERSONAS_VISIBLES)).map((perfil) => (
-                <PersonaChip key={perfil.id} perfil={perfil} />
-              ))}
+        <h1 className="venue-name ficha-nombre">{evento.nombre}</h1>
+
+        <Link to={`/locales/${evento.locales.id}`} className="ficha-evento-v2-local">
+          📍 {evento.locales.nombre}
+        </Link>
+        {evento.locales.direccion && <p className="ficha-evento-v2-direccion">{evento.locales.direccion}</p>}
+
+        {error && <p className="auth-error">{error}</p>}
+
+        <div className="ficha-voto">
+          <p className="ficha-votos-hoy">Vota por este evento</p>
+          <VotoButton votado={voyAEsteEvento} cargando={votando} onClick={handleVotar} />
+        </div>
+
+        {tieneHorario && (
+          <div className="ficha-evento-v2-info-fila">
+            <div className="ficha-evento-v2-info-card">
+              <span className="ficha-evento-v2-info-icono" aria-hidden="true">
+                🕐
+              </span>
+              <div>
+                <p className="ficha-evento-v2-info-titulo">Horario</p>
+                <p className="ficha-evento-v2-info-valor">
+                  {evento.hora_inicio?.slice(0, 5)}
+                  {evento.hora_fin ? ` - ${evento.hora_fin.slice(0, 5)}` : ''}
+                </p>
+              </div>
             </div>
-            {!mostrarTodasPersonas && personas.length > LIMITE_PERSONAS_VISIBLES && (
-              <button
-                type="button"
-                className="votantes-ver-todos"
-                onClick={() => setMostrarTodasPersonas(true)}
-              >
-                +{personas.length - LIMITE_PERSONAS_VISIBLES} más
-              </button>
-            )}
-          </>
+          </div>
         )}
+
+        {evento.descripcion && <p className="ficha-descripcion">{evento.descripcion}</p>}
+
+        <div className="ficha-votantes">
+          <h2 className="ficha-subtitulo">Quién va a este evento</h2>
+          {cargandoPersonas ? (
+            <p className="app-loading">Cargando...</p>
+          ) : personas.length === 0 ? (
+            <p className="inicio-vacio">Todavía nadie ha indicado que va a este evento.</p>
+          ) : (
+            <>
+              <div className="votantes-lista">
+                {(mostrarTodasPersonas ? personas : personas.slice(0, LIMITE_PERSONAS_VISIBLES)).map((perfil) => (
+                  <PersonaChip key={perfil.id} perfil={perfil} />
+                ))}
+              </div>
+              {!mostrarTodasPersonas && personas.length > LIMITE_PERSONAS_VISIBLES && (
+                <button
+                  type="button"
+                  className="votantes-ver-todos"
+                  onClick={() => setMostrarTodasPersonas(true)}
+                >
+                  +{personas.length - LIMITE_PERSONAS_VISIBLES} más
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

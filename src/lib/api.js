@@ -42,7 +42,7 @@ export async function getEventosDeLocal(localId, fechaDesdeISO) {
 export async function getEventoPorId(id) {
   const { data, error } = await supabase
     .from('eventos')
-    .select('id, nombre, descripcion, fecha, hora_inicio, hora_fin, foto_url, locales(id, nombre, direccion)')
+    .select('id, nombre, descripcion, fecha, hora_inicio, hora_fin, foto_url, locales(id, nombre, direccion, foto_url)')
     .eq('id', id)
     .single()
   return { data, error }
