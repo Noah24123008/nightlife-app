@@ -9,6 +9,7 @@ import {
   votarPorLocal,
   getNumeroNotificacionesNoLeidas,
   getRecomendacionesSocialesHoy,
+  getDondeVaLaGenteHoy,
 } from '../lib/api'
 import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
@@ -39,6 +40,11 @@ export default function Inicio() {
   const [locales, setLocales] = useState([])
   const [votosDia, setVotosDia] = useState([])
   const [eventosDia, setEventosDia] = useState([])
+  // Número TOTAL de amigos por local (id → total_amigos), tal cual lo
+  // devuelve get_donde_va_la_gente_hoy — no la longitud de
+  // muestra_perfiles, que está limitada a 3 y solo sirve para avatares
+  // en otra pantalla.
+  const [totalAmigosPorLocal, setTotalAmigosPorLocal] = useState({})
 
   const [cargandoBase, setCargandoBase] = useState(true)
   const [cargandoDia, setCargandoDia] = useState(true)
@@ -93,9 +99,11 @@ export default function Inicio() {
       const [
         { data: votosData, error: errVotos },
         { data: eventosData, error: errEventos },
+        { data: rankingAmigosData },
       ] = await Promise.all([
         getVotosDelDia(diaSeleccionado.fechaISO),
         getEventosDelDia(ciudadId, diaSeleccionado.fechaISO),
+        getDondeVaLaGenteHoy(diaSeleccionado.fechaISO),
       ])
       if (!activo) return
 
@@ -112,6 +120,12 @@ export default function Inicio() {
       } else {
         setEventosDia(eventosData ?? [])
       }
+
+      const totalAmigosPorId = {}
+      for (const item of rankingAmigosData ?? []) {
+        totalAmigosPorId[item.local_id] = item.total_amigos ?? 0
+      }
+      setTotalAmigosPorLocal(totalAmigosPorId)
 
       setCargandoDia(false)
     }
@@ -327,7 +341,11 @@ export default function Inicio() {
                     <div className="local-info">
                       <p className="venue-name">{local.nombre}</p>
                       <p className="local-categoria">
-                        {local.categoria} · {local.votos} {local.votos === 1 ? 'persona va' : 'personas van'}
+                        {local.categoria} · {local.votos} {local.votos === 1 ? 'va' : 'van'}
+                        {(totalAmigosPorLocal[local.id] ?? 0) > 0 &&
+                          ` · ${totalAmigosPorLocal[local.id]} ${
+                            totalAmigosPorLocal[local.id] === 1 ? 'amigo' : 'amigos'
+                          }`}
                       </p>
                     </div>
                     <VotoButton
