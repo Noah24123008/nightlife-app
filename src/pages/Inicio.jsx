@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
@@ -196,6 +196,22 @@ export default function Inicio() {
     setVotandoLocalId(null)
   }
 
+  // Selector de ciudad: por ahora es solo interfaz (Gijón sigue siendo la
+  // única ciudad real y funcional; no filtra datos ni navega).
+  const [ciudadMenuAbierto, setCiudadMenuAbierto] = useState(false)
+  const ciudadMenuRef = useRef(null)
+
+  useEffect(() => {
+    if (!ciudadMenuAbierto) return
+    function handleClickFuera(e) {
+      if (ciudadMenuRef.current && !ciudadMenuRef.current.contains(e.target)) {
+        setCiudadMenuAbierto(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickFuera)
+    return () => document.removeEventListener('mousedown', handleClickFuera)
+  }, [ciudadMenuAbierto])
+
   return (
     <div className="app-screen inicio-v2">
       <div className="inicio-v2-hero" style={{ backgroundImage: `url(${gijonHero})` }}>
@@ -203,7 +219,48 @@ export default function Inicio() {
 
         <div className="inicio-v2-hero-contenido">
           <div className="inicio-v2-hero-header">
-            <h1 className="inicio-v2-hero-ciudad">Gijón</h1>
+            <div className="inicio-v2-ciudad-selector" ref={ciudadMenuRef}>
+              <h1 className="inicio-v2-ciudad-heading">
+                <button
+                  type="button"
+                  className="inicio-v2-hero-ciudad-btn"
+                  onClick={() => setCiudadMenuAbierto((abierto) => !abierto)}
+                  aria-haspopup="true"
+                  aria-expanded={ciudadMenuAbierto}
+                >
+                  <span className="inicio-v2-hero-ciudad">Gijón</span>
+                  <span
+                    className={`inicio-v2-ciudad-chevron ${ciudadMenuAbierto ? 'inicio-v2-ciudad-chevron--abierto' : ''}`}
+                    aria-hidden="true"
+                  >
+                    ⌄
+                  </span>
+                </button>
+              </h1>
+
+              {ciudadMenuAbierto && (
+                <div className="inicio-v2-ciudad-menu">
+                  <button
+                    type="button"
+                    className="inicio-v2-ciudad-opcion inicio-v2-ciudad-opcion--activa"
+                    onClick={() => setCiudadMenuAbierto(false)}
+                  >
+                    <span>Gijón</span>
+                    <span className="inicio-v2-ciudad-check" aria-hidden="true">
+                      ✓
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="inicio-v2-ciudad-opcion inicio-v2-ciudad-opcion--deshabilitada"
+                    disabled
+                  >
+                    <span>Oviedo</span>
+                    <span className="inicio-v2-ciudad-proximamente">Próximamente</span>
+                  </button>
+                </div>
+              )}
+            </div>
             <Link to="/notificaciones" className="glass-icon-btn" aria-label="Notificaciones">
               🔔
               {numNoLeidas > 0 && (
