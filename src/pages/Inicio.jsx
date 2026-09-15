@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   getCiudadPorNombre,
@@ -12,7 +12,7 @@ import {
   getRecomendacionesSocialesHoy,
   getDondeVaLaGenteHoy,
 } from '../lib/api'
-import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
+import { buildDiasVisibles, etiquetaDiaTexto, toISODate, addDays, MAX_DIAS_FUTURO } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
 import RecomendacionSocialCard from '../components/RecomendacionSocialCard'
@@ -25,17 +25,63 @@ const DIAS_VISIBLES = 8
 const LIMITE_RANKING_INICIAL = 5
 const LIMITE_RECOMENDACIONES_INICIAL = 3
 
+// Mismo patrón de validación que ya usa FichaLocal para su ?fecha=, con el
+// añadido del límite superior (no se puede seleccionar más allá del rango
+// permitido por el calendario).
+function fechaEnRangoValido(valor, hoyISO, maxISO) {
+  if (!valor || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) return false
+  const fecha = new Date(`${valor}T00:00:00`)
+  if (Number.isNaN(fecha.getTime())) return false
+  return valor >= hoyISO && valor <= maxISO
+}
+
 export default function Inicio() {
   const { user, signOut } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const dias = useMemo(() => buildDiasVisibles(new Date(), DIAS_VISIBLES), [])
-  const [indiceDia, setIndiceDia] = useState(0)
+  const hoy = useMemo(() => new Date(), [])
+  const hoyISO = useMemo(() => toISODate(hoy), [hoy])
+  const fechaMaxISO = useMemo(() => toISODate(addDays(hoy, MAX_DIAS_FUTURO)), [hoy])
+
+  // Fecha seleccionada: viene de ?fecha= si es válida y está dentro del
+  // rango permitido (igual que ya hace FichaLocal con su propia ?fecha=);
+  // si no, hoy. Es la fuente de verdad — el índice dentro de la ventana
+  // visible se deriva de ella, no al revés, para que "conservar la fecha
+  // al volver atrás" funcione con solo mantenerla en la URL.
+  const fechaParam = searchParams.get('fecha')
+  const [fechaSeleccionadaISO, setFechaSeleccionadaISO] = useState(() =>
+    fechaEnRangoValido(fechaParam, hoyISO, fechaMaxISO) ? fechaParam : hoyISO
+  )
+
+  const dias = useMemo(
+    () => buildDiasVisibles(hoy, DIAS_VISIBLES, new Date(`${fechaSeleccionadaISO}T00:00:00`)),
+    [hoy, fechaSeleccionadaISO]
+  )
+  const indiceDia = useMemo(() => {
+    const idx = dias.findIndex((d) => d.fechaISO === fechaSeleccionadaISO)
+    return idx === -1 ? 0 : idx
+  }, [dias, fechaSeleccionadaISO])
   const diaSeleccionado = dias[indiceDia]
 
-  const etiquetaTexto = useMemo(
-    () => etiquetaDiaTexto(diaSeleccionado.fecha, indiceDia),
-    [diaSeleccionado.fecha, indiceDia]
-  )
+  function handleCambiarFecha(fechaISO) {
+    if (!fechaEnRangoValido(fechaISO, hoyISO, fechaMaxISO)) return
+    setFechaSeleccionadaISO(fechaISO)
+    setSearchParams(
+      (prev) => {
+        const siguiente = new URLSearchParams(prev)
+        siguiente.set('fecha', fechaISO)
+        return siguiente
+      },
+      { replace: true }
+    )
+  }
+
+  function handleSeleccionarIndice(index) {
+    const fechaISO = dias[index]?.fechaISO
+    if (fechaISO) handleCambiarFecha(fechaISO)
+  }
+
+  const etiquetaTexto = useMemo(() => etiquetaDiaTexto(diaSeleccionado.fecha), [diaSeleccionado.fecha])
 
   const [ciudadId, setCiudadId] = useState(null)
   const [locales, setLocales] = useState([])
@@ -170,7 +216,7 @@ export default function Inicio() {
   useEffect(() => {
     setMostrarRankingCompleto(false)
     setMostrarTodasRecomendaciones(false)
-  }, [indiceDia])
+  }, [fechaSeleccionadaISO])
 
   const miVotoLocalId = useMemo(
     () => votosDia.find((v) => v.usuario_id === user?.id)?.local_id ?? null,
@@ -299,7 +345,14 @@ export default function Inicio() {
       </div>
 
       <div className="inicio-v2-contenido">
-        <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
+        <DaySelector
+          dias={dias}
+          indiceSeleccionado={indiceDia}
+          onSeleccionar={handleSeleccionarIndice}
+          onSeleccionarFecha={handleCambiarFecha}
+          fechaMinISO={hoyISO}
+          fechaMaxISO={fechaMaxISO}
+        />
 
         {destinoTemporal && (
           <Link
@@ -316,7 +369,7 @@ export default function Inicio() {
           </Link>
         )}
 
-        {indiceDia === 0 && (
+        {diaSeleccionado.fechaISO === hoyISO && (
           <Link to="/hoy" className="inicio-v2-banner-hoy">
             <span>🔥 Dónde va la gente hoy</span>
             <span className="inicio-v2-banner-hoy-flecha" aria-hidden="true">

@@ -1,9 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
+import CalendarPicker from './CalendarPicker'
 
-export default function DaySelector({ dias, indiceSeleccionado, onSeleccionar }) {
+export default function DaySelector({
+  dias,
+  indiceSeleccionado,
+  onSeleccionar,
+  onSeleccionarFecha,
+  fechaMinISO,
+  fechaMaxISO,
+}) {
   const scrollRef = useRef(null)
   const [puedeIzquierda, setPuedeIzquierda] = useState(false)
   const [puedeDerecha, setPuedeDerecha] = useState(false)
+  const [calendarioAbierto, setCalendarioAbierto] = useState(false)
 
   function actualizarFlechas() {
     const el = scrollRef.current
@@ -28,6 +37,15 @@ export default function DaySelector({ dias, indiceSeleccionado, onSeleccionar })
     const el = scrollRef.current
     if (!el) return
     el.scrollBy({ left: direccion * 160, behavior: 'smooth' })
+  }
+
+  // El botón de calendario es opcional: si la pantalla que usa DaySelector
+  // no pasa onSeleccionarFecha (como Social, sin cambios en esta fase), no
+  // se renderiza nada nuevo y el componente se comporta exactamente igual
+  // que antes.
+  function handleSeleccionarFechaCalendario(fechaISO) {
+    onSeleccionarFecha(fechaISO)
+    setCalendarioAbierto(false)
   }
 
   return (
@@ -65,6 +83,29 @@ export default function DaySelector({ dias, indiceSeleccionado, onSeleccionar })
         >
           ›
         </button>
+      )}
+
+      {onSeleccionarFecha && (
+        <>
+          <button
+            type="button"
+            className="glass-icon-btn day-selector-calendario"
+            onClick={() => setCalendarioAbierto(true)}
+            aria-label="Elegir fecha en el calendario"
+            aria-haspopup="dialog"
+            aria-expanded={calendarioAbierto}
+          >
+            📅
+          </button>
+          <CalendarPicker
+            abierto={calendarioAbierto}
+            fechaSeleccionadaISO={dias[indiceSeleccionado]?.fechaISO}
+            fechaMinISO={fechaMinISO}
+            fechaMaxISO={fechaMaxISO}
+            onSeleccionarFecha={handleSeleccionarFechaCalendario}
+            onCerrar={() => setCalendarioAbierto(false)}
+          />
+        </>
       )}
     </div>
   )

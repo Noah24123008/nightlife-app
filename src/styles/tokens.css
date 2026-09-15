@@ -3586,3 +3586,239 @@ button {
   opacity: 0.5;
   cursor: default;
 }
+
+/* ============================================================
+   Botón de calendario del DaySelector — opcional, solo aparece si la
+   pantalla pasa onSeleccionarFecha (por ahora, solo Inicio). Social no
+   se ve afectado, no pasa esa prop.
+   ============================================================ */
+
+.day-selector-calendario {
+  flex: 0 0 auto;
+  margin-left: 6px;
+}
+
+/* ============================================================
+   CALENDAR PICKER — bottom sheet propio, sustituye al <input type="date">
+   nativo. Renderizado vía portal a document.body; z-index por encima del
+   BottomNav (100). Autocontenido (no depende de las variables de ninguna
+   pantalla concreta), reutiliza el negro sólido ya establecido en toda la
+   app para el estado seleccionado (glass-chip--active, BottomNav activo),
+   y el naranja de acento solo como detalle mínimo para "hoy".
+   ============================================================ */
+
+.calendar-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 12, 20, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.calendar-picker-overlay--visible {
+  background: rgba(10, 12, 20, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.calendar-picker-sheet {
+  width: calc(100% - 32px);
+  max-width: 440px;
+  margin-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom, 0px) * 0);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(20, 30, 50, 0.28);
+  transform: translateY(24px);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.22s ease;
+}
+
+.calendar-picker-sheet--visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.calendar-picker-handle {
+  width: 40px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.15);
+  margin: 0 auto 14px;
+}
+
+.calendar-picker-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.calendar-picker-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: #15151a;
+}
+
+.calendar-picker-subtitulo {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: #8a8f9c;
+}
+
+.calendar-picker-cerrar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.06);
+  border: none;
+  color: #15151a;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.calendar-picker-cerrar:focus-visible,
+.calendar-picker-mes-btn:focus-visible,
+.calendar-picker-dia:focus-visible {
+  outline: 2px solid rgba(21, 21, 26, 0.55);
+  outline-offset: 2px;
+}
+
+.calendar-picker-superficie {
+  background: rgba(250, 249, 247, 0.65);
+  border: 1px solid rgba(239, 238, 236, 0.9);
+  border-radius: 22px;
+  padding: 14px;
+}
+
+.calendar-picker-mes-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendar-picker-mes-titulo {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: #15151a;
+}
+
+.calendar-picker-mes-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #efeeec;
+  color: #15151a;
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.calendar-picker-mes-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.calendar-picker-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 4px;
+}
+
+.calendar-picker-dias-semana span {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9aa0ad;
+  padding: 6px 0;
+}
+
+.calendar-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-picker-dia {
+  position: relative;
+  aspect-ratio: 1;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 600;
+  color: #15151a;
+  cursor: pointer;
+}
+
+.calendar-picker-dia:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.calendar-picker-dia--fuera-de-mes {
+  visibility: hidden;
+}
+
+.calendar-picker-dia--hoy::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--color-accent-warm);
+}
+
+.calendar-picker-dia--seleccionado {
+  background: rgba(21, 21, 26, 0.92);
+  color: #ffffff;
+  transition: background 0.15s ease;
+}
+
+.calendar-picker-resumen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 16px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #15151a;
+  text-align: center;
+}
+
+@media (max-width: 360px) {
+  .calendar-picker-dia {
+    min-height: 36px;
+    font-size: 13px;
+  }
+}
