@@ -7,6 +7,7 @@ import {
   getVotosDelDia,
   getEventosDelDia,
   votarPorLocal,
+  eliminarVoto,
   getNumeroNotificacionesNoLeidas,
   getRecomendacionesSocialesHoy,
   getDondeVaLaGenteHoy,
@@ -195,17 +196,29 @@ export default function Inicio() {
     if (!user) return
     setVotandoLocalId(localId)
     setError('')
-    const { error: errVoto } = await votarPorLocal({
-      usuarioId: user.id,
-      localId,
-      fecha: diaSeleccionado.fechaISO,
-    })
+
+    const yaVotadoAqui = miVotoLocalId === localId
+    const { error: errVoto } = yaVotadoAqui
+      ? await eliminarVoto({ usuarioId: user.id, fecha: diaSeleccionado.fechaISO })
+      : await votarPorLocal({ usuarioId: user.id, localId, fecha: diaSeleccionado.fechaISO })
+
     if (errVoto) {
-      setError(mensajeError(errVoto, 'No se pudo registrar tu voto. Inténtalo de nuevo.'))
+      const mensajePorDefecto = yaVotadoAqui
+        ? 'No se pudo quitar tu voto. Inténtalo de nuevo.'
+        : 'No se pudo registrar tu voto. Inténtalo de nuevo.'
+      setError(mensajeError(errVoto, mensajePorDefecto))
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
     } else {
-      const { data } = await getVotosDelDia(diaSeleccionado.fechaISO)
-      setVotosDia(data ?? [])
+      const [{ data: votosData }, { data: rankingAmigosData }] = await Promise.all([
+        getVotosDelDia(diaSeleccionado.fechaISO),
+        getDondeVaLaGenteHoy(diaSeleccionado.fechaISO),
+      ])
+      setVotosDia(votosData ?? [])
+      const totalAmigosPorId = {}
+      for (const item of rankingAmigosData ?? []) {
+        totalAmigosPorId[item.local_id] = item.total_amigos ?? 0
+      }
+      setTotalAmigosPorLocal(totalAmigosPorId)
     }
     setVotandoLocalId(null)
   }
@@ -336,18 +349,23 @@ export default function Inicio() {
                       miVotoLocalId === local.id ? 'local-item--votado' : ''
                     }`}
                   >
-                    <span className="rank-position">{index + 1}</span>
-                    <FotoLocalMiniatura src={local.foto_url} alt={local.nombre} />
-                    <div className="local-info">
-                      <p className="venue-name">{local.nombre}</p>
-                      <p className="local-categoria">
-                        {local.categoria} · {local.votos} {local.votos === 1 ? 'va' : 'van'}
-                        {(totalAmigosPorLocal[local.id] ?? 0) > 0 &&
-                          ` · ${totalAmigosPorLocal[local.id]} ${
-                            totalAmigosPorLocal[local.id] === 1 ? 'amigo' : 'amigos'
-                          }`}
-                      </p>
-                    </div>
+                    <Link
+                      to={`/locales/${local.id}?fecha=${diaSeleccionado.fechaISO}`}
+                      className="local-item-enlace"
+                    >
+                      <span className="rank-position">{index + 1}</span>
+                      <FotoLocalMiniatura src={local.foto_url} alt={local.nombre} />
+                      <div className="local-info">
+                        <p className="venue-name">{local.nombre}</p>
+                        <p className="local-categoria">
+                          {local.categoria} · {local.votos} {local.votos === 1 ? 'va' : 'van'}
+                          {(totalAmigosPorLocal[local.id] ?? 0) > 0 &&
+                            ` · ${totalAmigosPorLocal[local.id]} ${
+                              totalAmigosPorLocal[local.id] === 1 ? 'amigo' : 'amigos'
+                            }`}
+                        </p>
+                      </div>
+                    </Link>
                     <VotoButton
                       votado={miVotoLocalId === local.id}
                       cargando={votandoLocalId === local.id}

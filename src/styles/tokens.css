@@ -3190,3 +3190,32 @@ button {
 .notificaciones-v2 .app-loading {
   color: var(--nt-text-muted);
 }
+
+/* ============================================================
+   Tarjeta de ranking de Inicio — pulsable, con el botón de voto
+   fuera del enlace (evita anidar <button> dentro de <a>, así que no
+   hace falta stopPropagation: son hermanos, no están anidados).
+   ============================================================ */
+
+.inicio-v2 .local-item {
+  padding: 12px 14px 12px 0;
+}
+
+.inicio-v2 .local-item--destacado {
+  padding: 20px 16px 20px 0;
+}
+
+.inicio-v2 .local-item-enlace {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  padding: 0 0 0 14px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.inicio-v2 .local-item--destacado .local-item-enlace {
+  padding-left: 16px;
+}

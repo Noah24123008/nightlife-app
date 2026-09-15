@@ -242,6 +242,15 @@ export async function votarPorLocal({ usuarioId, localId, fecha, eventoId = null
   return { error }
 }
 
+// Solo puede haber un voto por usuario y fecha (misma restricción que usa el
+// upsert de arriba), así que borrar por usuario_id + fecha borra únicamente
+// el voto de ESE día concreto, sin afectar a otras fechas. Se apoya en la
+// política RLS "Borrar voto propio" ya existente (auth.uid() = usuario_id).
+export async function eliminarVoto({ usuarioId, fecha }) {
+  const { error } = await supabase.from('votos').delete().eq('usuario_id', usuarioId).eq('fecha', fecha)
+  return { error }
+}
+
 // Carga el perfil del usuario autenticado. Si no existiera todavía (el alta
 // normal ya lo crea vía trigger, esto es solo un respaldo), lo crea de forma
 // segura: el upsert solo puede afectar a la fila cuyo id sea auth.uid(),

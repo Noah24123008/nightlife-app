@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getEventoPorId, getVotosDelDia, votarPorLocal, getPersonasQueVanHoy } from '../lib/api'
+import { getEventoPorId, getVotosDelDia, votarPorLocal, eliminarVoto, getPersonasQueVanHoy } from '../lib/api'
 import { formatearFechaLarga } from '../lib/dates'
 import { useEffect, useMemo, useState } from 'react'
 import VotoButton from '../components/VotoButton'
@@ -88,14 +88,21 @@ export default function FichaEvento() {
     if (!user || !evento?.locales) return
     setVotando(true)
     setError('')
-    const { error: errVoto } = await votarPorLocal({
-      usuarioId: user.id,
-      localId: evento.locales.id,
-      fecha: evento.fecha,
-      eventoId: evento.id,
-    })
+
+    const { error: errVoto } = voyAEsteEvento
+      ? await eliminarVoto({ usuarioId: user.id, fecha: evento.fecha })
+      : await votarPorLocal({
+          usuarioId: user.id,
+          localId: evento.locales.id,
+          fecha: evento.fecha,
+          eventoId: evento.id,
+        })
+
     if (errVoto) {
-      setError(mensajeError(errVoto, 'No se pudo registrar tu voto. Inténtalo de nuevo.'))
+      const mensajePorDefecto = voyAEsteEvento
+        ? 'No se pudo quitar tu voto. Inténtalo de nuevo.'
+        : 'No se pudo registrar tu voto. Inténtalo de nuevo.'
+      setError(mensajeError(errVoto, mensajePorDefecto))
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
     } else {
       const { data } = await getVotosDelDia(evento.fecha)

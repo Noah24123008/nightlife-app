@@ -4,7 +4,7 @@ export default function VotoButton({ votado, cargando, onClick, disabled }) {
       type="button"
       className={`glass-btn ${votado ? 'glass-btn--active' : ''}`}
       onClick={onClick}
-      disabled={disabled || cargando || votado}
+      disabled={disabled || cargando}
     >
       {cargando ? '...' : votado ? 'Vas aquí ✓' : 'Voy'}
     </button>
