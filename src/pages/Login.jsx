@@ -1,11 +1,15 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { destinoSeguro } from '../lib/navegacionSegura'
 import gijonHero from '../assets/gijon-hero.png'
 
 export default function Login() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -23,7 +27,7 @@ export default function Login() {
       return
     }
 
-    navigate('/')
+    navigate(destinoSeguro(from))
   }
 
   return (
@@ -49,10 +53,15 @@ export default function Login() {
           </button>
         </form>
         <p className="auth-switch">
-          <Link to="/recuperar-password">¿Has olvidado tu contraseña?</Link>
+          <Link to="/recuperar-password" state={from ? { from } : undefined}>
+            ¿Has olvidado tu contraseña?
+          </Link>
         </p>
         <p className="auth-switch">
-          ¿No tienes cuenta? <Link to="/registro">Regístrate</Link>
+          ¿No tienes cuenta?{' '}
+          <Link to="/registro" state={from ? { from } : undefined}>
+            Regístrate
+          </Link>
         </p>
       </div>
     </div>

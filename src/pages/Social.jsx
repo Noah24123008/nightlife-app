@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getSolicitudesPendientesRecibidas, responderSolicitudAmistad, getFeedSocialHoy } from '../lib/api'
+import { getSolicitudesPendientesRecibidas, responderSolicitudAmistad, getFeedSocialHoy, getAmigos } from '../lib/api'
 import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import PersonaChip from '../components/PersonaChip'
 import ActividadCard from '../components/ActividadCard'
+import InvitarAmigosCard from '../components/InvitarAmigosCard'
+import { compartirPerfil } from '../lib/compartir'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const DIAS_VISIBLES = 8
@@ -18,6 +20,20 @@ export default function Social() {
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
   const [procesandoId, setProcesandoId] = useState(null)
+
+  // Solo para decidir si mostrar el bloque grande de "invita a tus amigos"
+  // cuando el usuario todavía no tiene ninguno. Reutiliza getAmigos, ya
+  // existente (la misma función que usa Perfil.jsx).
+  const [numAmigos, setNumAmigos] = useState(null)
+  useEffect(() => {
+    let activo = true
+    getAmigos(user.id).then(({ data }) => {
+      if (activo) setNumAmigos((data ?? []).length)
+    })
+    return () => {
+      activo = false
+    }
+  }, [user.id])
 
   // Selector de día propio de esta pantalla: controla únicamente el bloque
   // de actividad de amigos de aquí abajo, nada más de Social.
@@ -113,6 +129,24 @@ export default function Social() {
             ›
           </span>
         </Link>
+
+        <InvitarAmigosCard userId={user.id} />
+
+        {numAmigos === 0 && (
+          <div className="social-v2-invitar-vacio">
+            <p className="social-v2-invitar-vacio-titulo">Tu gente todavía no está aquí</p>
+            <p className="social-v2-invitar-vacio-texto">
+              Invita a tus amigos para ver dónde vais a salir este finde.
+            </p>
+            <button
+              type="button"
+              className="social-v2-invitar-vacio-btn"
+              onClick={() => compartirPerfil(user.id)}
+            >
+              Invitar amigos
+            </button>
+          </div>
+        )}
 
         <h2 className="social-v2-seccion-titulo">Solicitudes pendientes</h2>
 

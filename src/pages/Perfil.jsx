@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getOCrearPerfil, guardarPerfil, subirAvatar, validarImagenAvatar, getAmigos } from '../lib/api'
 import ImagenConFallback from '../components/ImagenConFallback'
+import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 export default function Perfil() {
@@ -175,6 +176,8 @@ export default function Perfil() {
             ›
           </span>
         </Link>
+
+        <InvitarAmigosCard userId={user.id} />
 
         {error && <p className="auth-error">{error}</p>}
         {mensajeExito && <p className="auth-info">{mensajeExito}</p>}

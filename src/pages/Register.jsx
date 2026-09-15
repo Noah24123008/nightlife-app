@@ -1,10 +1,14 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { destinoSeguro } from '../lib/navegacionSegura'
 
 export default function Register() {
   const { signUp } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from
+
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -28,7 +32,7 @@ export default function Register() {
       // Sesión activa ya: confirmación de email desactivada o no requerida.
       // La decisión ya está tomada aquí; el setTimeout solo da tiempo a que
       // se lea el mensaje antes de navegar, no decide nada.
-      setTimeout(() => navigate('/'), 1200)
+      setTimeout(() => navigate(destinoSeguro(from)), 1200)
       return
     }
 
@@ -48,7 +52,7 @@ export default function Register() {
         <p className="auth-info">
           Cuenta creada. Revisa tu email para confirmar tu cuenta antes de iniciar sesión.
         </p>
-        <Link to="/login" className="inicio-ver-mas">
+        <Link to="/login" state={from ? { from } : undefined} className="inicio-ver-mas">
           Ir a iniciar sesión
         </Link>
       </div>
@@ -83,7 +87,10 @@ export default function Register() {
         </button>
       </form>
       <p className="auth-switch">
-        ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+        ¿Ya tienes cuenta?{' '}
+        <Link to="/login" state={from ? { from } : undefined}>
+          Inicia sesión
+        </Link>
       </p>
     </div>
   )

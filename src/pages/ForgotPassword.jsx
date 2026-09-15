@@ -1,9 +1,12 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function ForgotPassword() {
   const { requestPasswordReset } = useAuth()
+  const location = useLocation()
+  const from = location.state?.from
+
   const [email, setEmail] = useState('')
   const [error, setError] = useState('')
   const [info, setInfo] = useState('')
@@ -40,7 +43,9 @@ export default function ForgotPassword() {
         </button>
       </form>
       <p className="auth-switch">
-        <Link to="/login">Volver a iniciar sesión</Link>
+        <Link to="/login" state={from ? { from } : undefined}>
+          Volver a iniciar sesión
+        </Link>
       </p>
     </div>
   )

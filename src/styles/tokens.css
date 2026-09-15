@@ -3219,3 +3219,103 @@ button {
 .inicio-v2 .local-item--destacado .local-item-enlace {
   padding-left: 16px;
 }
+
+/* ============================================================
+   INVITAR AMIGOS — tarjeta reutilizable (Perfil y Social).
+   Estilo autocontenido (no depende de las variables de ninguna
+   pantalla concreta) para que el componente sea igual en ambas.
+   ============================================================ */
+
+.invitar-amigos-wrap {
+  margin-bottom: 24px;
+}
+
+.invitar-amigos-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #efeeec;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: #15151a;
+  text-align: left;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.invitar-amigos-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.06);
+  font-size: 17px;
+  flex: 0 0 auto;
+}
+
+.invitar-amigos-texto {
+  flex: 1;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.invitar-amigos-chevron {
+  flex: 0 0 auto;
+  color: #8a8f9c;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.invitar-amigos-toast {
+  margin: 8px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #15151a;
+  text-align: center;
+}
+
+/* ============================================================
+   Bloque grande de "invita a tus amigos" en Social, solo cuando el
+   usuario tiene 0 amigos.
+   ============================================================ */
+
+.social-v2-invitar-vacio {
+  text-align: center;
+  padding: 28px 20px;
+  margin-bottom: 24px;
+  background: var(--sv-card-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.social-v2-invitar-vacio-titulo {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--sv-text);
+}
+
+.social-v2-invitar-vacio-texto {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--sv-text-muted);
+}
+
+.social-v2-invitar-vacio-btn {
+  background: rgba(21, 21, 26, 0.92);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 24px;
+  font-weight: 700;
+  font-size: 14px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
