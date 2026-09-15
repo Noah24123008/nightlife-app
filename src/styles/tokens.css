@@ -188,7 +188,9 @@ button {
   color: #8a8f9c;
 }
 
-.auth-form input {
+.auth-form input,
+.auth-form select,
+.auth-form textarea {
   background: #faf9f7;
   border: 1px solid #efeeec;
   border-radius: 12px;
@@ -198,7 +200,9 @@ button {
   font-family: var(--font-body);
 }
 
-.auth-form input:focus {
+.auth-form input:focus,
+.auth-form select:focus,
+.auth-form textarea:focus {
   outline: none;
   border-color: rgba(21, 21, 26, 0.35);
   background: #ffffff;
@@ -3318,4 +3322,267 @@ button {
   font-size: 14px;
   font-family: var(--font-body);
   cursor: pointer;
+}
+
+/* ============================================================
+   PANEL ADMIN V1 — estilo autocontenido (blanco/negro/gris, mismo
+   lenguaje que el resto de la app). Los formularios reutilizan
+   .auth-form (inputs/labels/botón ya en tema claro); aquí solo se
+   añade lo que .auth-form no cubre: cabecera, tabs, tarjetas de
+   métricas, filas de lista y el botón secundario "Cancelar".
+   ============================================================ */
+
+.admin-v1 {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #faf9f7;
+  color: #15151a;
+  padding-bottom: 40px;
+}
+
+.admin-v1-header {
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 20px 4px;
+}
+
+.admin-v1-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: #15151a;
+}
+
+.admin-v1-subtitulo {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a8f9c;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-v1-nav {
+  display: flex;
+  gap: 6px;
+  padding: 16px 20px;
+  overflow-x: auto;
+}
+
+.admin-v1-tab {
+  flex: 0 0 auto;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #efeeec;
+  color: #55596a;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.admin-v1-tab--activo {
+  background: rgba(21, 21, 26, 0.92);
+  border-color: rgba(21, 21, 26, 0.92);
+  color: #ffffff;
+}
+
+.admin-v1-contenido {
+  padding: 0 20px;
+  max-width: 640px;
+}
+
+.admin-v1-metricas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.admin-v1-metrica-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #efeeec;
+  border-radius: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.admin-v1-metrica-numero {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: #15151a;
+}
+
+.admin-v1-metrica-etiqueta {
+  font-size: 13px;
+  color: #8a8f9c;
+}
+
+.admin-v1-seccion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.admin-v1-seccion-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.admin-v1-btn-nuevo {
+  flex: 0 0 auto;
+  background: rgba(21, 21, 26, 0.92);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+.admin-v1-btn-nuevo:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.admin-v1-form {
+  margin-bottom: 20px;
+}
+
+.admin-v1-form-titulo {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.admin-v1-form-acciones {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-v1-form-acciones button {
+  flex: 1;
+}
+
+.admin-v1-form .admin-v1-btn-cancelar {
+  background: none;
+  color: #55596a;
+  border: 1px solid #efeeec;
+}
+
+.admin-v1-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-v1-fila {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid #efeeec;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-v1-fila--inactivo {
+  opacity: 0.6;
+}
+
+.admin-v1-fila-foto,
+.admin-v1-fila-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background: #efeeec;
+}
+
+.admin-v1-fila-avatar {
+  border-radius: 999px;
+}
+
+.admin-v1-fila-foto--vacia {
+  background: #efeeec;
+}
+
+.admin-v1-fila-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-v1-fila-nombre {
+  margin: 0;
+  font-weight: 700;
+  font-size: 14px;
+  color: #15151a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-v1-fila-detalle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #8a8f9c;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-v1-estado {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+}
+
+.admin-v1-estado--activo {
+  background: rgba(52, 199, 89, 0.12);
+  color: #1a7d3a;
+}
+
+.admin-v1-estado--inactivo {
+  background: rgba(21, 21, 26, 0.06);
+  color: #8a8f9c;
+}
+
+.admin-v1-fila-acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.admin-v1-fila-acciones button {
+  background: none;
+  border: 1px solid #efeeec;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #15151a;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-v1-fila-acciones button:disabled {
+  opacity: 0.5;
+  cursor: default;
 }

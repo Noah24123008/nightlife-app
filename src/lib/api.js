@@ -312,3 +312,62 @@ export async function subirAvatar(userId, archivo) {
   const url = `${data.publicUrl}?v=${Date.now()}`
   return { url, error: null }
 }
+
+// ============================================================
+// ADMIN — Panel de Administración V1.
+// Todas las escrituras pasan por RPCs security definer que
+// comprueban es_admin(auth.uid()) en el propio backend; el frontend
+// nunca decide la autorización, solo la refleja.
+// ============================================================
+
+export async function getMiRol(usuarioId) {
+  const { data, error } = await supabase.from('profiles').select('rol').eq('id', usuarioId).single()
+  return { data, error }
+}
+
+// Lectura simple de todos los locales (activos e inactivos), para el
+// panel. La tabla ya tiene lectura pública en RLS; esta función solo
+// evita repetir el .eq('activo', true) que sí usa getLocalesPorCiudad
+// para el listado público.
+export async function getTodosLosLocalesAdmin() {
+  const { data, error } = await supabase.from('locales').select('*').order('nombre')
+  return { data, error }
+}
+
+export async function adminGuardarLocal(payload) {
+  const { data, error } = await supabase.rpc('admin_guardar_local', payload)
+  return { data, error }
+}
+
+export async function adminToggleLocalActivo(localId) {
+  const { data, error } = await supabase.rpc('admin_toggle_local_activo', { p_local_id: localId })
+  return { data, error }
+}
+
+export async function getTodosLosEventosAdmin() {
+  const { data, error } = await supabase
+    .from('eventos')
+    .select('*, locales(id, nombre)')
+    .order('fecha', { ascending: false })
+  return { data, error }
+}
+
+export async function adminGuardarEvento(payload) {
+  const { data, error } = await supabase.rpc('admin_guardar_evento', payload)
+  return { data, error }
+}
+
+export async function adminToggleEventoActivo(eventoId) {
+  const { data, error } = await supabase.rpc('admin_toggle_evento_activo', { p_evento_id: eventoId })
+  return { data, error }
+}
+
+export async function adminListarUsuarios() {
+  const { data, error } = await supabase.rpc('admin_listar_usuarios')
+  return { data, error }
+}
+
+export async function adminMetricas() {
+  const { data, error } = await supabase.rpc('admin_metricas')
+  return { data, error }
+}

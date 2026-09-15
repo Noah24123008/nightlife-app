@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './routes/ProtectedRoute'
+import AdminRoute from './routes/AdminRoute'
 import AppLayout from './routes/AppLayout'
 import Register from './pages/Register'
 import Login from './pages/Login'
@@ -18,6 +19,11 @@ import Buscar from './pages/Buscar'
 import Notificaciones from './pages/Notificaciones'
 import DondeVaLaGente from './pages/DondeVaLaGente'
 import Social from './pages/Social'
+import AdminLayout from './pages/admin/AdminLayout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminLocales from './pages/admin/AdminLocales'
+import AdminEventos from './pages/admin/AdminEventos'
+import AdminUsuarios from './pages/admin/AdminUsuarios'
 
 export default function App() {
   return (
@@ -47,6 +53,19 @@ export default function App() {
             <Route path="/notificaciones" element={<Notificaciones />} />
             <Route path="/hoy" element={<DondeVaLaGente />} />
             <Route path="/social" element={<Social />} />
+          </Route>
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="locales" element={<AdminLocales />} />
+            <Route path="eventos" element={<AdminEventos />} />
+            <Route path="usuarios" element={<AdminUsuarios />} />
           </Route>
         </Routes>
       </BrowserRouter>
