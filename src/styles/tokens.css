@@ -75,6 +75,7 @@
 .calendar-picker-mes-btn,
 .inicio-v2-hero-ciudad-btn,
 .perfil-v2-avatar-camara {
+  -webkit-tap-highlight-color: transparent;
   transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) ease,
     background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
 }
@@ -123,6 +124,7 @@
 .social-v2-buscador,
 .notificacion-card,
 .persona-chip {
+  -webkit-tap-highlight-color: transparent;
   transition: opacity var(--duration-fast) ease, transform var(--duration-fast) var(--ease-standard);
 }
 
@@ -157,6 +159,7 @@
    Crear cuenta, Enviar enlace, Restablecer — el press más suave de todos,
    apropiado para un botón grande y ya muy visible por sí mismo. */
 .auth-form button {
+  -webkit-tap-highlight-color: transparent;
   transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) ease;
 }
 
@@ -168,6 +171,7 @@
 /* Enlaces-botón discretos: no necesitan escala, solo una atenuación breve. */
 .amistad-eliminar,
 .perfil-salir {
+  -webkit-tap-highlight-color: transparent;
   transition: opacity var(--duration-fast) ease;
 }
 
@@ -180,6 +184,7 @@
    seleccionado) — opacity funciona igual de bien sobre cualquiera de esos
    fondos sin necesitar una regla distinta por estado. */
 .calendar-picker-dia {
+  -webkit-tap-highlight-color: transparent;
   transition: opacity var(--duration-fast) ease;
 }
 
@@ -191,6 +196,7 @@
    está disabled, así que :not(:disabled) ya la excluye sin necesidad de
    un selector aparte. */
 .inicio-v2-ciudad-opcion {
+  -webkit-tap-highlight-color: transparent;
   transition: opacity var(--duration-fast) ease;
 }
 
