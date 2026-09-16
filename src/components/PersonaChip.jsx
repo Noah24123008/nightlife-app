@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ImagenConFallback from './ImagenConFallback'
+import { iniciales } from '../lib/iniciales'
 
 export default function PersonaChip({ perfil }) {
   const etiqueta = perfil.nombre || (perfil.nombre_usuario ? `@${perfil.nombre_usuario}` : 'Usuario')
@@ -11,6 +12,7 @@ export default function PersonaChip({ perfil }) {
         alt={etiqueta}
         className="persona-chip-foto"
         placeholderClassName="persona-chip-foto persona-chip-foto--vacia"
+        textoAlternativo={iniciales(perfil)}
       />
       <span className="persona-chip-nombre">{etiqueta}</span>
     </Link>

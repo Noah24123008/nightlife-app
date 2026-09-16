@@ -16,6 +16,7 @@ import { toISODate } from '../lib/dates'
 import ImagenConFallback from '../components/ImagenConFallback'
 import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
+import { iniciales } from '../lib/iniciales'
 
 export default function PerfilPublico() {
   const { id } = useParams()
@@ -181,6 +182,7 @@ export default function PerfilPublico() {
             alt={perfil.nombre || 'Foto de perfil'}
             className="perfil-foto"
             placeholderClassName="perfil-foto perfil-foto--vacia"
+            textoAlternativo={iniciales(perfil)}
           />
         </div>
 

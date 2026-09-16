@@ -5,6 +5,7 @@ import { getOCrearPerfil, guardarPerfil, subirAvatar, validarImagenAvatar, getAm
 import ImagenConFallback from '../components/ImagenConFallback'
 import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
+import { iniciales } from '../lib/iniciales'
 
 export default function Perfil() {
   const { user, signOut } = useAuth()
@@ -135,6 +136,7 @@ export default function Perfil() {
             alt="Foto de perfil"
             className="perfil-foto perfil-v2-avatar"
             placeholderClassName="perfil-foto perfil-foto--vacia perfil-v2-avatar"
+            textoAlternativo={iniciales({ nombre, nombre_usuario: nombreUsuario })}
           />
           <input
             ref={inputArchivoRef}

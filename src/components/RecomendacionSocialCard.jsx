@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import ImagenConFallback from './ImagenConFallback'
+import { iniciales } from '../lib/iniciales'
 
 export default function RecomendacionSocialCard({ recomendacion, fecha }) {
   const muestra = recomendacion.muestra_seguidos || []
@@ -23,7 +24,12 @@ export default function RecomendacionSocialCard({ recomendacion, fecha }) {
               className="mini-avatar"
               title={perfil.nombre || perfil.nombre_usuario || 'Usuario'}
             >
-              <ImagenConFallback src={perfil.foto_url} alt="" placeholderClassName="mini-avatar--vacio" />
+              <ImagenConFallback
+                src={perfil.foto_url}
+                alt=""
+                placeholderClassName="mini-avatar--vacio"
+                textoAlternativo={iniciales(perfil)}
+              />
             </span>
           ))}
         </div>
