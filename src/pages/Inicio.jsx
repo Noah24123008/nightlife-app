@@ -240,31 +240,50 @@ export default function Inicio() {
 
   async function handleVotar(localId) {
     if (!user) return
+
+    const fecha = diaSeleccionado.fechaISO
+    const yaVotadoAqui = miVotoLocalId === localId
+
+    // Optimista: votosDia es la misma fuente de la que ya derivan
+    // miVotoLocalId y el ranking (useMemo), así que mutarla aquí basta —
+    // no se duplica ninguna lógica, todo lo demás se recalcula solo.
+    // Si ya había un voto (en este local u otro), se quita antes de poner
+    // el nuevo: así cambiar de local dentro del mismo día se ve como
+    // "sueltas uno, coges el otro", nunca como dos votos a la vez.
+    const votosPrevios = votosDia
+    const otrosVotos = votosDia.filter((v) => v.usuario_id !== user.id)
+    const votosOptimistas = yaVotadoAqui
+      ? otrosVotos
+      : [...otrosVotos, { usuario_id: user.id, local_id: localId, fecha, evento_id: null }]
+
+    setVotosDia(votosOptimistas)
     setVotandoLocalId(localId)
     setError('')
 
-    const yaVotadoAqui = miVotoLocalId === localId
     const { error: errVoto } = yaVotadoAqui
-      ? await eliminarVoto({ usuarioId: user.id, fecha: diaSeleccionado.fechaISO })
-      : await votarPorLocal({ usuarioId: user.id, localId, fecha: diaSeleccionado.fechaISO })
+      ? await eliminarVoto({ usuarioId: user.id, fecha })
+      : await votarPorLocal({ usuarioId: user.id, localId, fecha })
 
     if (errVoto) {
+      // Revertir: el botón y los contadores vuelven exactamente a como
+      // estaban antes del clic.
+      setVotosDia(votosPrevios)
       const mensajePorDefecto = yaVotadoAqui
         ? 'No se pudo quitar tu voto. Inténtalo de nuevo.'
         : 'No se pudo registrar tu voto. Inténtalo de nuevo.'
       setError(mensajeError(errVoto, mensajePorDefecto))
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
     } else {
-      const [{ data: votosData }, { data: rankingAmigosData }] = await Promise.all([
-        getVotosDelDia(diaSeleccionado.fechaISO),
-        getDondeVaLaGenteHoy(diaSeleccionado.fechaISO),
-      ])
-      setVotosDia(votosData ?? [])
-      const totalAmigosPorId = {}
-      for (const item of rankingAmigosData ?? []) {
-        totalAmigosPorId[item.local_id] = item.total_amigos ?? 0
-      }
-      setTotalAmigosPorLocal(totalAmigosPorId)
+      // El conteo de amigos depende de son_amigos() en el servidor (no se
+      // puede calcular en el cliente) — se refresca en segundo plano, sin
+      // bloquear el botón, que ya muestra el estado correcto al instante.
+      getDondeVaLaGenteHoy(fecha).then(({ data: rankingAmigosData }) => {
+        const totalAmigosPorId = {}
+        for (const item of rankingAmigosData ?? []) {
+          totalAmigosPorId[item.local_id] = item.total_amigos ?? 0
+        }
+        setTotalAmigosPorLocal(totalAmigosPorId)
+      })
     }
     setVotandoLocalId(null)
   }

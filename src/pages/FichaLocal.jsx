@@ -122,23 +122,30 @@ export default function FichaLocal() {
 
   async function handleVotar() {
     if (!user || !local) return
+
+    const yaVotadoAqui = miVotoLocalId === local.id
+
+    const votosPrevios = votosDia
+    const otrosVotos = votosDia.filter((v) => v.usuario_id !== user.id)
+    const votosOptimistas = yaVotadoAqui
+      ? otrosVotos
+      : [...otrosVotos, { usuario_id: user.id, local_id: local.id, fecha: fechaContexto, evento_id: null }]
+
+    setVotosDia(votosOptimistas)
     setVotando(true)
     setError('')
 
-    const yaVotadoAqui = miVotoLocalId === local.id
     const { error: errVoto } = yaVotadoAqui
       ? await eliminarVoto({ usuarioId: user.id, fecha: fechaContexto })
       : await votarPorLocal({ usuarioId: user.id, localId: local.id, fecha: fechaContexto })
 
     if (errVoto) {
+      setVotosDia(votosPrevios)
       const mensajePorDefecto = yaVotadoAqui
         ? 'No se pudo quitar tu voto. Inténtalo de nuevo.'
         : 'No se pudo registrar tu voto. Inténtalo de nuevo.'
       setError(mensajeError(errVoto, mensajePorDefecto))
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
-    } else {
-      const { data } = await getVotosDelDia(fechaContexto)
-      setVotosDia(data ?? [])
     }
     setVotando(false)
   }

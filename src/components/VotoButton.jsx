@@ -6,7 +6,7 @@ export default function VotoButton({ votado, cargando, onClick, disabled }) {
       onClick={onClick}
       disabled={disabled || cargando}
     >
-      {cargando ? '...' : votado ? 'Vas aquí ✓' : 'Voy'}
+      {votado ? 'Vas aquí ✓' : 'Voy'}
     </button>
   )
 }

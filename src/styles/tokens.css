@@ -17,10 +17,122 @@
      padding-bottom de .app-screen), no aquí. Si se cambia el padding o
      el min-height de abajo, actualizar este valor también. */
   --bottom-nav-height: 60px;
+
+  /* ------------------------------------------------------------
+     Sistema claro consolidado — cada pantalla -v2 definía su propia
+     paleta casi idéntica (--pv-*, --sv-*, --nt-*, ...) con los mismos
+     hex repetidos. Estas variables son la fuente única; las variables
+     por pantalla se mantienen (no se tocan sus usos existentes, cero
+     riesgo de regresión visual) pero ahora pueden apuntar aquí y el
+     código nuevo/corregido en esta fase ya las usa directamente.
+     ------------------------------------------------------------ */
+  --surface-bg: #faf9f7;
+  --surface-card: #ffffff;
+  --surface-border: #efeeec;
+  --surface-text: #15151a;
+  --surface-text-muted: #8a8f9c;
+  --surface-active: rgba(21, 21, 26, 0.92);
+
+  /* Radios: dos escalones cubren casi todos los casos reales del
+     proyecto (tarjeta grande / elemento de lista más compacto); el
+     resto de valores sueltos que ya existen no se tocan. */
+  --radius-lg: 20px;
+  --radius-md: 16px;
+  --radius-pill: 999px;
+
+  /* Misma sombra de tarjeta que ya se repetía casi sin variación en
+     más de 30 sitios distintos del proyecto. */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-float: 0 12px 32px rgba(20, 30, 50, 0.18);
+
+  --space-xs: 6px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+
+  --ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
 }
 
 * {
   box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------
+   Feedback de interacción global — un solo sitio, máximo alcance:
+   .glass-btn, .glass-chip y .glass-icon-btn son la base de casi todos
+   los botones/chips/iconos pulsables de la app (Voy, días, flechas,
+   campana, accesos...). Un pequeño press-state y un foco visible
+   consistente aquí cubre la inmensa mayoría de la interfaz sin tocar
+   cada pantalla por separado. Duración corta (150ms), nada exagerado.
+   ------------------------------------------------------------ */
+
+.glass-btn,
+.glass-chip,
+.glass-icon-btn {
+  transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) ease,
+    background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.glass-btn:active:not(:disabled),
+.glass-chip:active,
+.glass-icon-btn:active {
+  transform: scale(0.96);
+  opacity: 0.85;
+}
+
+.glass-btn:focus-visible,
+.glass-chip:focus-visible,
+.glass-icon-btn:focus-visible,
+.local-item-enlace:focus-visible,
+.local-hoy-enlace:focus-visible {
+  outline: 2px solid rgba(21, 21, 26, 0.55);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .glass-btn:hover:not(:disabled),
+  .glass-icon-btn:hover {
+    filter: brightness(0.97);
+  }
+}
+
+/* Filas/tarjetas que navegan a otra pantalla (ranking, listas, accesos) —
+   mismo criterio: feedback sutil, sin tocar cada pantalla por separado. */
+.local-item-enlace,
+.local-hoy-enlace,
+.social-v2-acceso,
+.perfil-v2-acceso,
+.invitar-amigos-card,
+.admin-v1-fila,
+.buscar-v2-fila .persona-chip,
+.amigos-v2-fila .persona-chip {
+  transition: opacity var(--duration-fast) ease;
+}
+
+.local-item-enlace:active,
+.local-hoy-enlace:active,
+.social-v2-acceso:active,
+.perfil-v2-acceso:active,
+.invitar-amigos-card:active,
+.admin-v1-fila:active,
+.buscar-v2-fila .persona-chip:active,
+.amigos-v2-fila .persona-chip:active {
+  opacity: 0.7;
+}
+
+/* Respaldo universal: cualquier elemento interactivo que no tenga ya un
+   foco visible más específico (los de arriba, o los propios de
+   .auth-form input) recibe al menos este anillo — nunca se navega a
+   teclado sin saber dónde está el foco. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(21, 21, 26, 0.5);
+  outline-offset: 2px;
 }
 
 /* ============================================================
@@ -288,6 +400,8 @@ button {
 
 .day-selector {
   display: flex;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 8px;
@@ -776,12 +890,12 @@ button {
   border-radius: 50%;
   object-fit: cover;
   flex: 0 0 auto;
-  background: var(--color-bg);
+  background: #eceae6;
 }
 
 .persona-chip-foto--vacia {
   display: block;
-  background: linear-gradient(135deg, var(--color-bg), var(--color-border));
+  background: linear-gradient(135deg, #eceae6, #d9d6d0);
 }
 
 .persona-chip-nombre {
@@ -1101,7 +1215,7 @@ button {
   display: block;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, var(--color-bg), var(--color-border));
+  background: linear-gradient(135deg, #eceae6, #d9d6d0);
 }
 
 .mini-avatares-mas {
@@ -1212,7 +1326,7 @@ button {
 
 .perfil-foto--vacia {
   display: block;
-  background: linear-gradient(135deg, var(--color-surface), var(--color-border));
+  background: linear-gradient(135deg, #eceae6, #d9d6d0);
 }
 
 .perfil-nota {
@@ -1301,8 +1415,9 @@ button {
   margin: 16px 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   font-size: 14px;
+  line-height: 1.5;
 }
 
 .ficha-datos p {
@@ -1686,7 +1801,7 @@ button {
   border-radius: 20px;
   padding: 14px;
   gap: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .inicio-v2 .local-item--votado {
@@ -1726,7 +1841,7 @@ button {
   background: var(--inicio-card-bg);
   border: 1px solid var(--inicio-border);
   border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .inicio-v2 .evento-nombre {
@@ -1742,7 +1857,7 @@ button {
   background: var(--inicio-card-bg);
   border: 1px solid var(--inicio-border);
   border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .inicio-v2 .inicio-vacio {
@@ -1918,7 +2033,7 @@ button {
   border-radius: 20px;
   padding: 14px;
   gap: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .locales-v2 .local-card-foto-miniatura {
@@ -2063,7 +2178,7 @@ button {
   border-radius: 20px;
   padding: 20px;
   margin-bottom: 32px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .ficha-local-v2 .ficha-votantes .ficha-subtitulo {
@@ -2094,7 +2209,7 @@ button {
   border: 1px solid var(--fl-border);
   border-radius: 18px;
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   align-items: center;
 }
 
@@ -2245,7 +2360,7 @@ button {
   border: 1px solid var(--fe-border);
   border-radius: 16px;
   padding: 12px 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .ficha-evento-v2-info-icono {
@@ -2282,7 +2397,7 @@ button {
   border: 1px solid var(--fe-border);
   border-radius: 20px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .ficha-evento-v2 .ficha-votantes .ficha-subtitulo {
@@ -2345,7 +2460,7 @@ button {
   border: 1px solid var(--dv-border);
   border-radius: 20px;
   padding: 11px 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .donde-va-v2 .mini-avatares {
@@ -2359,9 +2474,9 @@ button {
 
 /* Puesto #1: acento cálido, sin cambiar ningún dato ni añadir badges */
 .donde-va-v2 .local-item--destacado {
-  background: var(--dv-card-bg);
-  border: 1.5px solid var(--color-accent-warm);
-  box-shadow: 0 4px 14px rgba(245, 166, 35, 0.16);
+  background: linear-gradient(180deg, rgba(245, 166, 35, 0.07), var(--dv-card-bg) 55%);
+  border: 1px solid rgba(245, 166, 35, 0.28);
+  box-shadow: 0 6px 20px rgba(245, 166, 35, 0.14);
 }
 
 .donde-va-v2 .rank-position {
@@ -2474,7 +2589,7 @@ button {
   background: var(--sv-card-bg);
   border: 1px solid var(--sv-border);
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   text-decoration: none;
   color: var(--sv-text);
 }
@@ -2523,7 +2638,7 @@ button {
   background: var(--sv-card-bg);
   border: 1px solid var(--sv-border);
   border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .social-v2-vacio-icono {
@@ -2543,7 +2658,7 @@ button {
   background: var(--sv-card-bg);
   border: 1px solid var(--sv-border);
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .social-v2 .persona-chip {
@@ -2564,7 +2679,7 @@ button {
   border: 1px solid var(--sv-border);
   border-radius: 18px;
   padding: 14px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .social-v2 .actividad-destino {
@@ -2655,7 +2770,7 @@ button {
   background: var(--bs-card-bg);
   border: 1px solid var(--bs-border);
   color: var(--bs-text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   flex: 1;
 }
 
@@ -2709,7 +2824,7 @@ button {
   background: var(--am-card-bg);
   border: 1px solid var(--am-border);
   color: var(--am-text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   flex: 1;
 }
 
@@ -2922,7 +3037,7 @@ button {
   background: var(--pv-card-bg);
   border: 1px solid var(--pv-border);
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   text-decoration: none;
 }
 
@@ -2952,7 +3067,7 @@ button {
   background: var(--pv-card-bg);
   border: 1px solid var(--pv-border);
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   text-decoration: none;
   color: var(--pv-text);
   text-align: left;
@@ -3167,7 +3282,7 @@ button {
   border: 1px solid var(--nt-border);
   border-radius: 20px;
   padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .notificaciones-v2 .notificacion-card--no-leida {
@@ -3207,6 +3322,8 @@ button {
 
 .inicio-v2 .local-item--destacado {
   padding: 20px 16px 20px 0;
+  background: linear-gradient(180deg, rgba(245, 166, 35, 0.08), #ffffff 55%);
+  border: 1px solid rgba(245, 166, 35, 0.28);
 }
 
 .inicio-v2 .local-item-enlace {
@@ -3243,7 +3360,7 @@ button {
   background: #ffffff;
   border: 1px solid #efeeec;
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   color: #15151a;
   text-align: left;
   font-family: var(--font-body);
@@ -3295,7 +3412,7 @@ button {
   background: var(--sv-card-bg);
   border: 1px solid var(--sv-border);
   border-radius: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .social-v2-invitar-vacio-titulo {
@@ -3406,7 +3523,7 @@ button {
   background: #ffffff;
   border: 1px solid #efeeec;
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
 }
 
 .admin-v1-metrica-numero {
@@ -3494,7 +3611,7 @@ button {
   background: #ffffff;
   border: 1px solid #efeeec;
   border-radius: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-card);
   text-decoration: none;
   color: inherit;
 }

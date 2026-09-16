@@ -86,6 +86,17 @@ export default function FichaEvento() {
 
   async function handleVotar() {
     if (!user || !evento?.locales) return
+
+    const votosPrevios = votosDelDia
+    const otrosVotos = votosDelDia.filter((v) => v.usuario_id !== user.id)
+    const votosOptimistas = voyAEsteEvento
+      ? otrosVotos
+      : [
+          ...otrosVotos,
+          { usuario_id: user.id, local_id: evento.locales.id, fecha: evento.fecha, evento_id: evento.id },
+        ]
+
+    setVotosDelDia(votosOptimistas)
     setVotando(true)
     setError('')
 
@@ -99,14 +110,12 @@ export default function FichaEvento() {
         })
 
     if (errVoto) {
+      setVotosDelDia(votosPrevios)
       const mensajePorDefecto = voyAEsteEvento
         ? 'No se pudo quitar tu voto. Inténtalo de nuevo.'
         : 'No se pudo registrar tu voto. Inténtalo de nuevo.'
       setError(mensajeError(errVoto, mensajePorDefecto))
       if (esErrorDeAutenticacion(errVoto)) setTimeout(() => signOut(), 2000)
-    } else {
-      const { data } = await getVotosDelDia(evento.fecha)
-      setVotosDelDia(data ?? [])
     }
     setVotando(false)
   }
