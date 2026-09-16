@@ -70,14 +70,22 @@
 
 .glass-btn,
 .glass-chip,
-.glass-icon-btn {
+.glass-icon-btn,
+.calendar-picker-cerrar,
+.calendar-picker-mes-btn,
+.inicio-v2-hero-ciudad-btn,
+.perfil-v2-avatar-camara {
   transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) ease,
     background var(--duration-fast) ease, border-color var(--duration-fast) ease, color var(--duration-fast) ease;
 }
 
 .glass-btn:active:not(:disabled),
 .glass-chip:active,
-.glass-icon-btn:active {
+.glass-icon-btn:active,
+.calendar-picker-cerrar:active,
+.calendar-picker-mes-btn:active:not(:disabled),
+.inicio-v2-hero-ciudad-btn:active,
+.perfil-v2-avatar-camara:active:not(:disabled) {
   transform: scale(0.96);
   opacity: 0.85;
 }
@@ -99,16 +107,23 @@
 }
 
 /* Filas/tarjetas que navegan a otra pantalla (ranking, listas, accesos) —
-   mismo criterio: feedback sutil, sin tocar cada pantalla por separado. */
+   mismo criterio: feedback sutil, sin tocar cada pantalla por separado.
+   Intensidad "tarjeta": la más sutil de todas (scale 0.99 + opacity leve),
+   para que un bloque grande de contenido no parezca "temblar" al tocarlo. */
 .local-item-enlace,
 .local-hoy-enlace,
 .social-v2-acceso,
 .perfil-v2-acceso,
 .invitar-amigos-card,
-.admin-v1-fila,
 .buscar-v2-fila .persona-chip,
-.amigos-v2-fila .persona-chip {
-  transition: opacity var(--duration-fast) ease;
+.amigos-v2-fila .persona-chip,
+.local-card,
+.evento-item,
+.perfil-v2-stat-card,
+.social-v2-buscador,
+.notificacion-card,
+.persona-chip {
+  transition: opacity var(--duration-fast) ease, transform var(--duration-fast) var(--ease-standard);
 }
 
 .local-item-enlace:active,
@@ -116,9 +131,70 @@
 .social-v2-acceso:active,
 .perfil-v2-acceso:active,
 .invitar-amigos-card:active,
-.admin-v1-fila:active,
 .buscar-v2-fila .persona-chip:active,
-.amigos-v2-fila .persona-chip:active {
+.amigos-v2-fila .persona-chip:active,
+.local-card:active,
+.evento-item:active,
+.perfil-v2-stat-card:active,
+.social-v2-buscador:active,
+.notificacion-card:active,
+.persona-chip:active {
+  opacity: 0.9;
+  transform: scale(0.99);
+}
+
+/* admin-v1-fila queda aislada, con su propio feedback sin tocar — no forma
+   parte de esta pasada (el panel admin está fuera de alcance). */
+.admin-v1-fila {
+  transition: opacity var(--duration-fast) ease;
+}
+
+.admin-v1-fila:active {
+  opacity: 0.7;
+}
+
+/* CTA grandes (negro sólido, ancho completo): Guardar cambios, Entrar,
+   Crear cuenta, Enviar enlace, Restablecer — el press más suave de todos,
+   apropiado para un botón grande y ya muy visible por sí mismo. */
+.auth-form button {
+  transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) ease;
+}
+
+.auth-form button:active:not(:disabled) {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+/* Enlaces-botón discretos: no necesitan escala, solo una atenuación breve. */
+.amistad-eliminar,
+.perfil-salir {
+  transition: opacity var(--duration-fast) ease;
+}
+
+.amistad-eliminar:active:not(:disabled),
+.perfil-salir:active {
+  opacity: 0.55;
+}
+
+/* Días del calendario: celda pequeña con su propio estado de color (hoy /
+   seleccionado) — opacity funciona igual de bien sobre cualquiera de esos
+   fondos sin necesitar una regla distinta por estado. */
+.calendar-picker-dia {
+  transition: opacity var(--duration-fast) ease;
+}
+
+.calendar-picker-dia:active:not(:disabled) {
+  opacity: 0.6;
+}
+
+/* Fila de opción dentro del desplegable de ciudad (Gijón/Oviedo). Oviedo
+   está disabled, así que :not(:disabled) ya la excluye sin necesidad de
+   un selector aparte. */
+.inicio-v2-ciudad-opcion {
+  transition: opacity var(--duration-fast) ease;
+}
+
+.inicio-v2-ciudad-opcion:active:not(:disabled) {
   opacity: 0.7;
 }
 
