@@ -8,6 +8,7 @@ import PersonaChip from '../components/PersonaChip'
 import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import BackButton from '../components/BackButton'
+import { SkeletonFicha, SkeletonPersonaFila } from '../components/Skeleton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const LIMITE_VOTANTES_VISIBLES = 8
@@ -153,9 +154,11 @@ export default function FichaLocal() {
   if (cargando) {
     return (
       <div className="app-screen ficha-local-v2">
-        <div className="ficha-local-v2-contenido">
-          <BackButton />
-          <p className="app-loading">Cargando local...</p>
+        <div className="ficha-local-v2-hero">
+          <div className="ficha-local-v2-hero-back">
+            <BackButton />
+          </div>
+          <SkeletonFicha />
         </div>
       </div>
     )
@@ -214,7 +217,11 @@ export default function FichaLocal() {
         <div className="ficha-votantes">
           <h2 className="ficha-subtitulo">Quién va {etiquetaTexto}</h2>
           {cargandoVotantes ? (
-            <p className="app-loading">Cargando...</p>
+            <div className="votantes-lista">
+              <SkeletonPersonaFila />
+              <SkeletonPersonaFila />
+              <SkeletonPersonaFila />
+            </div>
           ) : votantes.length === 0 ? (
             <p className="inicio-vacio">Todavía nadie ha indicado que va {etiquetaTexto}.</p>
           ) : (

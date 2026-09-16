@@ -17,6 +17,7 @@ import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
 import RecomendacionSocialCard from '../components/RecomendacionSocialCard'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
+import { SkeletonRankingFila, SkeletonLocalCard } from '../components/Skeleton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import gijonHero from '../assets/gijon-hero.png'
 
@@ -400,7 +401,12 @@ export default function Inicio() {
         {error && <p className="auth-error">{error}</p>}
 
         {cargandoBase || cargandoDia ? (
-          <p className="app-loading">Cargando...</p>
+          <ul className="ranking">
+            <SkeletonRankingFila />
+            <SkeletonRankingFila />
+            <SkeletonRankingFila />
+            <SkeletonRankingFila />
+          </ul>
         ) : (
           <>
             <section className="inicio-v2-seccion">
@@ -479,7 +485,10 @@ export default function Inicio() {
         <section className="inicio-v2-seccion recomendaciones-social">
           <h2 className="inicio-v2-seccion-titulo">Te puede interesar {etiquetaTexto}</h2>
           {cargandoRecomendaciones ? (
-            <p className="app-loading">Cargando recomendaciones...</p>
+            <div className="recomendaciones-lista">
+              <SkeletonLocalCard />
+              <SkeletonLocalCard />
+            </div>
           ) : recomendaciones.length === 0 ? (
             <p className="inicio-vacio">Hazte amigo de más gente para descubrir dónde van {etiquetaTexto}</p>
           ) : (

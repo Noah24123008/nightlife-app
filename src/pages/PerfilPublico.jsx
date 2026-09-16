@@ -17,6 +17,7 @@ import ImagenConFallback from '../components/ImagenConFallback'
 import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import { iniciales } from '../lib/iniciales'
+import { SkeletonPerfil } from '../components/Skeleton'
 
 export default function PerfilPublico() {
   const { id } = useParams()
@@ -152,7 +153,7 @@ export default function PerfilPublico() {
       <div className="app-screen perfil-publico-v2">
         <div className="perfil-publico-v2-contenido">
           <BackButton />
-          <p className="app-loading">Cargando perfil...</p>
+          <SkeletonPerfil />
         </div>
       </div>
     )

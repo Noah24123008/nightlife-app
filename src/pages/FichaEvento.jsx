@@ -7,6 +7,7 @@ import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
 import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
 import BackButton from '../components/BackButton'
+import { SkeletonFicha, SkeletonPersonaFila } from '../components/Skeleton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const LIMITE_PERSONAS_VISIBLES = 8
@@ -123,9 +124,11 @@ export default function FichaEvento() {
   if (cargando) {
     return (
       <div className="app-screen ficha-evento-v2">
-        <div className="ficha-evento-v2-contenido">
-          <BackButton />
-          <p className="app-loading">Cargando evento...</p>
+        <div className="ficha-evento-v2-hero">
+          <div className="ficha-evento-v2-hero-back">
+            <BackButton />
+          </div>
+          <SkeletonFicha />
         </div>
       </div>
     )
@@ -193,7 +196,11 @@ export default function FichaEvento() {
         <div className="ficha-votantes">
           <h2 className="ficha-subtitulo">Quién va a este evento</h2>
           {cargandoPersonas ? (
-            <p className="app-loading">Cargando...</p>
+            <div className="votantes-lista">
+              <SkeletonPersonaFila />
+              <SkeletonPersonaFila />
+              <SkeletonPersonaFila />
+            </div>
           ) : personas.length === 0 ? (
             <p className="inicio-vacio">Todavía nadie ha indicado que va a este evento.</p>
           ) : (

@@ -451,6 +451,82 @@ button {
   padding: 40px;
 }
 
+/* ============================================================
+   Skeletons — primitivas compartidas. Gris neutro (mismo tono que los
+   placeholders de avatar ya existentes), radios acordes a las tarjetas
+   reales, shimmer sutil. Nunca cambian el espacio que ocupa el contenido
+   real: cada skeleton concreto usa las mismas medidas que su homólogo.
+   ============================================================ */
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #ece9e4;
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+    display: none;
+  }
+}
+
+.skeleton-linea {
+  height: 12px;
+  border-radius: 6px;
+}
+
+.skeleton-linea--corta {
+  width: 40%;
+}
+
+.skeleton-linea--media {
+  width: 65%;
+}
+
+.skeleton-linea--larga {
+  width: 90%;
+}
+
+.skeleton-circulo {
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.skeleton-pill {
+  border-radius: var(--radius-pill);
+}
+
+.skeleton-fila {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeleton-columna {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
 /* Pantalla Inicio */
 
 .app-screen {

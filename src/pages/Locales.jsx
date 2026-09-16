@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import MapaLocales from '../components/MapaLocales'
+import { SkeletonLocalCard } from '../components/Skeleton'
 import fiestaHero from '../assets/fiestahero.png'
 
 const CIUDAD_ACTUAL = 'Gijón'
@@ -92,7 +93,23 @@ export default function Locales() {
         {error && <p className="auth-error">{error}</p>}
 
         {cargando ? (
-          <p className="app-loading">Cargando locales...</p>
+          <ul className="locales-lista">
+            <li>
+              <SkeletonLocalCard />
+            </li>
+            <li>
+              <SkeletonLocalCard />
+            </li>
+            <li>
+              <SkeletonLocalCard />
+            </li>
+            <li>
+              <SkeletonLocalCard />
+            </li>
+            <li>
+              <SkeletonLocalCard />
+            </li>
+          </ul>
         ) : locales.length === 0 ? (
           <p className="inicio-vacio">Todavía no hay locales cargados para Gijón.</p>
         ) : vista === 'mapa' ? (

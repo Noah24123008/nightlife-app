@@ -8,6 +8,7 @@ import PersonaChip from '../components/PersonaChip'
 import ImagenConFallback from '../components/ImagenConFallback'
 import ActividadCard from '../components/ActividadCard'
 import InvitarAmigosCard from '../components/InvitarAmigosCard'
+import { SkeletonPersonaFila } from '../components/Skeleton'
 import { compartirPerfil } from '../lib/compartir'
 import { iniciales } from '../lib/iniciales'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
@@ -204,7 +205,10 @@ export default function Social() {
           <>
             <h2 className="social-v2-seccion-titulo">Tus amigos hoy</h2>
             {cargandoFeedHoy ? (
-              <p className="app-loading">Cargando...</p>
+              <div className="social-v2-amigos-hoy">
+                <SkeletonPersonaFila />
+                <SkeletonPersonaFila />
+              </div>
             ) : gruposPorLocal.length === 0 ? (
               <div className="social-v2-vacio">
                 <p className="inicio-vacio">Tus amigos todavía no han elegido dónde ir hoy</p>
@@ -254,7 +258,10 @@ export default function Social() {
         {error && <p className="auth-error">{error}</p>}
 
         {cargando ? (
-          <p className="app-loading">Cargando solicitudes...</p>
+          <div className="votantes-lista votantes-lista--columna">
+            <SkeletonPersonaFila />
+            <SkeletonPersonaFila />
+          </div>
         ) : solicitudes.length === 0 ? (
           <div className="social-v2-vacio">
             <span className="social-v2-vacio-icono" aria-hidden="true">
@@ -294,7 +301,11 @@ export default function Social() {
         <DaySelector dias={dias} indiceSeleccionado={indiceDia} onSeleccionar={setIndiceDia} />
 
         {cargandoFeed ? (
-          <p className="app-loading">Cargando actividad...</p>
+          <div className="votantes-lista votantes-lista--columna">
+            <SkeletonPersonaFila />
+            <SkeletonPersonaFila />
+            <SkeletonPersonaFila />
+          </div>
         ) : errorFeed ? (
           <p className="auth-error">{errorFeed}</p>
         ) : feed.length === 0 ? (

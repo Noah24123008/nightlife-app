@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { buscarPerfilesPublicos } from '../lib/api'
 import PersonaChip from '../components/PersonaChip'
+import { SkeletonPersonaFila } from '../components/Skeleton'
 import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
@@ -70,7 +71,11 @@ export default function Buscar() {
         {!terminoValido ? (
           <p className="inicio-vacio">Busca personas por nombre o usuario.</p>
         ) : buscando ? (
-          <p className="app-loading">Buscando...</p>
+          <div className="votantes-lista votantes-lista--columna">
+            <SkeletonPersonaFila />
+            <SkeletonPersonaFila />
+            <SkeletonPersonaFila />
+          </div>
         ) : error ? (
           <p className="auth-error">{error}</p>
         ) : resultados.length === 0 ? (
