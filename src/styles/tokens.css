@@ -648,13 +648,14 @@ button {
   overflow-x: hidden;
 }
 
-.app-layout-pagina {
-  min-height: 100%;
-  will-change: transform;
-}
-
-.app-layout-pagina--transicionando {
-  pointer-events: none;
+/* En reposo, .app-layout-swipe y .app-layout-panel se comportan como divs
+   normales en el flujo del documento (el scroll de cada pantalla sigue
+   funcionando exactamente igual que siempre). Solo durante un gesto activo
+   se les aplica position:absolute vía JS (AppLayout.jsx), para poder
+   superponer el panel actual y el vecino mientras se arrastra; al terminar
+   el gesto se revierte a flujo normal. */
+.app-layout-panel {
+  width: 100%;
 }
 
 .bottom-nav {
