@@ -598,6 +598,23 @@ button {
   font-weight: 600;
   padding: 6px 16px;
   border-radius: 18px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: color var(--duration-fast) ease, background var(--duration-fast) ease,
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+/* Transitorio: solo existe mientras el dedo está apoyado. Nunca decide qué
+   pestaña está activa (eso lo sigue marcando la ruta real, vía NavLink) —
+   es únicamente el acuse de recibo instantáneo del toque, antes de que el
+   cambio de ruta termine de completarse. */
+.bottom-nav-item:active {
+  transform: scale(0.94);
+  background: rgba(21, 21, 26, 0.08);
+}
+
+.bottom-nav-item--activo:active {
+  background: rgba(21, 21, 26, 0.92);
 }
 
 .bottom-nav-icono {
