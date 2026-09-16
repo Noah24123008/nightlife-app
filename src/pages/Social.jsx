@@ -9,6 +9,7 @@ import ImagenConFallback from '../components/ImagenConFallback'
 import ActividadCard from '../components/ActividadCard'
 import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { compartirPerfil } from '../lib/compartir'
+import { iniciales } from '../lib/iniciales'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const DIAS_VISIBLES = 8
@@ -199,7 +200,7 @@ export default function Social() {
           </div>
         )}
 
-        {numAmigos > 0 && (
+        {numAmigos !== 0 && (numAmigos > 0 || gruposPorLocal.length > 0) && (
           <>
             <h2 className="social-v2-seccion-titulo">Tus amigos hoy</h2>
             {cargandoFeedHoy ? (
@@ -219,7 +220,12 @@ export default function Social() {
                     <div className="mini-avatares">
                       {grupo.personas.slice(0, 3).map((p) => (
                         <span key={p.usuario_id} className="mini-avatar" title={p.nombre || p.nombre_usuario}>
-                          <ImagenConFallback src={p.foto_url} alt="" placeholderClassName="mini-avatar--vacio" />
+                          <ImagenConFallback
+                            src={p.foto_url}
+                            alt=""
+                            placeholderClassName="mini-avatar--vacio"
+                            textoAlternativo={iniciales(p)}
+                          />
                         </span>
                       ))}
                     </div>

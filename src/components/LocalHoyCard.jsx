@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import ImagenConFallback from './ImagenConFallback'
 import FotoLocalMiniatura from './FotoLocalMiniatura'
 import { toISODate } from '../lib/dates'
+import { iniciales } from '../lib/iniciales'
 
 export default function LocalHoyCard({ local, posicion, destacado }) {
   const muestra = local.muestra_perfiles || []
@@ -30,7 +31,12 @@ export default function LocalHoyCard({ local, posicion, destacado }) {
                   className="mini-avatar"
                   title={perfil.nombre || perfil.nombre_usuario || 'Usuario'}
                 >
-                  <ImagenConFallback src={perfil.foto_url} alt="" placeholderClassName="mini-avatar--vacio" />
+                  <ImagenConFallback
+                    src={perfil.foto_url}
+                    alt=""
+                    placeholderClassName="mini-avatar--vacio"
+                    textoAlternativo={iniciales(perfil)}
+                  />
                 </span>
               ))}
             </div>
