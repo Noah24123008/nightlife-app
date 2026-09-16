@@ -645,16 +645,6 @@ button {
 
 .app-layout {
   min-height: 100vh;
-  overflow-x: hidden;
-}
-
-.app-layout-pagina {
-  min-height: 100%;
-  will-change: transform;
-}
-
-.app-layout-pagina--transicionando {
-  pointer-events: none;
 }
 
 .bottom-nav {
