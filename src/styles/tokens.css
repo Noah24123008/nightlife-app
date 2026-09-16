@@ -645,6 +645,17 @@ button {
 
 .app-layout {
   min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* En reposo, .app-layout-swipe y .app-layout-panel se comportan como divs
+   normales en el flujo del documento (el scroll de cada pantalla sigue
+   funcionando exactamente igual que siempre). Solo durante un gesto activo
+   se les aplica position:absolute vía JS (AppLayout.jsx), para poder
+   superponer el panel actual y el vecino mientras se arrastra; al terminar
+   el gesto se revierte a flujo normal. */
+.app-layout-panel {
+  width: 100%;
 }
 
 .bottom-nav {
@@ -4037,4 +4048,58 @@ button {
     min-height: 36px;
     font-size: 13px;
   }
+}
+
+/* ============================================================
+   "Tus amigos hoy" — resumen compacto agrupado por local. Reutiliza el
+   mismo lenguaje visual ya establecido en Social (--sv-*, shadow-card,
+   radios) y el patrón .mini-avatares/.mini-avatar ya usado en /hoy.
+   ============================================================ */
+
+.social-v2-amigos-hoy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.social-v2-amigo-hoy-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--sv-card-bg);
+  border: 1px solid var(--sv-border);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+  color: var(--sv-text);
+}
+
+.social-v2-amigo-hoy-fila .mini-avatares {
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+.social-v2-amigo-hoy-texto {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 14px;
+  color: var(--sv-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.social-v2-amigo-hoy-texto strong {
+  color: var(--sv-text);
+  font-weight: 700;
+}
+
+.social-v2-amigos-sin-decidir {
+  margin: 2px 0 0;
+  padding: 0 4px;
+  font-size: 13px;
+  color: var(--sv-text-muted);
 }

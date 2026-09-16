@@ -5,6 +5,7 @@ import { getSolicitudesPendientesRecibidas, responderSolicitudAmistad, getFeedSo
 import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import PersonaChip from '../components/PersonaChip'
+import ImagenConFallback from '../components/ImagenConFallback'
 import ActividadCard from '../components/ActividadCard'
 import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { compartirPerfil } from '../lib/compartir'
@@ -12,6 +13,14 @@ import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const DIAS_VISIBLES = 8
 const LIMITE_FEED_INICIAL = 4
+
+// "Pedro" / "Pedro y Lucía" / "Pedro, Lucía y 3 más"
+function textoNombres(personas) {
+  const nombres = personas.map((p) => p.nombre || p.nombre_usuario || 'Alguien')
+  if (nombres.length === 1) return nombres[0]
+  if (nombres.length === 2) return `${nombres[0]} y ${nombres[1]}`
+  return `${nombres[0]}, ${nombres[1]} y ${nombres.length - 2} más`
+}
 
 export default function Social() {
   const { user, signOut, refrescarSolicitudesPendientes } = useAuth()
@@ -49,6 +58,48 @@ export default function Social() {
   const [cargandoFeed, setCargandoFeed] = useState(true)
   const [errorFeed, setErrorFeed] = useState('')
   const [mostrarTodoFeed, setMostrarTodoFeed] = useState(false)
+
+  // "Tus amigos hoy": siempre el día de hoy, independiente del selector de
+  // "Actividad" de más abajo. dias[0] ya es hoy (buildDiasVisibles sin
+  // fecha ancla empieza en hoy), así que no hace falta ni importar
+  // toISODate aparte. Reutiliza getFeedSocialHoy, la misma función que ya
+  // usa "Actividad de tus amigos" — sin ninguna consulta nueva.
+  const hoyISO = dias[0].fechaISO
+  const [feedHoy, setFeedHoy] = useState([])
+  const [cargandoFeedHoy, setCargandoFeedHoy] = useState(true)
+
+  useEffect(() => {
+    let activo = true
+    getFeedSocialHoy(hoyISO).then(({ data }) => {
+      if (activo) setFeedHoy(data ?? [])
+      if (activo) setCargandoFeedHoy(false)
+    })
+    return () => {
+      activo = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoyISO])
+
+  // Agrupado por local en el cliente — mismo dato de feedHoy, sin tocar la
+  // privacidad ni el filtrado de amigos, que ya viene resuelto por la RPC.
+  const gruposPorLocal = useMemo(() => {
+    const grupos = new Map()
+    for (const item of feedHoy) {
+      if (!grupos.has(item.local_id)) {
+        grupos.set(item.local_id, { local_id: item.local_id, local_nombre: item.local_nombre, personas: [] })
+      }
+      grupos.get(item.local_id).personas.push(item)
+    }
+    return Array.from(grupos.values()).sort((a, b) => b.personas.length - a.personas.length)
+  }, [feedHoy])
+
+  // "Sin decidir" = amigos totales menos los que ya aparecen en el feed de
+  // hoy (por diferencia, sin ninguna consulta adicional).
+  const amigosSinDecidir = useMemo(() => {
+    if (numAmigos === null) return 0
+    const idsQueYaVan = new Set(feedHoy.map((item) => item.usuario_id))
+    return Math.max(0, numAmigos - idsQueYaVan.size)
+  }, [numAmigos, feedHoy])
 
   async function cargarSolicitudes() {
     setCargando(true)
@@ -146,6 +197,50 @@ export default function Social() {
               Invitar amigos
             </button>
           </div>
+        )}
+
+        {numAmigos > 0 && (
+          <>
+            <h2 className="social-v2-seccion-titulo">Tus amigos hoy</h2>
+            {cargandoFeedHoy ? (
+              <p className="app-loading">Cargando...</p>
+            ) : gruposPorLocal.length === 0 ? (
+              <div className="social-v2-vacio">
+                <p className="inicio-vacio">Tus amigos todavía no han elegido dónde ir hoy</p>
+              </div>
+            ) : (
+              <div className="social-v2-amigos-hoy">
+                {gruposPorLocal.map((grupo) => (
+                  <Link
+                    key={grupo.local_id}
+                    to={`/locales/${grupo.local_id}?fecha=${hoyISO}`}
+                    className="social-v2-amigo-hoy-fila"
+                  >
+                    <div className="mini-avatares">
+                      {grupo.personas.slice(0, 3).map((p) => (
+                        <span key={p.usuario_id} className="mini-avatar" title={p.nombre || p.nombre_usuario}>
+                          <ImagenConFallback src={p.foto_url} alt="" placeholderClassName="mini-avatar--vacio" />
+                        </span>
+                      ))}
+                    </div>
+                    <p className="social-v2-amigo-hoy-texto">
+                      <strong>{textoNombres(grupo.personas)}</strong> → {grupo.local_nombre}
+                    </p>
+                    <span className="social-v2-chevron" aria-hidden="true">
+                      ›
+                    </span>
+                  </Link>
+                ))}
+                {amigosSinDecidir > 0 && (
+                  <p className="social-v2-amigos-sin-decidir">
+                    {amigosSinDecidir === 1
+                      ? '1 amigo todavía no ha elegido'
+                      : `${amigosSinDecidir} amigos todavía no han elegido`}
+                  </p>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         <h2 className="social-v2-seccion-titulo">Solicitudes pendientes</h2>
