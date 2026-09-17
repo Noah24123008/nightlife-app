@@ -1087,32 +1087,58 @@ button {
   height: 100%;
 }
 
-.leaflet-popup-content-wrapper {
-  background: var(--color-surface);
-  color: var(--color-text);
-  border-radius: 10px;
+.leaflet-popup-content-wrapper,
+.mapa-contenedor .leaflet-popup-content-wrapper {
+  background: #ffffff;
+  color: #15151a;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(20, 30, 50, 0.16);
 }
 
-.leaflet-popup-tip {
-  background: var(--color-surface);
+.leaflet-popup-tip,
+.mapa-contenedor .leaflet-popup-tip {
+  background: #ffffff;
+}
+
+.mapa-contenedor .leaflet-popup-content {
+  margin: 14px 16px;
+  line-height: 1.4;
 }
 
 .mapa-popup-nombre {
   font-family: var(--font-display);
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   font-size: 15px;
+  font-weight: 700;
+  color: #15151a;
 }
 
 .mapa-popup-detalle {
-  margin: 0 0 4px;
-  color: var(--color-text-muted);
+  margin: 0 0 2px;
+  color: #8a8f9c;
   font-size: 12px;
 }
 
-.leaflet-popup-content a {
-  color: var(--color-accent-warm);
-  font-weight: 600;
+.leaflet-popup-content a,
+.mapa-contenedor .leaflet-popup-content a {
+  display: inline-block;
+  margin-top: 8px;
+  color: #15151a;
+  font-weight: 700;
+  font-size: 13px;
   text-decoration: none;
+}
+
+.mapa-contenedor .leaflet-popup-close-button {
+  color: #8a8f9c;
+  font-size: 18px;
+  font-weight: 400;
+  top: 6px;
+  right: 8px;
+}
+
+.mapa-contenedor .leaflet-popup-close-button:hover {
+  color: #15151a;
 }
 
 /* Votantes de hoy (ficha de local) */

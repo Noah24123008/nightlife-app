@@ -65,7 +65,7 @@ export default function MapaLocales({ locales }) {
                 <p className="mapa-popup-nombre">{local.nombre}</p>
                 {local.categoria && <p className="mapa-popup-detalle">{local.categoria}</p>}
                 {local.direccion && <p className="mapa-popup-detalle">{local.direccion}</p>}
-                <Link to={`/locales/${local.id}`}>Ver local</Link>
+                <Link to={`/locales/${local.id}`}>Ver local →</Link>
               </Popup>
             </Marker>
           ))}
