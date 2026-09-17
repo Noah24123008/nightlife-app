@@ -320,10 +320,15 @@ textarea:focus-visible {
   margin-bottom: 16px;
 }
 
+html,
+#root {
+  background: #faf9f7;
+}
+
 body {
   margin: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
+  background: #faf9f7;
+  color: #15151a;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
 }
@@ -446,7 +451,7 @@ button {
 }
 
 .app-loading {
-  color: var(--color-text-muted);
+  color: #8a8f9c;
   text-align: center;
   padding: 40px;
 }
