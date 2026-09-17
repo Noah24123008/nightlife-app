@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { getCiudadPorNombre, getEventosFuturos } from '../lib/api'
+import { getCiudadPorNombre, getEventosFuturos, getVotosDelDia, getFeedSocialHoy } from '../lib/api'
 import { getFechaNocturnaActual, toISODate, addDays } from '../lib/dates'
 import EventoCard from '../components/EventoCard'
 import { SkeletonEventoCard } from '../components/Skeleton'
@@ -35,6 +35,59 @@ export default function Eventos() {
   const [eventos, setEventos] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
+
+  // Asistencia y amigos por evento, agrupado por FECHA (no por evento):
+  // getVotosDelDia/getFeedSocialHoy ya devuelven todos los votos/actividad
+  // de una fecha en una sola llamada, así que solo hace falta una consulta
+  // por cada fecha DISTINTA entre los eventos mostrados (normalmente pocas,
+  // aunque haya más eventos que fechas) — nunca una consulta por card.
+  const [datosPorFecha, setDatosPorFecha] = useState({})
+
+  const fechasDistintas = useMemo(() => {
+    const set = new Set(eventos.map((e) => e.fecha))
+    return Array.from(set)
+  }, [eventos])
+  const clavesFechas = fechasDistintas.join(',')
+
+  useEffect(() => {
+    if (fechasDistintas.length === 0) {
+      setDatosPorFecha({})
+      return
+    }
+    let activo = true
+    Promise.all(
+      fechasDistintas.map((fecha) =>
+        Promise.all([getVotosDelDia(fecha), getFeedSocialHoy(fecha)]).then(([votosRes, feedRes]) => [
+          fecha,
+          { votos: votosRes.data ?? [], feed: feedRes.data ?? [] },
+        ])
+      )
+    ).then((resultados) => {
+      if (!activo) return
+      const mapa = {}
+      for (const [fecha, datos] of resultados) mapa[fecha] = datos
+      setDatosPorFecha(mapa)
+    })
+    return () => {
+      activo = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clavesFechas])
+
+  // Cuenta asistentes y amigos de un evento concreto cruzando en cliente
+  // los datos ya cargados para su fecha — sin ninguna llamada adicional.
+  function contarAsistenciaSocial(evento) {
+    const datos = datosPorFecha[evento.fecha]
+    if (!datos) return { totalVan: 0, totalAmigos: 0 }
+    const totalVan = datos.votos.filter((v) => v.evento_id === evento.id).length
+    const idsAmigos = new Set(
+      datos.feed.filter((f) => f.evento_id === evento.id).map((f) => f.usuario_id)
+    )
+    const amigosMuestra = datos.feed.filter(
+      (f, indice, arr) => f.evento_id === evento.id && arr.findIndex((x) => x.usuario_id === f.usuario_id) === indice
+    )
+    return { totalVan, totalAmigos: idsAmigos.size, amigosMuestra: amigosMuestra.slice(0, 3) }
+  }
 
   useEffect(() => {
     let activo = true
@@ -111,7 +164,7 @@ export default function Eventos() {
               <h2 className="eventos-v2-seccion-titulo" style={ESTILO_SECCION}>Este fin de semana</h2>
               <div className="eventos-v2-lista">
                 {eventosFinde.map((evento) => (
-                  <EventoCard key={evento.id} evento={evento} />
+                  <EventoCard key={evento.id} evento={evento} asistenciaSocial={contarAsistenciaSocial(evento)} />
                 ))}
               </div>
             </>
@@ -122,7 +175,7 @@ export default function Eventos() {
               <h2 className="eventos-v2-seccion-titulo" style={ESTILO_SECCION}>Próximos eventos</h2>
               <div className="eventos-v2-lista">
                 {eventosProximos.map((evento) => (
-                  <EventoCard key={evento.id} evento={evento} />
+                  <EventoCard key={evento.id} evento={evento} asistenciaSocial={contarAsistenciaSocial(evento)} />
                 ))}
               </div>
             </>

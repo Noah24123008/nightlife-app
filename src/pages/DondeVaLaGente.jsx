@@ -3,6 +3,9 @@ import { getDondeVaLaGenteHoy } from '../lib/api'
 import { getFechaNocturnaActual } from '../lib/dates'
 import LocalHoyCard from '../components/LocalHoyCard'
 import BackButton from '../components/BackButton'
+import EmptyState from '../components/EmptyState'
+import IconoAmigos from '../components/IconoAmigos'
+import { SkeletonRankingFila } from '../components/Skeleton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -39,13 +42,23 @@ export default function DondeVaLaGente() {
       <div className="donde-va-v2-contenido">
         <BackButton />
         <h1 className="donde-va-v2-titulo">Dónde va la gente hoy</h1>
+        <p className="donde-va-v2-subtitulo">Así está Gijón esta noche</p>
 
         {error && <p className="auth-error">{error}</p>}
 
         {cargando ? (
-          <p className="app-loading">Cargando...</p>
+          <ul className="ranking">
+            <SkeletonRankingFila />
+            <SkeletonRankingFila />
+            <SkeletonRankingFila />
+            <SkeletonRankingFila />
+          </ul>
         ) : locales.length === 0 ? (
-          <p className="inicio-vacio">Todavía nadie ha indicado dónde va hoy</p>
+          <EmptyState
+            icono={<IconoAmigos size={22} />}
+            titulo="Todavía nadie ha indicado dónde va"
+            texto="En cuanto alguien vote, aparecerá aquí."
+          />
         ) : (
           <ul className="ranking">
             {locales.map((local, index) => (

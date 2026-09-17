@@ -493,10 +493,13 @@ export default function Inicio() {
                         <p className="venue-name">{local.nombre}</p>
                         <p className="local-categoria">
                           {local.categoria} · {local.votos} {local.votos === 1 ? 'va' : 'van'}
-                          {(totalAmigosPorLocal[local.id] ?? 0) > 0 &&
-                            ` · ${totalAmigosPorLocal[local.id]} ${
-                              totalAmigosPorLocal[local.id] === 1 ? 'amigo' : 'amigos'
-                            }`}
+                          {(totalAmigosPorLocal[local.id] ?? 0) > 0 && (
+                            <span className="amigos-count-destacado">
+                              {' '}
+                              · {totalAmigosPorLocal[local.id]}{' '}
+                              {totalAmigosPorLocal[local.id] === 1 ? 'amigo' : 'amigos'}
+                            </span>
+                          )}
                         </p>
                       </div>
                     </Link>
