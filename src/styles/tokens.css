@@ -4480,7 +4480,7 @@ button {
    Pantalla Eventos — mismo lenguaje visual que Inicio/Locales/Perfil:
    fondo claro, tarjetas blancas redondeadas, sombra suave, tipografía ya
    establecida. Variables propias (--ev-*) siguiendo el mismo patrón que
-   --pv-*/--sv-*/--inicio-*, con los mismos valores reales.
+   --pw, --sv y --inicio, con los mismos valores reales.
    ============================================================ */
 
 .eventos-v2-seccion-titulo {
