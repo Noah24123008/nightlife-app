@@ -3312,8 +3312,27 @@ button {
 }
 
 .perfil-v2-usuario {
-  margin: 2px 0 20px;
+  margin: 2px 0 12px;
   color: var(--pv-text-muted);
+  font-size: 14px;
+}
+
+.perfil-v2-amigos-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 0 0 20px;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(21, 21, 26, 0.05);
+  color: var(--pv-text-muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.perfil-v2-amigos-link strong {
+  color: var(--pv-text);
+  font-weight: 700;
   font-size: 14px;
 }
 
@@ -3369,6 +3388,45 @@ button {
   text-align: left;
 }
 
+/* Agrupa "Ver mi perfil público" + InvitarAmigosCard como una sola
+   tarjeta con dos filas, en vez de dos tarjetas independientes. Solo
+   afecta cuando están anidados aquí dentro — InvitarAmigosCard en
+   Social.jsx no lleva este wrapper, así que su aspecto ahí no cambia. */
+.perfil-v2-accesos {
+  background: var(--pv-card-bg);
+  border: 1px solid var(--pv-border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.perfil-v2-accesos .perfil-v2-acceso {
+  margin-bottom: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 14px 16px;
+}
+
+.perfil-v2-accesos-divisor {
+  height: 1px;
+  background: var(--pv-border);
+  margin: 0 16px;
+}
+
+.perfil-v2-accesos .invitar-amigos-wrap {
+  margin-bottom: 0;
+}
+
+.perfil-v2-accesos .invitar-amigos-card {
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 14px 16px;
+}
+
 .perfil-v2-acceso-icono {
   display: flex;
   align-items: center;
@@ -3407,9 +3465,9 @@ button {
   background: var(--pv-card-bg);
   border: 1px solid var(--pv-border);
   border-radius: 20px;
-  padding: 18px;
+  padding: 12px 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  gap: 14px;
+  gap: 8px;
 }
 
 .perfil-v2 .perfil-v2-campo {
@@ -3419,6 +3477,16 @@ button {
   gap: 10px;
   font-size: 14px;
   color: var(--pv-text-muted);
+}
+
+.perfil-v2-campo--bloqueado {
+  opacity: 0.85;
+}
+
+.perfil-v2-campos-divisor {
+  height: 1px;
+  background: var(--pv-border);
+  margin: 1px 0;
 }
 
 .perfil-v2-campo-icono {
@@ -3436,7 +3504,7 @@ button {
 .perfil-v2-campo-textos {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   flex: 1;
   min-width: 0;
 }
@@ -3448,18 +3516,20 @@ button {
 }
 
 .perfil-v2-campo-candado {
+  display: flex;
+  align-items: center;
   flex: 0 0 auto;
-  font-size: 13px;
-  opacity: 0.6;
+  color: var(--pv-text-muted);
+  opacity: 0.7;
 }
 
 .perfil-v2 .auth-form .perfil-v2-campo input {
   background: var(--pv-bg);
   border: 1px solid var(--pv-border);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 8px 10px;
   color: var(--pv-text);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .perfil-v2 .auth-form .perfil-v2-campo input:disabled {
@@ -3481,6 +3551,13 @@ button {
   padding: 15px;
   font-weight: 700;
   font-size: 15px;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.perfil-v2 .auth-form .perfil-v2-guardar--sin-cambios {
+  background: var(--pv-bg);
+  color: var(--pv-text-muted);
+  box-shadow: none;
 }
 
 .perfil-v2 .perfil-salir {

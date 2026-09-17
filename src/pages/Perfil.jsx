@@ -6,6 +6,7 @@ import ImagenConFallback from '../components/ImagenConFallback'
 import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import { iniciales } from '../lib/iniciales'
+import IconoCandado from '../components/IconoCandado'
 
 export default function Perfil() {
   const { user, signOut } = useAuth()
@@ -23,6 +24,13 @@ export default function Perfil() {
 
   const [numAmigos, setNumAmigos] = useState(0)
 
+  // Estado "dirty": comparación puramente en cliente contra los últimos
+  // valores cargados/guardados. No toca guardarPerfil ni ninguna llamada a
+  // Supabase — solo decide el aspecto del botón.
+  const nombreOriginalRef = useRef('')
+  const nombreUsuarioOriginalRef = useRef('')
+  const huboCambios = nombre !== nombreOriginalRef.current || nombreUsuario !== nombreUsuarioOriginalRef.current
+
   useEffect(() => {
     if (!user) return
     let activo = true
@@ -38,6 +46,8 @@ export default function Perfil() {
         setNombre(data.nombre ?? '')
         setNombreUsuario(data.nombre_usuario ?? '')
         setFotoUrl(data.foto_url ?? '')
+        nombreOriginalRef.current = data.nombre ?? ''
+        nombreUsuarioOriginalRef.current = data.nombre_usuario ?? ''
       }
 
       const { data: amigosData } = await getAmigos(user.id)
@@ -77,6 +87,8 @@ export default function Perfil() {
     }
 
     setMensajeExito('Cambios guardados ✓')
+    nombreOriginalRef.current = nombre
+    nombreUsuarioOriginalRef.current = nombreUsuario
     setTimeout(() => setMensajeExito(''), 2500)
   }
 
@@ -159,27 +171,25 @@ export default function Perfil() {
         <h2 className="perfil-v2-nombre">{nombre || 'Sin nombre'}</h2>
         {nombreUsuario && <p className="perfil-v2-usuario">@{nombreUsuario}</p>}
 
-        <div className="perfil-v2-stats">
-          <Link to={`/usuarios/${user.id}/amigos`} className="perfil-v2-stat-card">
-            <span className="perfil-v2-stat-icono" aria-hidden="true">
-              👥
-            </span>
-            <span className="perfil-v2-stat-numero">{numAmigos}</span>
-            <span className="perfil-v2-stat-etiqueta">Amigos</span>
-          </Link>
-        </div>
-
-        <Link to={`/usuarios/${user.id}`} className="perfil-v2-acceso">
-          <span className="perfil-v2-acceso-icono" aria-hidden="true">
-            👁️
-          </span>
-          <span className="perfil-v2-acceso-texto">Ver mi perfil público</span>
-          <span className="perfil-v2-chevron" aria-hidden="true">
-            ›
-          </span>
+        <Link to={`/usuarios/${user.id}/amigos`} className="perfil-v2-amigos-link">
+          <strong>{numAmigos}</strong> {numAmigos === 1 ? 'amigo' : 'amigos'}
         </Link>
 
-        <InvitarAmigosCard userId={user.id} />
+        <div className="perfil-v2-accesos">
+          <Link to={`/usuarios/${user.id}`} className="perfil-v2-acceso">
+            <span className="perfil-v2-acceso-icono" aria-hidden="true">
+              👁️
+            </span>
+            <span className="perfil-v2-acceso-texto">Ver mi perfil público</span>
+            <span className="perfil-v2-chevron" aria-hidden="true">
+              ›
+            </span>
+          </Link>
+
+          <div className="perfil-v2-accesos-divisor" />
+
+          <InvitarAmigosCard userId={user.id} />
+        </div>
 
         {error && <p className="auth-error">{error}</p>}
         {mensajeExito && <p className="auth-info">{mensajeExito}</p>}
@@ -188,9 +198,6 @@ export default function Perfil() {
 
         <form className="auth-form perfil-v2-form" onSubmit={handleGuardar}>
           <label className="perfil-v2-campo">
-            <span className="perfil-v2-campo-icono" aria-hidden="true">
-              👤
-            </span>
             <span className="perfil-v2-campo-textos">
               <span className="perfil-v2-campo-label">Nombre</span>
               <input value={nombre} onChange={(e) => setNombre(e.target.value)} placeholder="Tu nombre" />
@@ -198,9 +205,6 @@ export default function Perfil() {
           </label>
 
           <label className="perfil-v2-campo">
-            <span className="perfil-v2-campo-icono" aria-hidden="true">
-              @
-            </span>
             <span className="perfil-v2-campo-textos">
               <span className="perfil-v2-campo-label">Nombre de usuario</span>
               <input
@@ -211,30 +215,33 @@ export default function Perfil() {
             </span>
           </label>
 
-          <label className="perfil-v2-campo">
-            <span className="perfil-v2-campo-icono" aria-hidden="true">
-              ✉️
-            </span>
+          <div className="perfil-v2-campos-divisor" />
+
+          <label className="perfil-v2-campo perfil-v2-campo--bloqueado">
             <span className="perfil-v2-campo-textos">
               <span className="perfil-v2-campo-label">Email</span>
               <input value={user?.email ?? ''} disabled />
             </span>
+            <span className="perfil-v2-campo-candado" aria-hidden="true">
+              <IconoCandado />
+            </span>
           </label>
 
-          <label className="perfil-v2-campo">
-            <span className="perfil-v2-campo-icono" aria-hidden="true">
-              📍
-            </span>
+          <label className="perfil-v2-campo perfil-v2-campo--bloqueado">
             <span className="perfil-v2-campo-textos">
               <span className="perfil-v2-campo-label">Ciudad</span>
               <input value="Gijón" disabled />
             </span>
             <span className="perfil-v2-campo-candado" aria-hidden="true">
-              🔒
+              <IconoCandado />
             </span>
           </label>
 
-          <button type="submit" className="perfil-v2-guardar" disabled={guardando}>
+          <button
+            type="submit"
+            className={`perfil-v2-guardar ${!huboCambios && !guardando ? 'perfil-v2-guardar--sin-cambios' : ''}`}
+            disabled={guardando || !huboCambios}
+          >
             {guardando ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </form>
