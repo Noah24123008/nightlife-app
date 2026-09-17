@@ -8,6 +8,8 @@ import PersonaChip from '../components/PersonaChip'
 import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
 import BackButton from '../components/BackButton'
 import { SkeletonFicha, SkeletonPersonaFila } from '../components/Skeleton'
+import EmptyState from '../components/EmptyState'
+import IconoAmigos from '../components/IconoAmigos'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const LIMITE_PERSONAS_VISIBLES = 8
@@ -202,7 +204,11 @@ export default function FichaEvento() {
               <SkeletonPersonaFila />
             </div>
           ) : personas.length === 0 ? (
-            <p className="inicio-vacio">Todavía nadie ha indicado que va a este evento.</p>
+            <EmptyState
+              icono={<IconoAmigos size={20} />}
+              titulo="Aún no hay amigos visibles aquí"
+              texto="Cuando alguno de tus amigos vaya, aparecerá aquí."
+            />
           ) : (
             <>
               <div className="votantes-lista">

@@ -1,16 +1,17 @@
 import { Link } from 'react-router-dom'
 import ImagenConFallback from './ImagenConFallback'
 import FotoLocalMiniatura from './FotoLocalMiniatura'
-import { toISODate } from '../lib/dates'
+import { getFechaNocturnaActual } from '../lib/dates'
 import { iniciales } from '../lib/iniciales'
 
 export default function LocalHoyCard({ local, posicion, destacado }) {
   const muestra = local.muestra_perfiles || []
   const totalAmigos = local.total_amigos ?? 0
-  // /hoy es siempre "hoy": se pasa la fecha explícita en la URL para que
-  // FichaLocal use la misma arquitectura ?fecha= que el resto de la app,
-  // en vez de depender de su valor por defecto.
-  const fechaHoyISO = toISODate(new Date())
+  // /hoy es siempre "hoy nocturno": se pasa la misma fecha explícita en la
+  // URL para que FichaLocal muestre exactamente el mismo contexto que
+  // acabas de ver en el ranking, en vez de depender de su valor por
+  // defecto (que podría, en teoría, evaluarse en un instante distinto).
+  const fechaHoyISO = getFechaNocturnaActual()
 
   return (
     <li className={`local-item ${destacado ? 'local-item--destacado' : ''}`}>

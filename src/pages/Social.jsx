@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getSolicitudesPendientesRecibidas, responderSolicitudAmistad, getFeedSocialHoy, getAmigos } from '../lib/api'
-import { buildDiasVisibles, etiquetaDiaTexto } from '../lib/dates'
+import { buildDiasVisibles, etiquetaDiaTexto, getFechaNocturnaActualComoDate } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import PersonaChip from '../components/PersonaChip'
 import ImagenConFallback from '../components/ImagenConFallback'
@@ -11,6 +11,9 @@ import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { SkeletonPersonaFila } from '../components/Skeleton'
 import { compartirPerfil } from '../lib/compartir'
 import { iniciales } from '../lib/iniciales'
+import EmptyState from '../components/EmptyState'
+import IconoAmigos from '../components/IconoAmigos'
+import IconoCheck from '../components/IconoCheck'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const DIAS_VISIBLES = 8
@@ -48,7 +51,7 @@ export default function Social() {
 
   // Selector de día propio de esta pantalla: controla únicamente el bloque
   // de actividad de amigos de aquí abajo, nada más de Social.
-  const dias = useMemo(() => buildDiasVisibles(new Date(), DIAS_VISIBLES), [])
+  const dias = useMemo(() => buildDiasVisibles(getFechaNocturnaActualComoDate(), DIAS_VISIBLES), [])
   const [indiceDia, setIndiceDia] = useState(0)
   const diaSeleccionado = dias[indiceDia]
   const etiquetaTexto = useMemo(
@@ -211,7 +214,11 @@ export default function Social() {
               </div>
             ) : gruposPorLocal.length === 0 ? (
               <div className="social-v2-vacio">
-                <p className="inicio-vacio">Tus amigos todavía no han elegido dónde ir hoy</p>
+                <EmptyState
+                  icono={<IconoAmigos size={20} />}
+                  titulo="Tus amigos aún no han elegido"
+                  texto="Cuando decidan dónde salir, aparecerán aquí."
+                />
               </div>
             ) : (
               <div className="social-v2-amigos-hoy">
@@ -264,10 +271,11 @@ export default function Social() {
           </div>
         ) : solicitudes.length === 0 ? (
           <div className="social-v2-vacio">
-            <span className="social-v2-vacio-icono" aria-hidden="true">
-              👥
-            </span>
-            <p className="inicio-vacio">No tienes solicitudes de amistad pendientes</p>
+            <EmptyState
+              icono={<IconoCheck size={20} />}
+              titulo="No tienes solicitudes pendientes"
+              texto="Todo al día."
+            />
           </div>
         ) : (
           <div className="social-solicitudes">
@@ -309,7 +317,11 @@ export default function Social() {
         ) : errorFeed ? (
           <p className="auth-error">{errorFeed}</p>
         ) : feed.length === 0 ? (
-          <p className="inicio-vacio">Tus amigos todavía no han indicado dónde van {etiquetaTexto}</p>
+          <EmptyState
+            icono={<IconoAmigos size={20} />}
+            titulo="Tus amigos aún no han elegido"
+            texto={`Cuando decidan dónde salir, aparecerán aquí — ${etiquetaTexto}.`}
+          />
         ) : (
           <>
             <div className="feed-lista">

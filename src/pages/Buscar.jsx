@@ -3,6 +3,7 @@ import { buscarPerfilesPublicos } from '../lib/api'
 import PersonaChip from '../components/PersonaChip'
 import { SkeletonPersonaFila } from '../components/Skeleton'
 import BackButton from '../components/BackButton'
+import EmptyState from '../components/EmptyState'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -79,7 +80,11 @@ export default function Buscar() {
         ) : error ? (
           <p className="auth-error">{error}</p>
         ) : resultados.length === 0 ? (
-          <p className="inicio-vacio">No se encontraron usuarios.</p>
+          <EmptyState
+            icono="🔍"
+            titulo="Sin resultados"
+            texto="Prueba con otro nombre o usuario."
+          />
         ) : (
           <div className="votantes-lista votantes-lista--columna">
             {resultados.map((perfil) => (

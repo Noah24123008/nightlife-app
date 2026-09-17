@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getAmigos } from '../lib/api'
+import { getAmigos, getFeedSocialHoy } from '../lib/api'
+import { getFechaNocturnaActual } from '../lib/dates'
 import PersonaChip from '../components/PersonaChip'
 import { SkeletonPersonaFila } from '../components/Skeleton'
 import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
+import { compartirPerfil } from '../lib/compartir'
+import EmptyState from '../components/EmptyState'
+import IconoAmigos from '../components/IconoAmigos'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 // "seguidores" y "siguiendo" se conservan solo por compatibilidad con URLs
@@ -24,12 +28,33 @@ const CONFIG_POR_TIPO = {
 
 export default function ListaSeguimiento() {
   const { id, tipo } = useParams()
-  const { signOut } = useAuth()
+  const { user, signOut } = useAuth()
   const config = CONFIG_POR_TIPO[tipo]
+  const esMiPropiaLista = user?.id === id
 
   const [personas, setPersonas] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
+
+  // "Dónde va hoy" por persona: reutiliza getFeedSocialHoy, la misma
+  // función que ya usa Social.jsx para "Tus amigos hoy" — sin ninguna
+  // consulta nueva. Independiente del fetch de la lista, así un fallo aquí
+  // nunca bloquea ver la lista en sí.
+  const [dondeVaHoyPorId, setDondeVaHoyPorId] = useState({})
+  useEffect(() => {
+    let activo = true
+    getFeedSocialHoy(getFechaNocturnaActual()).then(({ data }) => {
+      if (!activo) return
+      const mapa = {}
+      for (const item of data ?? []) {
+        mapa[item.usuario_id] = item.local_nombre
+      }
+      setDondeVaHoyPorId(mapa)
+    })
+    return () => {
+      activo = false
+    }
+  }, [])
 
   useEffect(() => {
     if (!config) return
@@ -82,15 +107,22 @@ export default function ListaSeguimiento() {
             <SkeletonPersonaFila />
           </div>
         ) : personas.length === 0 ? (
-          <p className="inicio-vacio">{config.vacio}</p>
+          <EmptyState
+            icono={<IconoAmigos size={20} />}
+            titulo={config.vacio}
+            texto={esMiPropiaLista ? 'Invita a tus amigos para verlos aquí.' : undefined}
+            accion={
+              esMiPropiaLista ? { texto: 'Invitar amigos', onClick: () => compartirPerfil(user.id) } : undefined
+            }
+          />
         ) : (
           <div className="votantes-lista votantes-lista--columna">
             {personas.map((persona) => (
               <div key={persona.id} className="amigos-v2-fila">
-                <PersonaChip perfil={persona} />
-                <span className="amigos-v2-chevron" aria-hidden="true">
-                  ›
-                </span>
+                <PersonaChip
+                  perfil={persona}
+                  subtitulo={dondeVaHoyPorId[persona.id] ? `Hoy va a ${dondeVaHoyPorId[persona.id]}` : undefined}
+                />
               </div>
             ))}
           </div>

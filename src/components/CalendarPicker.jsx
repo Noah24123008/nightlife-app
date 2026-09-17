@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { addDays, toISODate } from '../lib/dates'
+import { addDays, toISODate, getFechaNocturnaActual } from '../lib/dates'
 
 const DIAS_SEMANA_CORTOS = ['LUN', 'MAR', 'MIÉ', 'JUE', 'VIE', 'SÁB', 'DOM']
 const MESES_LARGOS = [
@@ -75,7 +75,7 @@ export default function CalendarPicker({
   const mesMaximo = useMemo(() => inicioDeMes(new Date(`${fechaMaxISO}T00:00:00`)), [fechaMaxISO])
 
   const celdas = useMemo(() => generarCeldas(mesVisible), [mesVisible])
-  const hoyISO = useMemo(() => toISODate(new Date()), [])
+  const hoyISO = useMemo(() => getFechaNocturnaActual(), [])
 
   const puedeMesAnterior = mesVisible > mesMinimo
   const puedeMesSiguiente = mesVisible < mesMaximo

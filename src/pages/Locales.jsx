@@ -4,6 +4,7 @@ import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import MapaLocales from '../components/MapaLocales'
 import { SkeletonLocalCard } from '../components/Skeleton'
+import EmptyState from '../components/EmptyState'
 import fiestaHero from '../assets/fiestahero.png'
 
 const CIUDAD_ACTUAL = 'Gijón'
@@ -111,7 +112,7 @@ export default function Locales() {
             </li>
           </ul>
         ) : locales.length === 0 ? (
-          <p className="inicio-vacio">Todavía no hay locales cargados para Gijón.</p>
+          <EmptyState titulo="Sin locales todavía" texto="Estamos cargando los locales de Gijón." />
         ) : vista === 'mapa' ? (
           <MapaLocales locales={locales} />
         ) : (

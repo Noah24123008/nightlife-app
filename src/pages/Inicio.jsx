@@ -12,12 +12,24 @@ import {
   getRecomendacionesSocialesHoy,
   getDondeVaLaGenteHoy,
 } from '../lib/api'
-import { buildDiasVisibles, etiquetaDiaTexto, toISODate, addDays, MAX_DIAS_FUTURO } from '../lib/dates'
+import {
+  buildDiasVisibles,
+  etiquetaDiaTexto,
+  toISODate,
+  addDays,
+  MAX_DIAS_FUTURO,
+  getFechaNocturnaActualComoDate,
+  estaEnFranjaNocturnaAhora,
+} from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
 import RecomendacionSocialCard from '../components/RecomendacionSocialCard'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import { SkeletonRankingFila, SkeletonLocalCard } from '../components/Skeleton'
+import IconoLuna from '../components/IconoLuna'
+import EmptyState from '../components/EmptyState'
+import IconoAmigos from '../components/IconoAmigos'
+import IconoCalendario from '../components/IconoCalendario'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import gijonHero from '../assets/gijon-hero.png'
 
@@ -36,11 +48,35 @@ function fechaEnRangoValido(valor, hoyISO, maxISO) {
   return valor >= hoyISO && valor <= maxISO
 }
 
+// Distinto de fechaEnRangoValido: solo comprueba que el formato sea
+// correcto, sin exigir que esté dentro del rango hoy..max. Se usa
+// exclusivamente para decidir si una ?fecha= de la URL es una fecha
+// explícita válida (que debe respetarse tal cual, sea pasada o futura,
+// como un enlace compartido de "lo de anoche") — fechaEnRangoValido sigue
+// gobernando la selección interactiva (calendario/pastillas), que si debe
+// quedarse dentro de hoy..max.
+function esFechaConFormatoValido(valor) {
+  if (!valor || !/^\d{4}-\d{2}-\d{2}$/.test(valor)) return false
+  return !Number.isNaN(new Date(`${valor}T00:00:00`).getTime())
+}
+
 export default function Inicio() {
   const { user, signOut } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const hoy = useMemo(() => new Date(), [])
+  const hoy = useMemo(() => getFechaNocturnaActualComoDate(), [])
+
+  // Aviso "el día cambia a las 06:00": se reevalúa cada minuto para que
+  // desaparezca solo si la app se queda abierta cruzando las 6:00, sin
+  // necesidad de recargar. No participa en ningún cálculo de fecha — es
+  // puramente informativo.
+  const [mostrarAvisoNocturno, setMostrarAvisoNocturno] = useState(() => estaEnFranjaNocturnaAhora())
+  useEffect(() => {
+    const intervalo = window.setInterval(() => {
+      setMostrarAvisoNocturno(estaEnFranjaNocturnaAhora())
+    }, 60000)
+    return () => window.clearInterval(intervalo)
+  }, [])
   const hoyISO = useMemo(() => toISODate(hoy), [hoy])
   const fechaMaxISO = useMemo(() => toISODate(addDays(hoy, MAX_DIAS_FUTURO)), [hoy])
 
@@ -51,7 +87,7 @@ export default function Inicio() {
   // al volver atrás" funcione con solo mantenerla en la URL.
   const fechaParam = searchParams.get('fecha')
   const [fechaSeleccionadaISO, setFechaSeleccionadaISO] = useState(() =>
-    fechaEnRangoValido(fechaParam, hoyISO, fechaMaxISO) ? fechaParam : hoyISO
+    esFechaConFormatoValido(fechaParam) ? fechaParam : hoyISO
   )
 
   const dias = useMemo(
@@ -62,7 +98,18 @@ export default function Inicio() {
     const idx = dias.findIndex((d) => d.fechaISO === fechaSeleccionadaISO)
     return idx === -1 ? 0 : idx
   }, [dias, fechaSeleccionadaISO])
-  const diaSeleccionado = dias[indiceDia]
+  // diaSeleccionado es la fuente real de qué día se está mostrando — se
+  // construye directamente desde fechaSeleccionadaISO, no desde
+  // dias[indiceDia]. Son cosas distintas: dias es solo la ventana visible
+  // de pastillas (buildDiasVisibles nunca muestra días anteriores a hoy),
+  // así que una fecha pasada llegada por ?fecha= podría no aparecer ahí —
+  // pero los datos mostrados deben ser los suyos igualmente. indiceDia se
+  // sigue usando solo para saber qué pastilla resaltar (o ninguna, si la
+  // fecha seleccionada queda fuera de esa ventana).
+  const diaSeleccionado = useMemo(
+    () => ({ fecha: new Date(`${fechaSeleccionadaISO}T00:00:00`), fechaISO: fechaSeleccionadaISO }),
+    [fechaSeleccionadaISO]
+  )
 
   function handleCambiarFecha(fechaISO) {
     if (!fechaEnRangoValido(fechaISO, hoyISO, fechaMaxISO)) return
@@ -374,6 +421,13 @@ export default function Inicio() {
           fechaMaxISO={fechaMaxISO}
         />
 
+        {mostrarAvisoNocturno && (
+          <p className="inicio-v2-aviso-nocturno">
+            <IconoLuna size={19} />
+            En NoctUp, el día cambia a las <strong>06:00</strong>.
+          </p>
+        )}
+
         {destinoTemporal && (
           <Link
             to={`/locales/${destinoTemporal.id}`}
@@ -415,9 +469,11 @@ export default function Inicio() {
                 <h2 className="inicio-v2-ranking-header-titulo">Dónde va la gente {etiquetaTexto}</h2>
               </div>
               {votosDia.length === 0 && (
-                <p className="inicio-vacio">
-                  Todavía no hay votos {etiquetaTexto}. ¡Sé el primero en decir a dónde vas!
-                </p>
+                <EmptyState
+                  icono={<IconoAmigos size={20} />}
+                  titulo={`Todavía no hay votos ${etiquetaTexto}`}
+                  texto="¡Sé el primero en decir a dónde vas!"
+                />
               )}
               <ul className="ranking">
                 {(mostrarRankingCompleto ? ranking : ranking.slice(0, LIMITE_RANKING_INICIAL)).map((local, index) => (
@@ -462,7 +518,11 @@ export default function Inicio() {
             <section className="inicio-v2-seccion">
               <h2 className="inicio-v2-seccion-titulo">Eventos</h2>
               {eventosDia.length === 0 ? (
-                <p className="inicio-vacio">No hay eventos programados para este día todavía.</p>
+                <EmptyState
+                  icono={<IconoCalendario size={20} />}
+                  titulo="No hay eventos para este día"
+                  texto="Todavía no hay eventos programados."
+                />
               ) : (
                 <ul className="eventos-lista">
                   {eventosDia.map((evento) => (
@@ -490,7 +550,12 @@ export default function Inicio() {
               <SkeletonLocalCard />
             </div>
           ) : recomendaciones.length === 0 ? (
-            <p className="inicio-vacio">Hazte amigo de más gente para descubrir dónde van {etiquetaTexto}</p>
+            <EmptyState
+              icono={<IconoAmigos size={20} />}
+              titulo="Sin recomendaciones todavía"
+              texto={`Hazte amigo de más gente para descubrir dónde van ${etiquetaTexto}`}
+              accion={{ texto: 'Ir a Social', href: '/social' }}
+            />
           ) : (
             <>
               <div className="recomendaciones-lista">

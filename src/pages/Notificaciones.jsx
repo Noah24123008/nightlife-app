@@ -7,6 +7,8 @@ import {
 } from '../lib/api'
 import NotificacionCard from '../components/NotificacionCard'
 import BackButton from '../components/BackButton'
+import EmptyState from '../components/EmptyState'
+import IconoCheck from '../components/IconoCheck'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
@@ -85,7 +87,7 @@ export default function Notificaciones() {
         {cargando ? (
           <p className="app-loading">Cargando notificaciones...</p>
         ) : notificaciones.length === 0 ? (
-          <p className="inicio-vacio">No tienes notificaciones</p>
+          <EmptyState icono={<IconoCheck size={20} />} titulo="Sin notificaciones" texto="Todo al día." />
         ) : (
           <div className="notificaciones-lista">
             {notificaciones.map((n) => (

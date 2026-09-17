@@ -2,13 +2,16 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getLocalPorId, getVotosDelDia, getEventosDeLocal, votarPorLocal, eliminarVoto, getPersonasQueVanHoy } from '../lib/api'
-import { toISODate, addDays, formatearFechaLarga, etiquetaDiaTexto } from '../lib/dates'
+import { toISODate, addDays, formatearFechaLarga, etiquetaDiaTexto, getFechaNocturnaActual, getFechaNocturnaActualComoDate } from '../lib/dates'
 import VotoButton from '../components/VotoButton'
 import PersonaChip from '../components/PersonaChip'
 import FotoLocalPanoramica from '../components/FotoLocalPanoramica'
 import FotoLocalMiniatura from '../components/FotoLocalMiniatura'
 import BackButton from '../components/BackButton'
 import { SkeletonFicha, SkeletonPersonaFila } from '../components/Skeleton'
+import EmptyState from '../components/EmptyState'
+import IconoAmigos from '../components/IconoAmigos'
+import IconoCalendario from '../components/IconoCalendario'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 const LIMITE_VOTANTES_VISIBLES = 8
@@ -28,15 +31,15 @@ export default function FichaLocal() {
   // si no, la fecha local del navegador, igual que antes.
   const fechaParam = searchParams.get('fecha')
   const fechaContexto = useMemo(
-    () => (esFechaValida(fechaParam) ? fechaParam : toISODate(new Date())),
+    () => (esFechaValida(fechaParam) ? fechaParam : getFechaNocturnaActual()),
     [fechaParam]
   )
 
   // Etiqueta de texto (hoy / mañana / el viernes...) coherente con la que
   // ya usa Inicio, comparando la fecha de contexto contra hoy y mañana.
   const etiquetaTexto = useMemo(() => {
-    const hoyISO = toISODate(new Date())
-    const mananaISO = toISODate(addDays(new Date(), 1))
+    const hoyISO = getFechaNocturnaActual()
+    const mananaISO = toISODate(addDays(getFechaNocturnaActualComoDate(), 1))
     let indice = 2
     if (fechaContexto === hoyISO) indice = 0
     else if (fechaContexto === mananaISO) indice = 1
@@ -223,7 +226,11 @@ export default function FichaLocal() {
               <SkeletonPersonaFila />
             </div>
           ) : votantes.length === 0 ? (
-            <p className="inicio-vacio">Todavía nadie ha indicado que va {etiquetaTexto}.</p>
+            <EmptyState
+              icono={<IconoAmigos size={20} />}
+              titulo="Aún no hay amigos visibles aquí"
+              texto="Cuando alguno de tus amigos vaya, aparecerá aquí."
+            />
           ) : (
             <>
               <div className="votantes-lista">
@@ -246,7 +253,11 @@ export default function FichaLocal() {
 
         <h2 className="ficha-subtitulo">Próximos eventos</h2>
         {eventos.length === 0 ? (
-          <p className="inicio-vacio">Este local no tiene eventos programados todavía.</p>
+          <EmptyState
+            icono={<IconoCalendario size={20} />}
+            titulo="No hay eventos programados"
+            texto="Este local no tiene próximos eventos todavía."
+          />
         ) : (
           <ul className="eventos-lista">
             {eventos.map((evento) => (

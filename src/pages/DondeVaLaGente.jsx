@@ -1,17 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
-import { getDondeVaLaGenteHoy, getMiVotoDelDia } from '../lib/api'
-import { toISODate } from '../lib/dates'
+import { useEffect, useState } from 'react'
+import { getDondeVaLaGenteHoy } from '../lib/api'
+import { getFechaNocturnaActual } from '../lib/dates'
 import LocalHoyCard from '../components/LocalHoyCard'
 import BackButton from '../components/BackButton'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 
 export default function DondeVaLaGente() {
-  const { user, signOut } = useAuth()
-  const hoyISO = useMemo(() => toISODate(new Date()), [])
+  const { signOut } = useAuth()
 
   const [locales, setLocales] = useState([])
-  const [miVotoLocalId, setMiVotoLocalId] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
 
@@ -20,10 +18,7 @@ export default function DondeVaLaGente() {
     async function cargar() {
       setCargando(true)
       setError('')
-      const [{ data, error: errDatos }, { data: miVoto }] = await Promise.all([
-        getDondeVaLaGenteHoy(),
-        user ? getMiVotoDelDia(user.id, hoyISO) : Promise.resolve({ data: null }),
-      ])
+      const { data, error: errDatos } = await getDondeVaLaGenteHoy(getFechaNocturnaActual())
       if (!activo) return
       if (errDatos) {
         setError(mensajeError(errDatos, 'No se pudo cargar la actividad de hoy.'))
@@ -31,14 +26,13 @@ export default function DondeVaLaGente() {
       } else {
         setLocales(data ?? [])
       }
-      setMiVotoLocalId(miVoto?.local_id ?? null)
       setCargando(false)
     }
     cargar()
     return () => {
       activo = false
     }
-  }, [user?.id, hoyISO])
+  }, [])
 
   return (
     <div className="app-screen donde-va-v2">
@@ -55,13 +49,7 @@ export default function DondeVaLaGente() {
         ) : (
           <ul className="ranking">
             {locales.map((local, index) => (
-              <LocalHoyCard
-                key={local.local_id}
-                local={local}
-                posicion={index + 1}
-                destacado={index === 0}
-                yoVotadoAqui={miVotoLocalId === local.local_id}
-              />
+              <LocalHoyCard key={local.local_id} local={local} posicion={index + 1} destacado={index === 0} />
             ))}
           </ul>
         )}

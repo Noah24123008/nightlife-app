@@ -12,7 +12,7 @@ import {
   responderSolicitudAmistad,
   eliminarRelacionAmistad,
 } from '../lib/api'
-import { toISODate } from '../lib/dates'
+import { getFechaNocturnaActual } from '../lib/dates'
 import ImagenConFallback from '../components/ImagenConFallback'
 import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
@@ -22,7 +22,7 @@ import { SkeletonPerfil } from '../components/Skeleton'
 export default function PerfilPublico() {
   const { id } = useParams()
   const { user, signOut } = useAuth()
-  const hoyISO = useMemo(() => toISODate(new Date()), [])
+  const hoyISO = useMemo(() => getFechaNocturnaActual(), [])
 
   const [perfil, setPerfil] = useState(null)
   const [destino, setDestino] = useState(null)
@@ -193,6 +193,16 @@ export default function PerfilPublico() {
           <p className="perfil-nota">Gijón</p>
         </div>
 
+        <div className="ficha-voto">
+          {destino ? (
+            <p className="ficha-votos-hoy">
+              Hoy va a: <Link to={destino.enlace}>{destino.texto}</Link>
+            </p>
+          ) : (
+            <p className="ficha-votos-hoy">Todavía no ha indicado dónde va hoy</p>
+          )}
+        </div>
+
         <div className="seguimiento-contadores">
           <Link to={`/usuarios/${id}/amigos`} className="seguimiento-contador">
             <span className="seguimiento-numero">{numAmigos}</span>
@@ -241,16 +251,6 @@ export default function PerfilPublico() {
             )}
           </div>
         )}
-
-        <div className="ficha-voto">
-          {destino ? (
-            <p className="ficha-votos-hoy">
-              Hoy va a: <Link to={destino.enlace}>{destino.texto}</Link>
-            </p>
-          ) : (
-            <p className="ficha-votos-hoy">Todavía no ha indicado dónde va hoy</p>
-          )}
-        </div>
       </div>
     </div>
   )
