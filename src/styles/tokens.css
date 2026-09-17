@@ -775,16 +775,6 @@ button {
   overflow-x: hidden;
 }
 
-/* En reposo, .app-layout-swipe y .app-layout-panel se comportan como divs
-   normales en el flujo del documento (el scroll de cada pantalla sigue
-   funcionando exactamente igual que siempre). Solo durante un gesto activo
-   se les aplica position:absolute vía JS (AppLayout.jsx), para poder
-   superponer el panel actual y el vecino mientras se arrastra; al terminar
-   el gesto se revierte a flujo normal. */
-.app-layout-panel {
-  width: 100%;
-}
-
 .bottom-nav {
   position: fixed;
   left: 50%;
@@ -822,6 +812,10 @@ button {
   touch-action: manipulation;
   transition: color var(--duration-fast) ease, background var(--duration-fast) ease,
     transform var(--duration-fast) var(--ease-standard);
+}
+
+.bottom-nav-label {
+  white-space: nowrap;
 }
 
 /* Transitorio: solo existe mientras el dedo está apoyado. Nunca decide qué
@@ -868,10 +862,35 @@ button {
 
 /* Pantalla Locales */
 
-.vista-selector {
+.locales-subnav {
   display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(21, 21, 26, 0.05);
+  border-radius: 12px;
+  margin: 12px 0 4px;
+}
+
+.locales-subnav-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a8f9c;
+  text-decoration: none;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.locales-subnav-item--activo {
+  background: #ffffff;
+  color: #15151a;
+  box-shadow: 0 1px 4px rgba(20, 30, 50, 0.12);
 }
 
 .social-accesos {
@@ -4365,4 +4384,74 @@ button {
   padding: 0 4px;
   font-size: 13px;
   color: var(--sv-text-muted);
+}
+
+/* ============================================================
+   Pantalla Eventos — mismo lenguaje visual que Inicio/Locales/Perfil:
+   fondo claro, tarjetas blancas redondeadas, sombra suave, tipografía ya
+   establecida. Variables propias (--ev-*) siguiendo el mismo patrón que
+   --pv-*/--sv-*/--inicio-*, con los mismos valores reales.
+   ============================================================ */
+
+.eventos-v2-seccion-titulo {
+  margin: 28px 0 18px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--loc-text);
+}
+
+.eventos-v2-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.evento-card {
+  display: block;
+  background: var(--loc-card-bg);
+  border: 1px solid var(--loc-border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--loc-text);
+}
+
+.evento-card-foto {
+  display: block;
+  width: 100%;
+  height: 112px;
+  object-fit: cover;
+  background: #eceae6;
+}
+
+.evento-card-foto--vacia {
+  background: linear-gradient(135deg, #eceae6, #d9d6d0);
+}
+
+.evento-card-info {
+  padding: 12px 16px 14px;
+}
+
+.evento-card-nombre {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--loc-text);
+  line-height: 1.25;
+}
+
+.evento-card-local {
+  margin: 0 0 3px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--loc-text-muted);
+}
+
+.evento-card-fecha {
+  margin: 0;
+  font-size: 12px;
+  color: var(--loc-text-muted);
 }

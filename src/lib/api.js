@@ -229,6 +229,23 @@ export async function getEventosDelDia(ciudadId, fechaISO) {
   return { data, error }
 }
 
+// Eventos futuros (activo = true, fecha >= fechaDesdeISO — normalmente la
+// fecha nocturna actual), de cualquier local de la ciudad, ordenados por
+// fecha y luego hora de inicio. Mismo patrón de join que getEventosDelDia
+// (locales!inner + filtro por ciudad_id), así que trae el local en la
+// misma consulta — sin ninguna llamada extra por evento.
+export async function getEventosFuturos(ciudadId, fechaDesdeISO) {
+  const { data, error } = await supabase
+    .from('eventos')
+    .select('id, nombre, descripcion, fecha, hora_inicio, hora_fin, foto_url, locales!inner(id, nombre, ciudad_id)')
+    .eq('activo', true)
+    .eq('locales.ciudad_id', ciudadId)
+    .gte('fecha', fechaDesdeISO)
+    .order('fecha', { ascending: true })
+    .order('hora_inicio', { ascending: true })
+  return { data, error }
+}
+
 // Un único voto activo por usuario y día: el upsert usa la restricción
 // (usuario_id, fecha) ya definida en la base de datos, así que esta misma
 // llamada sirve tanto para el primer voto del día como para cambiarlo.

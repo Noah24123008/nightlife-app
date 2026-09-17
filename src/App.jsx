@@ -3,13 +3,12 @@ import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './routes/ProtectedRoute'
 import AdminRoute from './routes/AdminRoute'
 import AppLayout from './routes/AppLayout'
+import LocalesSectionLayout from './routes/LocalesSectionLayout'
 import Register from './pages/Register'
 import Login from './pages/Login'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
 import Inicio from './pages/Inicio'
-import Locales from './pages/Locales'
-import Mapa from './pages/Mapa'
 import FichaLocal from './pages/FichaLocal'
 import FichaEvento from './pages/FichaEvento'
 import Perfil from './pages/Perfil'
@@ -42,8 +41,11 @@ export default function App() {
             }
           >
             <Route path="/" element={<Inicio />} />
-            <Route path="/locales" element={<Locales />} />
-            <Route path="/mapa" element={<Mapa />} />
+            <Route element={<LocalesSectionLayout />}>
+              <Route path="/locales" element={null} />
+              <Route path="/eventos" element={null} />
+              <Route path="/mapa" element={null} />
+            </Route>
             <Route path="/locales/:id" element={<FichaLocal />} />
             <Route path="/eventos/:id" element={<FichaEvento />} />
             <Route path="/perfil" element={<Perfil />} />

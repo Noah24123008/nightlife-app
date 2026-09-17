@@ -73,6 +73,21 @@ export function SkeletonFicha() {
   )
 }
 
+// Tarjeta de evento (pantalla Eventos): foto protagonista + nombre + local
+// + fecha.
+export function SkeletonEventoCard() {
+  return (
+    <div className="evento-card" aria-hidden="true">
+      <span className="skeleton evento-card-foto" style={{ borderRadius: 0 }} />
+      <div className="evento-card-info">
+        <span className="skeleton skeleton-linea skeleton-linea--larga" style={{ height: 15, marginBottom: 6 }} />
+        <span className="skeleton skeleton-linea skeleton-linea--corta" style={{ height: 11, marginBottom: 6 }} />
+        <span className="skeleton skeleton-linea skeleton-linea--media" style={{ height: 11 }} />
+      </div>
+    </div>
+  )
+}
+
 // Avatar + nombre + stats de PerfilPublico.
 export function SkeletonPerfil() {
   return (

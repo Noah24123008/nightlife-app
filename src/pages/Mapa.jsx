@@ -3,7 +3,6 @@ import { getCiudadPorNombre, getLocalesPorCiudad } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import MapaLocales from '../components/MapaLocales'
-import BackButton from '../components/BackButton'
 
 const CIUDAD_ACTUAL = 'Gijón'
 
@@ -43,16 +42,14 @@ export default function Mapa() {
   }, [])
 
   return (
-    <div className="app-screen">
-      <BackButton />
-
-      <header className="screen-header">
-        <span className="screen-title">Mapa</span>
-      </header>
-
+    <>
       {error && <p className="auth-error">{error}</p>}
 
+      <h2 className="eventos-v2-seccion-titulo" style={{ color: '#15151a' }}>
+        Mapa
+      </h2>
+
       {cargando ? <p className="app-loading">Cargando mapa...</p> : <MapaLocales locales={locales} />}
-    </div>
+    </>
   )
 }
