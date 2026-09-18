@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "seed:demo": "node scripts/seed-demo.js",
-    "cleanup:demo": "node scripts/cleanup-demo.js"
+    "cleanup:demo": "node scripts/cleanup-demo.js",
+    "backfill:usernames": "node scripts/backfill-usernames.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",

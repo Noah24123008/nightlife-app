@@ -6,6 +6,7 @@ import ImagenConFallback from '../components/ImagenConFallback'
 import InvitarAmigosCard from '../components/InvitarAmigosCard'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import { iniciales } from '../lib/iniciales'
+import { normalizarUsername, formatoUsernameValido } from '../lib/username'
 import IconoCandado from '../components/IconoCandado'
 
 export default function Perfil() {
@@ -65,13 +66,25 @@ export default function Perfil() {
   async function handleGuardar(e) {
     e.preventDefault()
     if (!user) return
+
+    // El username es opcional: si se deja vacío, se guarda null (sigue sin
+    // ser obligatorio en esta fase). Si se ha escrito algo, debe cumplir
+    // el formato antes de intentar guardarlo — así no dependemos solo de
+    // la restricción UNIQUE de la base de datos para detectar un formato
+    // inválido.
+    const usernameNormalizado = normalizarUsername(nombreUsuario)
+    if (usernameNormalizado && !formatoUsernameValido(usernameNormalizado)) {
+      setError('Usa entre 3 y 20 caracteres: letras, números y _')
+      return
+    }
+
     setGuardando(true)
     setError('')
     setMensajeExito('')
 
     const { error: errGuardar } = await guardarPerfil(user.id, {
       nombre: nombre.trim() || null,
-      nombre_usuario: nombreUsuario.trim() || null,
+      nombre_usuario: usernameNormalizado || null,
     })
 
     setGuardando(false)
@@ -86,9 +99,10 @@ export default function Perfil() {
       return
     }
 
+    setNombreUsuario(usernameNormalizado)
     setMensajeExito('Cambios guardados ✓')
     nombreOriginalRef.current = nombre
-    nombreUsuarioOriginalRef.current = nombreUsuario
+    nombreUsuarioOriginalRef.current = usernameNormalizado
     setTimeout(() => setMensajeExito(''), 2500)
   }
 

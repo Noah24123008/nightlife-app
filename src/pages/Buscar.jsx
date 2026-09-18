@@ -28,7 +28,11 @@ export default function Buscar() {
     setError('')
 
     const temporizador = setTimeout(async () => {
-      const { data, error: errBusqueda } = await buscarPerfilesPublicos(limpio)
+      // Si el usuario escribe "@lucasfg", se busca "lucasfg" — los
+      // usernames se guardan sin arroba, así que buscar el término tal
+      // cual con la @ nunca encontraría coincidencias.
+      const terminoBusqueda = limpio.startsWith('@') ? limpio.slice(1) : limpio
+      const { data, error: errBusqueda } = await buscarPerfilesPublicos(terminoBusqueda)
       if (!activo) return
       if (errBusqueda) {
         setError(mensajeError(errBusqueda, 'No se pudo completar la búsqueda. Inténtalo de nuevo.'))
@@ -89,7 +93,10 @@ export default function Buscar() {
           <div className="votantes-lista votantes-lista--columna">
             {resultados.map((perfil) => (
               <div key={perfil.id} className="buscar-v2-fila">
-                <PersonaChip perfil={perfil} />
+                <PersonaChip
+                  perfil={perfil}
+                  subtitulo={perfil.nombre_usuario ? `@${perfil.nombre_usuario}` : undefined}
+                />
                 <span className="buscar-v2-chevron" aria-hidden="true">
                   ›
                 </span>
