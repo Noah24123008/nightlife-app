@@ -20,6 +20,7 @@ import {
   MAX_DIAS_FUTURO,
   getFechaNocturnaActualComoDate,
   estaEnFranjaNocturnaAhora,
+  formatearFechaLarga,
 } from '../lib/dates'
 import DaySelector from '../components/DaySelector'
 import VotoButton from '../components/VotoButton'
@@ -30,6 +31,7 @@ import IconoLuna from '../components/IconoLuna'
 import EmptyState from '../components/EmptyState'
 import IconoAmigos from '../components/IconoAmigos'
 import IconoCalendario from '../components/IconoCalendario'
+import ImagenConFallback from '../components/ImagenConFallback'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import gijonHero from '../assets/gijon-hero.png'
 
@@ -531,11 +533,23 @@ export default function Inicio() {
                   {eventosDia.map((evento) => (
                     <li key={evento.id}>
                       <Link to={`/eventos/${evento.id}`} className="evento-item">
-                        <span className="evento-hora">{evento.hora_inicio?.slice(0, 5)}</span>
-                        <div>
+                        <ImagenConFallback
+                          src={evento.foto_url}
+                          alt={evento.nombre}
+                          className="evento-item-foto"
+                          placeholderClassName="evento-item-foto evento-item-foto--vacia"
+                        />
+                        <div className="evento-item-info">
                           <p className="evento-nombre">{evento.nombre}</p>
                           <p className="evento-local">{evento.locales?.nombre}</p>
+                          <p className="evento-item-fecha">
+                            {formatearFechaLarga(diaSeleccionado.fechaISO)}
+                            {evento.hora_inicio && ` · ${evento.hora_inicio.slice(0, 5)}`}
+                          </p>
                         </div>
+                        <span className="evento-item-chevron" aria-hidden="true">
+                          ›
+                        </span>
                       </Link>
                     </li>
                   ))}

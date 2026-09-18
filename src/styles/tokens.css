@@ -755,16 +755,39 @@ button {
   color: inherit;
 }
 
-.evento-hora {
-  font-family: var(--font-display);
-  color: var(--color-accent-cool);
-  font-size: 14px;
-  min-width: 44px;
-}
-
 .evento-nombre {
   margin: 0 0 2px;
   font-size: 15px;
+}
+
+.evento-item-foto {
+  display: block;
+  width: 88px;
+  height: 88px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background: #eceae6;
+}
+
+.evento-item-foto--vacia {
+  background: linear-gradient(135deg, #eceae6, #d9d6d0);
+}
+
+.evento-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.evento-item-fecha {
+  margin: 3px 0 0;
+  font-size: 12px;
+}
+
+.evento-item-chevron {
+  flex: 0 0 auto;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .evento-local {
@@ -2184,6 +2207,7 @@ button {
 
 /* Eventos */
 .inicio-v2 .evento-item {
+  align-items: center;
   background: var(--inicio-card-bg);
   border: 1px solid var(--inicio-border);
   border-radius: 20px;
@@ -2192,9 +2216,15 @@ button {
 
 .inicio-v2 .evento-nombre {
   color: var(--inicio-text);
+  font-weight: 700;
 }
 
 .inicio-v2 .evento-local {
+  color: var(--inicio-text-muted);
+}
+
+.inicio-v2 .evento-item-fecha,
+.inicio-v2 .evento-item-chevron {
   color: var(--inicio-text-muted);
 }
 
@@ -4480,7 +4510,7 @@ button {
    Pantalla Eventos — mismo lenguaje visual que Inicio/Locales/Perfil:
    fondo claro, tarjetas blancas redondeadas, sombra suave, tipografía ya
    establecida. Variables propias (--ev-*) siguiendo el mismo patrón que
-   --pw, --sv y --inicio, con los mismos valores reales.
+   --pv-*/--sv-*/--inicio-*, con los mismos valores reales.
    ============================================================ */
 
 .eventos-v2-seccion-titulo {
