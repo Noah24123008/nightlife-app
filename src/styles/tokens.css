@@ -1886,6 +1886,13 @@ button {
   justify-content: space-between;
 }
 
+.inicio-v2-hero-acciones {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
 .inicio-v2-ciudad-selector {
   position: relative;
 }
@@ -4443,6 +4450,155 @@ button {
   font-weight: 600;
   color: #15151a;
   text-align: center;
+}
+
+/* Bottom sheet genérico — mismo estilo visual que calendar-picker-*, con
+   nombres de clase propios para no acoplar este componente reutilizable
+   al calendario. */
+.bottom-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(10, 12, 20, 0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background 0.25s ease, backdrop-filter 0.25s ease;
+}
+
+.bottom-sheet-overlay--visible {
+  background: rgba(10, 12, 20, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.bottom-sheet {
+  width: calc(100% - 32px);
+  max-width: 440px;
+  margin-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 30px;
+  box-shadow: 0 20px 60px rgba(20, 30, 50, 0.28);
+  transform: translateY(24px);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.22s ease;
+}
+
+.bottom-sheet--visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.15);
+  margin: 0 auto 14px;
+}
+
+.bottom-sheet-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.bottom-sheet-titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 800;
+  color: #15151a;
+}
+
+.bottom-sheet-cerrar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(21, 21, 26, 0.06);
+  border: none;
+  color: #15151a;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.bottom-sheet-cerrar:focus-visible {
+  outline: 2px solid rgba(21, 21, 26, 0.55);
+  outline-offset: 2px;
+}
+
+/* Contenido específico del sheet "Instalar NoctUp" */
+.instalar-sheet-intro {
+  margin: 12px 0 16px;
+  font-size: 14px;
+  color: #55596a;
+  line-height: 1.4;
+}
+
+.instalar-sheet-btn-principal {
+  width: 100%;
+  padding: 13px 16px;
+  margin-bottom: 16px;
+  border: none;
+  border-radius: 14px;
+  background: #15151a;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.instalar-sheet-btn-principal:active {
+  transform: scale(0.98);
+}
+
+.instalar-sheet-seccion {
+  margin-bottom: 16px;
+}
+
+.instalar-sheet-seccion-titulo {
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  color: #15151a;
+}
+
+.instalar-sheet-pasos {
+  margin: 0;
+  padding-left: 20px;
+  font-size: 13px;
+  color: #55596a;
+  line-height: 1.6;
+}
+
+.instalar-sheet-btn-entendido {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid rgba(21, 21, 26, 0.12);
+  border-radius: 14px;
+  background: #ffffff;
+  color: #15151a;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.instalar-sheet-btn-entendido:active {
+  transform: scale(0.98);
 }
 
 @media (max-width: 360px) {

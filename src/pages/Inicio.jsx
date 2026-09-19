@@ -32,6 +32,9 @@ import EmptyState from '../components/EmptyState'
 import IconoAmigos from '../components/IconoAmigos'
 import IconoCalendario from '../components/IconoCalendario'
 import ImagenConFallback from '../components/ImagenConFallback'
+import IconoInstalar from '../components/IconoInstalar'
+import InstalarNoctUpSheet from '../components/InstalarNoctUpSheet'
+import { useInstalacionApp } from '../hooks/useInstalacionApp'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import gijonHero from '../assets/gijon-hero.png'
 
@@ -152,6 +155,8 @@ export default function Inicio() {
   const [cargandoRecomendaciones, setCargandoRecomendaciones] = useState(true)
 
   const [numNoLeidas, setNumNoLeidas] = useState(0)
+  const [sheetInstalarAbierto, setSheetInstalarAbierto] = useState(false)
+  const { yaInstalada, puedeInstalarDirectamente, instalarAhora } = useInstalacionApp()
 
   const [mostrarRankingCompleto, setMostrarRankingCompleto] = useState(false)
   const [mostrarTodasRecomendaciones, setMostrarTodasRecomendaciones] = useState(false)
@@ -403,15 +408,34 @@ export default function Inicio() {
                 </div>
               )}
             </div>
-            <Link to="/notificaciones" className="glass-icon-btn" aria-label="Notificaciones">
-              🔔
-              {numNoLeidas > 0 && (
-                <span className="badge-no-leidas">{numNoLeidas > 9 ? '9+' : numNoLeidas}</span>
+            <div className="inicio-v2-hero-acciones">
+              {!yaInstalada && (
+                <button
+                  type="button"
+                  className="glass-icon-btn"
+                  aria-label="Instalar NoctUp"
+                  onClick={() => setSheetInstalarAbierto(true)}
+                >
+                  <IconoInstalar size={20} />
+                </button>
               )}
-            </Link>
+              <Link to="/notificaciones" className="glass-icon-btn" aria-label="Notificaciones">
+                🔔
+                {numNoLeidas > 0 && (
+                  <span className="badge-no-leidas">{numNoLeidas > 9 ? '9+' : numNoLeidas}</span>
+                )}
+              </Link>
+            </div>
           </div>
         </div>
       </div>
+
+      <InstalarNoctUpSheet
+        abierto={sheetInstalarAbierto}
+        onCerrar={() => setSheetInstalarAbierto(false)}
+        puedeInstalarDirectamente={puedeInstalarDirectamente}
+        onInstalarAhora={instalarAhora}
+      />
 
       <div className="inicio-v2-contenido">
         <DaySelector
