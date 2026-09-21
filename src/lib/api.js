@@ -425,3 +425,29 @@ export async function eliminarCuenta() {
   const { data, error } = await supabase.functions.invoke('eliminar-cuenta')
   return { data, error }
 }
+
+// --- Feedback beta ---
+
+// INSERT directo protegido solo por RLS (auth.uid() = usuario_id) — el
+// mismo patrón ya usado por votarPorLocal. No hace falta ninguna RPC
+// para crear: Postgres rechaza cualquier usuario_id que no coincida con
+// la sesión real, sea lo que sea lo que se envíe desde aquí.
+export async function enviarFeedback({ usuarioId, tipo, mensaje, rutaActual }) {
+  const { error } = await supabase.from('feedback_beta').insert({
+    usuario_id: usuarioId,
+    tipo,
+    mensaje,
+    ruta_actual: rutaActual,
+  })
+  return { error }
+}
+
+export async function adminListarFeedback() {
+  const { data, error } = await supabase.rpc('admin_listar_feedback')
+  return { data, error }
+}
+
+export async function adminCambiarEstadoFeedback(id, estado) {
+  const { error } = await supabase.rpc('admin_cambiar_estado_feedback', { p_id: id, p_estado: estado })
+  return { error }
+}

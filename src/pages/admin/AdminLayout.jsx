@@ -5,6 +5,7 @@ const TABS = [
   { to: '/admin/locales', label: 'Locales', end: false },
   { to: '/admin/eventos', label: 'Eventos', end: false },
   { to: '/admin/usuarios', label: 'Usuarios', end: false },
+  { to: '/admin/feedback', label: 'Feedback', end: false },
 ]
 
 export default function AdminLayout() {

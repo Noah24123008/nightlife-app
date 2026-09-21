@@ -9,6 +9,7 @@ import { iniciales } from '../lib/iniciales'
 import { normalizarUsername, formatoUsernameValido } from '../lib/username'
 import IconoCandado from '../components/IconoCandado'
 import EliminarCuentaSheet from '../components/EliminarCuentaSheet'
+import FeedbackSheet from '../components/FeedbackSheet'
 
 export default function Perfil() {
   const { user, signOut } = useAuth()
@@ -20,6 +21,7 @@ export default function Perfil() {
   const [error, setError] = useState('')
   const [mensajeExito, setMensajeExito] = useState('')
   const [sheetEliminarAbierto, setSheetEliminarAbierto] = useState(false)
+  const [sheetFeedbackAbierto, setSheetFeedbackAbierto] = useState(false)
 
   const [nombre, setNombre] = useState('')
   const [nombreUsuario, setNombreUsuario] = useState('')
@@ -279,6 +281,13 @@ export default function Perfil() {
           </a>
           <button
             type="button"
+            className="perfil-v2-ayuda-enlace"
+            onClick={() => setSheetFeedbackAbierto(true)}
+          >
+            Enviar feedback
+          </button>
+          <button
+            type="button"
             className="perfil-v2-ayuda-enlace perfil-v2-ayuda-enlace--peligro"
             onClick={() => setSheetEliminarAbierto(true)}
           >
@@ -288,6 +297,7 @@ export default function Perfil() {
       </div>
 
       <EliminarCuentaSheet abierto={sheetEliminarAbierto} onCerrar={() => setSheetEliminarAbierto(false)} />
+      <FeedbackSheet abierto={sheetFeedbackAbierto} onCerrar={() => setSheetFeedbackAbierto(false)} />
     </div>
   )
 }

@@ -26,6 +26,7 @@ import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminLocales from './pages/admin/AdminLocales'
 import AdminEventos from './pages/admin/AdminEventos'
 import AdminUsuarios from './pages/admin/AdminUsuarios'
+import AdminFeedback from './pages/admin/AdminFeedback'
 
 export default function App() {
   return (
@@ -74,6 +75,7 @@ export default function App() {
             <Route path="locales" element={<AdminLocales />} />
             <Route path="eventos" element={<AdminEventos />} />
             <Route path="usuarios" element={<AdminUsuarios />} />
+            <Route path="feedback" element={<AdminFeedback />} />
           </Route>
         </Routes>
       </BrowserRouter>
