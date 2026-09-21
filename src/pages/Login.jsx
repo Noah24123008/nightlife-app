@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { destinoSeguro } from '../lib/navegacionSegura'
+import { mensajeErrorAuth } from '../lib/errors'
+import CampoPassword from '../components/CampoPassword'
 import gijonHero from '../assets/gijon-hero.png'
 
 export default function Login() {
@@ -23,7 +25,7 @@ export default function Login() {
     setLoading(false)
 
     if (error) {
-      setError(error.message)
+      setError(mensajeErrorAuth(error))
       return
     }
 
@@ -41,11 +43,21 @@ export default function Login() {
         <form className="auth-form" onSubmit={handleSubmit}>
           <label>
             Email
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
           </label>
           <label>
             Contraseña
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <CampoPassword
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
           </label>
           {error && <p className="auth-error">{error}</p>}
           <button type="submit" disabled={loading}>

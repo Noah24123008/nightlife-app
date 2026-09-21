@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { mensajeErrorAuth } from '../lib/errors'
+import CampoPassword from '../components/CampoPassword'
 
 export default function ResetPassword() {
   const { updatePassword } = useAuth()
@@ -19,7 +21,7 @@ export default function ResetPassword() {
     setLoading(false)
 
     if (error) {
-      setError(error.message)
+      setError(mensajeErrorAuth(error))
       return
     }
 
@@ -33,14 +35,14 @@ export default function ResetPassword() {
       <form className="auth-form" onSubmit={handleSubmit}>
         <label>
           Nueva contraseña
-          <input
-            type="password"
+          <CampoPassword
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            autoComplete="new-password"
             minLength={6}
           />
         </label>
+        <p className="auth-requisito">Mínimo 6 caracteres.</p>
         {error && <p className="auth-error">{error}</p>}
         {info && <p className="auth-info">{info}</p>}
         <button type="submit" disabled={loading}>

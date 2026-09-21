@@ -8,6 +8,9 @@ import Register from './pages/Register'
 import Login from './pages/Login'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import Privacidad from './pages/Privacidad'
+import Terminos from './pages/Terminos'
+import CuentaEliminada from './pages/CuentaEliminada'
 import Inicio from './pages/Inicio'
 import FichaLocal from './pages/FichaLocal'
 import FichaEvento from './pages/FichaEvento'
@@ -33,6 +36,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/recuperar-password" element={<ForgotPassword />} />
           <Route path="/restablecer-password" element={<ResetPassword />} />
+          <Route path="/privacidad" element={<Privacidad />} />
+          <Route path="/terminos" element={<Terminos />} />
+          <Route path="/cuenta-eliminada" element={<CuentaEliminada />} />
           <Route
             element={
               <ProtectedRoute>

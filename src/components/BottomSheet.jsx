@@ -5,7 +5,13 @@ import { createPortal } from 'react-dom'
 // Escape, y portal a document.body — el mismo patrón que ya usa
 // CalendarPicker, extraído aquí como componente propio para no duplicarlo
 // en cada sheet nuevo que haga falta a partir de ahora.
-export default function BottomSheet({ abierto, onCerrar, titulo, ariaLabel, children }) {
+//
+// noDescartable (opcional, por defecto false — no cambia nada para los
+// usos ya existentes): cuando es true, oculta el botón "×" de cerrar. No
+// afecta por sí solo al cierre por click fuera / Escape — eso lo decide
+// quien use el componente pasando un onCerrar que sea un no-op, como ya
+// hace AceptacionLegalModal.
+export default function BottomSheet({ abierto, onCerrar, titulo, ariaLabel, children, noDescartable = false }) {
   const [renderizado, setRenderizado] = useState(false)
 
   // Mantener el sheet montado un instante más al cerrar, para que la
@@ -46,9 +52,11 @@ export default function BottomSheet({ abierto, onCerrar, titulo, ariaLabel, chil
         <div className="bottom-sheet-handle" aria-hidden="true" />
         <div className="bottom-sheet-header">
           <h2 className="bottom-sheet-titulo">{titulo}</h2>
-          <button type="button" className="bottom-sheet-cerrar" onClick={onCerrar} aria-label="Cerrar">
-            ×
-          </button>
+          {!noDescartable && (
+            <button type="button" className="bottom-sheet-cerrar" onClick={onCerrar} aria-label="Cerrar">
+              ×
+            </button>
+          )}
         </div>
         {children}
       </div>

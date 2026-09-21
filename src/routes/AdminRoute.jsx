@@ -11,8 +11,6 @@ export default function AdminRoute({ children }) {
   const { user, loading, esAdmin, cargandoRol } = useAuth()
   const location = useLocation()
 
- 
-
   if (loading || cargandoRol) return <p className="app-loading">Cargando...</p>
   if (!user) return <Navigate to="/login" state={{ from: location }} replace />
   if (!esAdmin) return <Navigate to="/" replace />

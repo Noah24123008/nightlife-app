@@ -1,30 +1,30 @@
-:root {
+﻿:root {
   --color-bg: #10182b;
   --color-surface: #1b2440;
   --color-border: #2c3760;
   --color-accent-warm: #f5a623; /* voto / tendencia / ranking */
-  --color-accent-cool: #4fd1c5; /* distinción de eventos */
+  --color-accent-cool: #4fd1c5; /* distinciÃ³n de eventos */
   --color-error: #ff6b6b;
   --color-text: #f5f3ef;
   --color-text-muted: #9aa5c7;
 
-  --font-display: 'Unbounded', sans-serif; /* solo nombres destacados, posiciones de ranking, títulos */
+  --font-display: 'Unbounded', sans-serif; /* solo nombres destacados, posiciones de ranking, tÃ­tulos */
   --font-body: 'Manrope', sans-serif; /* resto de textos y elementos funcionales */
 
   /* 8px (padding superior) + 44px (min-height de .bottom-nav-item) +
      8px (padding inferior) = 60px. La zona segura y el hueco flotante de
-     16px se añaden aparte (en el "bottom" del propio BottomNav y en el
-     padding-bottom de .app-screen), no aquí. Si se cambia el padding o
-     el min-height de abajo, actualizar este valor también. */
+     16px se aÃ±aden aparte (en el "bottom" del propio BottomNav y en el
+     padding-bottom de .app-screen), no aquÃ­. Si se cambia el padding o
+     el min-height de abajo, actualizar este valor tambiÃ©n. */
   --bottom-nav-height: 60px;
 
   /* ------------------------------------------------------------
-     Sistema claro consolidado — cada pantalla -v2 definía su propia
-     paleta casi idéntica (--pv-*, --sv-*, --nt-*, ...) con los mismos
-     hex repetidos. Estas variables son la fuente única; las variables
+     Sistema claro consolidado â€” cada pantalla -v2 definÃ­a su propia
+     paleta casi idÃ©ntica (--pv-*, --sv-*, --nt-*, ...) con los mismos
+     hex repetidos. Estas variables son la fuente Ãºnica; las variables
      por pantalla se mantienen (no se tocan sus usos existentes, cero
-     riesgo de regresión visual) pero ahora pueden apuntar aquí y el
-     código nuevo/corregido en esta fase ya las usa directamente.
+     riesgo de regresiÃ³n visual) pero ahora pueden apuntar aquÃ­ y el
+     cÃ³digo nuevo/corregido en esta fase ya las usa directamente.
      ------------------------------------------------------------ */
   --surface-bg: #faf9f7;
   --surface-card: #ffffff;
@@ -34,14 +34,14 @@
   --surface-active: rgba(21, 21, 26, 0.92);
 
   /* Radios: dos escalones cubren casi todos los casos reales del
-     proyecto (tarjeta grande / elemento de lista más compacto); el
+     proyecto (tarjeta grande / elemento de lista mÃ¡s compacto); el
      resto de valores sueltos que ya existen no se tocan. */
   --radius-lg: 20px;
   --radius-md: 16px;
   --radius-pill: 999px;
 
-  /* Misma sombra de tarjeta que ya se repetía casi sin variación en
-     más de 30 sitios distintos del proyecto. */
+  /* Misma sombra de tarjeta que ya se repetÃ­a casi sin variaciÃ³n en
+     mÃ¡s de 30 sitios distintos del proyecto. */
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.05);
   --shadow-float: 0 12px 32px rgba(20, 30, 50, 0.18);
 
@@ -60,12 +60,12 @@
 }
 
 /* ------------------------------------------------------------
-   Feedback de interacción global — un solo sitio, máximo alcance:
+   Feedback de interacciÃ³n global â€” un solo sitio, mÃ¡ximo alcance:
    .glass-btn, .glass-chip y .glass-icon-btn son la base de casi todos
-   los botones/chips/iconos pulsables de la app (Voy, días, flechas,
-   campana, accesos...). Un pequeño press-state y un foco visible
-   consistente aquí cubre la inmensa mayoría de la interfaz sin tocar
-   cada pantalla por separado. Duración corta (150ms), nada exagerado.
+   los botones/chips/iconos pulsables de la app (Voy, dÃ­as, flechas,
+   campana, accesos...). Un pequeÃ±o press-state y un foco visible
+   consistente aquÃ­ cubre la inmensa mayorÃ­a de la interfaz sin tocar
+   cada pantalla por separado. DuraciÃ³n corta (150ms), nada exagerado.
    ------------------------------------------------------------ */
 
 .glass-btn,
@@ -107,9 +107,9 @@
   }
 }
 
-/* Filas/tarjetas que navegan a otra pantalla (ranking, listas, accesos) —
+/* Filas/tarjetas que navegan a otra pantalla (ranking, listas, accesos) â€”
    mismo criterio: feedback sutil, sin tocar cada pantalla por separado.
-   Intensidad "tarjeta": la más sutil de todas (scale 0.99 + opacity leve),
+   Intensidad "tarjeta": la mÃ¡s sutil de todas (scale 0.99 + opacity leve),
    para que un bloque grande de contenido no parezca "temblar" al tocarlo. */
 .local-item-enlace,
 .local-hoy-enlace,
@@ -145,8 +145,8 @@
   transform: scale(0.99);
 }
 
-/* admin-v1-fila queda aislada, con su propio feedback sin tocar — no forma
-   parte de esta pasada (el panel admin está fuera de alcance). */
+/* admin-v1-fila queda aislada, con su propio feedback sin tocar â€” no forma
+   parte de esta pasada (el panel admin estÃ¡ fuera de alcance). */
 .admin-v1-fila {
   transition: opacity var(--duration-fast) ease;
 }
@@ -155,9 +155,9 @@
   opacity: 0.7;
 }
 
-/* CTA grandes (negro sólido, ancho completo): Guardar cambios, Entrar,
-   Crear cuenta, Enviar enlace, Restablecer — el press más suave de todos,
-   apropiado para un botón grande y ya muy visible por sí mismo. */
+/* CTA grandes (negro sÃ³lido, ancho completo): Guardar cambios, Entrar,
+   Crear cuenta, Enviar enlace, Restablecer â€” el press mÃ¡s suave de todos,
+   apropiado para un botÃ³n grande y ya muy visible por sÃ­ mismo. */
 .auth-form button {
   -webkit-tap-highlight-color: transparent;
   transition: transform var(--duration-fast) var(--ease-standard), opacity var(--duration-fast) ease;
@@ -168,7 +168,7 @@
   opacity: 0.92;
 }
 
-/* Enlaces-botón discretos: no necesitan escala, solo una atenuación breve. */
+/* Enlaces-botÃ³n discretos: no necesitan escala, solo una atenuaciÃ³n breve. */
 .amistad-eliminar,
 .perfil-salir {
   -webkit-tap-highlight-color: transparent;
@@ -180,8 +180,8 @@
   opacity: 0.55;
 }
 
-/* Días del calendario: celda pequeña con su propio estado de color (hoy /
-   seleccionado) — opacity funciona igual de bien sobre cualquiera de esos
+/* DÃ­as del calendario: celda pequeÃ±a con su propio estado de color (hoy /
+   seleccionado) â€” opacity funciona igual de bien sobre cualquiera de esos
    fondos sin necesitar una regla distinta por estado. */
 .calendar-picker-dia {
   -webkit-tap-highlight-color: transparent;
@@ -192,8 +192,8 @@
   opacity: 0.6;
 }
 
-/* Fila de opción dentro del desplegable de ciudad (Gijón/Oviedo). Oviedo
-   está disabled, así que :not(:disabled) ya la excluye sin necesidad de
+/* Fila de opciÃ³n dentro del desplegable de ciudad (GijÃ³n/Oviedo). Oviedo
+   estÃ¡ disabled, asÃ­ que :not(:disabled) ya la excluye sin necesidad de
    un selector aparte. */
 .inicio-v2-ciudad-opcion {
   -webkit-tap-highlight-color: transparent;
@@ -205,9 +205,9 @@
 }
 
 /* Respaldo universal: cualquier elemento interactivo que no tenga ya un
-   foco visible más específico (los de arriba, o los propios de
-   .auth-form input) recibe al menos este anillo — nunca se navega a
-   teclado sin saber dónde está el foco. */
+   foco visible mÃ¡s especÃ­fico (los de arriba, o los propios de
+   .auth-form input) recibe al menos este anillo â€” nunca se navega a
+   teclado sin saber dÃ³nde estÃ¡ el foco. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -218,10 +218,10 @@ textarea:focus-visible {
 }
 
 /* ============================================================
-   Sistema "glass" reutilizable — mismo lenguaje visual que el
-   BottomNav (cristal translúcido + blur + estado activo en negro).
+   Sistema "glass" reutilizable â€” mismo lenguaje visual que el
+   BottomNav (cristal translÃºcido + blur + estado activo en negro).
    Pensado para usarse en cualquier pantalla, no solo Inicio, por
-   eso vive aquí como clase global y no anidada bajo .inicio-v2.
+   eso vive aquÃ­ como clase global y no anidada bajo .inicio-v2.
    ============================================================ */
 
 .glass-surface {
@@ -264,9 +264,9 @@ textarea:focus-visible {
   cursor: default;
 }
 
-/* "Vas aquí ✓" llega con disabled=true a la vez que activo=true (un
-   estado ya confirmado, no uno a la espera) — sin esto, la opacidad de
-   arriba diluía el negro sólido de .glass-btn--active a un gris. */
+/* "Vas aquÃ­ âœ“" llega con disabled=true a la vez que activo=true (un
+   estado ya confirmado, no uno a la espera) â€” sin esto, la opacidad de
+   arriba diluÃ­a el negro sÃ³lido de .glass-btn--active a un gris. */
 .glass-btn--active:disabled {
   opacity: 1;
 }
@@ -407,6 +407,64 @@ button {
   background: #ffffff;
 }
 
+.auth-aviso-edad {
+  margin: -8px 0 16px;
+  font-size: 13px;
+  color: #8a8f9c;
+}
+
+.auth-requisito {
+  margin: -10px 0 0;
+  font-size: 12px;
+  color: #8a8f9c;
+}
+
+.auth-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #55596a;
+  line-height: 1.4;
+}
+
+.auth-checkbox input[type='checkbox'] {
+  margin-top: 2px;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.auth-checkbox a {
+  color: #15151a;
+  font-weight: 600;
+}
+
+.campo-password {
+  position: relative;
+  display: flex;
+}
+
+.campo-password input {
+  width: 100%;
+  padding-right: 44px;
+  box-sizing: border-box;
+}
+
+.campo-password-toggle {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 8px;
+  line-height: 1;
+  cursor: pointer;
+}
+
 .auth-form button {
   margin-top: 8px;
   background: rgba(21, 21, 26, 0.92);
@@ -423,6 +481,156 @@ button {
 .auth-form button:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+/* PÃ¡ginas legales pÃºblicas (/privacidad, /terminos) */
+.legal-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px calc(48px + env(safe-area-inset-bottom, 0px));
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #faf9f7;
+  color: #15151a;
+}
+
+.legal-page-volver {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: #8a8f9c;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.legal-page-titulo {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.legal-page-meta {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: #8a8f9c;
+}
+
+.legal-page-nota {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  background: rgba(245, 166, 35, 0.1);
+  border-radius: 12px;
+  font-size: 13px;
+  color: #6b5410;
+}
+
+.legal-page h2 {
+  margin: 24px 0 8px;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: #15151a;
+}
+
+.legal-page p,
+.legal-page li {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #33363f;
+}
+
+.legal-page ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.legal-page a {
+  color: #15151a;
+  font-weight: 600;
+}
+
+.legal-page-enlace-final {
+  margin-top: 28px;
+}
+
+/* SecciÃ³n "Ayuda y privacidad" en Perfil */
+.perfil-v2-ayuda {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #efeeec;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.perfil-v2-ayuda-titulo {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #8a8f9c;
+}
+
+.perfil-v2-ayuda-enlace {
+  display: block;
+  width: 100%;
+  padding: 12px 4px;
+  border: none;
+  border-bottom: 1px solid #f4f3f1;
+  background: none;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  color: #15151a;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.perfil-v2-ayuda-enlace:last-child {
+  border-bottom: none;
+}
+
+.perfil-v2-ayuda-enlace--peligro {
+  color: #c23b3b;
+}
+
+/* Eliminar cuenta (dentro de EliminarCuentaSheet) */
+.eliminar-cuenta-input {
+  width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 12px;
+  border: 1px solid #efeeec;
+  border-radius: 12px;
+  background: #faf9f7;
+  color: #15151a;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.eliminar-cuenta-input:focus {
+  outline: none;
+  border-color: rgba(194, 59, 59, 0.5);
+}
+
+.eliminar-cuenta-btn-confirmar {
+  width: 100%;
+  padding: 13px 16px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 14px;
+  background: #c23b3b;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.eliminar-cuenta-btn-confirmar:disabled {
+  background: rgba(194, 59, 59, 0.35);
+  cursor: not-allowed;
 }
 
 .auth-error {
@@ -457,10 +665,10 @@ button {
 }
 
 /* ============================================================
-   Skeletons — primitivas compartidas. Gris neutro (mismo tono que los
+   Skeletons â€” primitivas compartidas. Gris neutro (mismo tono que los
    placeholders de avatar ya existentes), radios acordes a las tarjetas
    reales, shimmer sutil. Nunca cambian el espacio que ocupa el contenido
-   real: cada skeleton concreto usa las mismas medidas que su homólogo.
+   real: cada skeleton concreto usa las mismas medidas que su homÃ³logo.
    ============================================================ */
 
 .skeleton {
@@ -588,8 +796,8 @@ button {
   margin-left: 6px;
 }
 
-/* Solo en dispositivos con puntero preciso (ratón): en táctil el gesto
-   nativo ya sirve, y las flechas sobrarían. */
+/* Solo en dispositivos con puntero preciso (ratÃ³n): en tÃ¡ctil el gesto
+   nativo ya sirve, y las flechas sobrarÃ­an. */
 @media (hover: hover) and (pointer: fine) {
   .day-selector-flecha {
     display: flex;
@@ -691,7 +899,7 @@ button {
   font-size: 20px;
 }
 
-/* Única media query de esta fase: pantallas muy estrechas (320/360/375px) */
+/* Ãšnica media query de esta fase: pantallas muy estrechas (320/360/375px) */
 @media (max-width: 380px) {
   .local-item--destacado .rank-position {
     font-size: 26px;
@@ -796,7 +1004,7 @@ button {
   font-size: 13px;
 }
 
-/* Layout con navegación inferior */
+/* Layout con navegaciÃ³n inferior */
 
 .app-layout {
   min-height: 100vh;
@@ -846,9 +1054,9 @@ button {
   white-space: nowrap;
 }
 
-/* Transitorio: solo existe mientras el dedo está apoyado. Nunca decide qué
-   pestaña está activa (eso lo sigue marcando la ruta real, vía NavLink) —
-   es únicamente el acuse de recibo instantáneo del toque, antes de que el
+/* Transitorio: solo existe mientras el dedo estÃ¡ apoyado. Nunca decide quÃ©
+   pestaÃ±a estÃ¡ activa (eso lo sigue marcando la ruta real, vÃ­a NavLink) â€”
+   es Ãºnicamente el acuse de recibo instantÃ¡neo del toque, antes de que el
    cambio de ruta termine de completarse. */
 .bottom-nav-item:active {
   transform: scale(0.94);
@@ -1430,7 +1638,7 @@ button {
   font-size: 12px;
 }
 
-/* Banner "Dónde va la gente hoy" (Inicio) */
+/* Banner "DÃ³nde va la gente hoy" (Inicio) */
 
 .banner-donde-va {
   display: flex;
@@ -1718,7 +1926,7 @@ button {
   background: linear-gradient(135deg, var(--color-surface), var(--color-border));
 }
 
-/* Panorámico de FichaLocal: fondo desenfocado + foto completa sin recortar */
+/* PanorÃ¡mico de FichaLocal: fondo desenfocado + foto completa sin recortar */
 
 .ficha-foto-panoramica {
   position: relative;
@@ -1809,12 +2017,12 @@ button {
 }
 
 /* ============================================================
-   INICIO — rediseño visual (fase 1, mocks)
-   Todo aquí va anidado bajo .inicio-v2 a propósito: DaySelector,
+   INICIO â€” rediseÃ±o visual (fase 1, mocks)
+   Todo aquÃ­ va anidado bajo .inicio-v2 a propÃ³sito: DaySelector,
    VotoButton, .ranking, .local-item, .venue-name, .local-categoria,
    .mini-avatares, .inicio-ver-mas, .inicio-vacio y .ficha-subtitulo
-   los usan también Locales, Social, FichaLocal, FichaEvento, etc. —
-   así que todo lo nuevo se queda contenido en Inicio y ningún otro
+   los usan tambiÃ©n Locales, Social, FichaLocal, FichaEvento, etc. â€”
+   asÃ­ que todo lo nuevo se queda contenido en Inicio y ningÃºn otro
    sitio se ve afectado.
    ============================================================ */
 
@@ -1840,10 +2048,10 @@ button {
   background-color: #1b2440;
   background-size: cover;
   background-position: 74% 34%;
-  /* Silueta orgánica en vez de un simple border-radius: la base baja
-     más por la izquierda y termina antes por la derecha, con varios
+  /* Silueta orgÃ¡nica en vez de un simple border-radius: la base baja
+     mÃ¡s por la izquierda y termina antes por la derecha, con varios
      puntos para simular una curva suave en vez de un corte recto. El
-     fondo claro de .inicio-v2 se ve a través de la zona recortada. */
+     fondo claro de .inicio-v2 se ve a travÃ©s de la zona recortada. */
   clip-path: polygon(
     0% 0%,
     100% 0%,
@@ -2011,7 +2219,7 @@ button {
   margin: 0 0 12px;
 }
 
-/* Selector de días: gap propio de Inicio (glass-chip/glass-icon-btn ya
+/* Selector de dÃ­as: gap propio de Inicio (glass-chip/glass-icon-btn ya
    aportan el resto del estilo, de forma global) */
 .inicio-v2 .day-selector {
   gap: 10px;
@@ -2039,14 +2247,14 @@ button {
   display: flex;
   flex-direction: column;
   /* clave: sin esto, un contenedor flex en columna estira a sus hijos
-     (badge incluido) para llenar todo el ancho por defecto — es lo que
-     convertía el badge "TEMPORAL" en una barra completa. */
+     (badge incluido) para llenar todo el ancho por defecto â€” es lo que
+     convertÃ­a el badge "TEMPORAL" en una barra completa. */
   align-items: flex-start;
   justify-content: flex-end;
   gap: 3px;
   padding: 14px;
   /* Degradado suave y localizado solo en la parte baja, para leer el
-     texto sin panel ni blur — la foto se ve completa y limpia. */
+     texto sin panel ni blur â€” la foto se ve completa y limpia. */
   background: linear-gradient(
     to top,
     rgba(0, 0, 0, 0.65) 0%,
@@ -2264,7 +2472,7 @@ button {
 }
 
 /* ============================================================
-   LOCALES — rediseño visual (mock de referencia)
+   LOCALES â€” rediseÃ±o visual (mock de referencia)
    Igual que en Inicio: todo lo que toca clases compartidas
    (.venue-name, .local-categoria, .ficha-subtitulo, .mapa-contenedor,
    .perfil-nota) va anidado bajo .locales-v2 para no afectar a
@@ -2324,7 +2532,7 @@ button {
   padding: 20px 16px 0;
 }
 
-/* Selector Lista/Mapa: mismas glass-chip globales, pero más anchas y
+/* Selector Lista/Mapa: mismas glass-chip globales, pero mÃ¡s anchas y
    repartidas a partes iguales, como en la referencia */
 .locales-v2 .vista-selector {
   gap: 10px;
@@ -2465,12 +2673,12 @@ button {
 }
 
 /* ============================================================
-   FICHA DE LOCAL — rediseño visual (mock de referencia)
+   FICHA DE LOCAL â€” rediseÃ±o visual (mock de referencia)
    .ficha-nombre, .ficha-datos, .ficha-voto, .ficha-votos-hoy,
    .ficha-votantes, .votantes-lista, .persona-chip, .ficha-subtitulo,
    .eventos-lista, .evento-item, .evento-nombre, .evento-local,
    .venue-name, .local-categoria, .inicio-vacio, .app-loading se
-   comparten con FichaEvento/PerfilPublico/Inicio — por eso todo va
+   comparten con FichaEvento/PerfilPublico/Inicio â€” por eso todo va
    anidado bajo .ficha-local-v2, igual que en Inicio/Locales.
    ============================================================ */
 
@@ -2624,11 +2832,11 @@ button {
 }
 
 /* ============================================================
-   FICHA DE EVENTO — rediseño visual (mock de referencia)
+   FICHA DE EVENTO â€” rediseÃ±o visual (mock de referencia)
    Igual que en FichaLocal: .ficha-nombre, .ficha-datos, .ficha-voto,
    .ficha-votos-hoy, .ficha-votantes, .votantes-lista, .persona-chip,
    .ficha-subtitulo, .venue-name, .ficha-descripcion se comparten con
-   otras pantallas, así que todo va anidado bajo .ficha-evento-v2.
+   otras pantallas, asÃ­ que todo va anidado bajo .ficha-evento-v2.
    ============================================================ */
 
 .ficha-evento-v2 {
@@ -2803,11 +3011,11 @@ button {
 }
 
 /* ============================================================
-   /HOY (Dónde va la gente) — rediseño visual
+   /HOY (DÃ³nde va la gente) â€” rediseÃ±o visual
    .local-item, .rank-position, .venue-name, .local-categoria,
    .mini-avatares, .mini-avatar, .mini-avatares-mas se comparten con
-   Inicio y RecomendacionSocialCard, así que todo va anidado bajo
-   .donde-va-v2, igual que en el resto del rediseño.
+   Inicio y RecomendacionSocialCard, asÃ­ que todo va anidado bajo
+   .donde-va-v2, igual que en el resto del rediseÃ±o.
    ============================================================ */
 
 .donde-va-v2 {
@@ -2867,7 +3075,7 @@ button {
   height: 64px;
 }
 
-/* Puesto #1: acento cálido, sin cambiar ningún dato ni añadir badges */
+/* Puesto #1: acento cÃ¡lido, sin cambiar ningÃºn dato ni aÃ±adir badges */
 .donde-va-v2 .local-item--destacado {
   background: linear-gradient(180deg, rgba(245, 166, 35, 0.07), var(--dv-card-bg) 55%);
   border: 1px solid rgba(245, 166, 35, 0.28);
@@ -2901,9 +3109,9 @@ button {
   letter-spacing: 0.03em;
 }
 
-/* Conteo social destacado ("X van · Y amigos") — clase global, reutilizada
+/* Conteo social destacado ("X van Â· Y amigos") â€” clase global, reutilizada
    en cualquier pantalla que combine asistencia total y amigos en la misma
-   línea (por ahora: /hoy y el ranking de Inicio). Color literal (no una
+   lÃ­nea (por ahora: /hoy y el ranking de Inicio). Color literal (no una
    variable scoped por pantalla) para que se vea igual en cualquier
    contexto donde se use. */
 .amigos-count-destacado {
@@ -2911,7 +3119,7 @@ button {
   font-weight: 700;
 }
 
-/* Puestos #2 y #3: jerarquía intermedia, misma estructura que el resto */
+/* Puestos #2 y #3: jerarquÃ­a intermedia, misma estructura que el resto */
 .donde-va-v2 .local-item--podio {
   border-color: rgba(21, 21, 26, 0.14);
 }
@@ -2968,11 +3176,11 @@ button {
 }
 
 /* ============================================================
-   SOCIAL — rediseño visual
+   SOCIAL â€” rediseÃ±o visual
    .ficha-subtitulo, .feed-lista, .inicio-ver-mas, .persona-chip,
    .amistad-respuesta/.amistad-aceptar/.amistad-rechazar,
    .social-acceso, .social-solicitud-card se comparten con otras
-   pantallas (Inicio, PerfilPublico, NotificacionCard), así que todo
+   pantallas (Inicio, PerfilPublico, NotificacionCard), asÃ­ que todo
    va anidado bajo .social-v2.
    ============================================================ */
 
@@ -3147,7 +3355,7 @@ button {
 }
 
 /* ============================================================
-   BUSCAR — rediseño visual
+   BUSCAR â€” rediseÃ±o visual
    ============================================================ */
 
 .buscar-v2 {
@@ -3235,7 +3443,7 @@ button {
 }
 
 /* ============================================================
-   AMIGOS (/usuarios/:id/amigos) — rediseño visual
+   AMIGOS (/usuarios/:id/amigos) â€” rediseÃ±o visual
    ============================================================ */
 
 .amigos-v2 {
@@ -3289,11 +3497,11 @@ button {
 }
 
 /* ============================================================
-   PERFIL PÚBLICO — rediseño visual
+   PERFIL PÃšBLICO â€” rediseÃ±o visual
    .perfil-foto, .venue-name, .local-categoria, .perfil-nota,
    .seguimiento-contadores, .amistad-eliminar, .amistad-respuesta,
    .ficha-voto se comparten con Perfil propio, Inicio, FichaLocal,
-   FichaEvento y Social, así que van anidados bajo .perfil-publico-v2.
+   FichaEvento y Social, asÃ­ que van anidados bajo .perfil-publico-v2.
    ============================================================ */
 
 .perfil-publico-v2 {
@@ -3376,14 +3584,14 @@ button {
 }
 
 /* ============================================================
-   PERFIL PROPIO — rediseño visual
+   PERFIL PROPIO â€” rediseÃ±o visual
    .auth-form, .perfil-foto-preview, .perfil-foto, .seguimiento-*,
    .perfil-nota, .perfil-salir, .auth-error/.auth-info se comparten
    con Login/Register/ForgotPassword/ResetPassword y con
-   PerfilPublico.jsx, así que todo va anidado bajo .perfil-v2. Los
+   PerfilPublico.jsx, asÃ­ que todo va anidado bajo .perfil-v2. Los
    selectores de campos usan dos clases (.perfil-v2 .perfil-v2-campo)
-   a propósito, para tener más especificidad que ".auth-form label"
-   y ".auth-form input" y así ganar el cascade sin usar !important.
+   a propÃ³sito, para tener mÃ¡s especificidad que ".auth-form label"
+   y ".auth-form input" y asÃ­ ganar el cascade sin usar !important.
    ============================================================ */
 
 .perfil-v2 {
@@ -3534,10 +3742,10 @@ button {
   text-align: left;
 }
 
-/* Agrupa "Ver mi perfil público" + InvitarAmigosCard como una sola
+/* Agrupa "Ver mi perfil pÃºblico" + InvitarAmigosCard como una sola
    tarjeta con dos filas, en vez de dos tarjetas independientes. Solo
-   afecta cuando están anidados aquí dentro — InvitarAmigosCard en
-   Social.jsx no lleva este wrapper, así que su aspecto ahí no cambia. */
+   afecta cuando estÃ¡n anidados aquÃ­ dentro â€” InvitarAmigosCard en
+   Social.jsx no lleva este wrapper, asÃ­ que su aspecto ahÃ­ no cambia. */
 .perfil-v2-accesos {
   background: var(--pv-card-bg);
   border: 1px solid var(--pv-border);
@@ -3723,7 +3931,7 @@ button {
 }
 
 /* ============================================================
-   LOGIN — hero exclusivo de esta pantalla.
+   LOGIN â€” hero exclusivo de esta pantalla.
    Register/ForgotPassword/ResetPassword comparten el mismo sistema
    .auth-* ya migrado al tema claro arriba, pero sin hero: solo Login
    necesita este contenedor aparte, para no tocar los otros tres.
@@ -3760,11 +3968,11 @@ button {
 }
 
 /* ============================================================
-   NOTIFICACIONES — rediseño visual
+   NOTIFICACIONES â€” rediseÃ±o visual
    .screen-header/.screen-title, .persona-chip, .actividad-destino,
-   .inicio-vacio, .app-loading se comparten con otras pantallas, así
+   .inicio-vacio, .app-loading se comparten con otras pantallas, asÃ­
    que van anidados bajo .notificaciones-v2. .amistad-aceptar/
-   .amistad-rechazar ya no se usan aquí (NotificacionCard migró a
+   .amistad-rechazar ya no se usan aquÃ­ (NotificacionCard migrÃ³ a
    glass-btn/glass-btn--active directamente, sin afectar a Social).
    ============================================================ */
 
@@ -3830,9 +4038,9 @@ button {
 }
 
 /* ============================================================
-   Tarjeta de ranking de Inicio — pulsable, con el botón de voto
-   fuera del enlace (evita anidar <button> dentro de <a>, así que no
-   hace falta stopPropagation: son hermanos, no están anidados).
+   Tarjeta de ranking de Inicio â€” pulsable, con el botÃ³n de voto
+   fuera del enlace (evita anidar <button> dentro de <a>, asÃ­ que no
+   hace falta stopPropagation: son hermanos, no estÃ¡n anidados).
    ============================================================ */
 
 .inicio-v2 .local-item {
@@ -3861,7 +4069,7 @@ button {
 }
 
 /* ============================================================
-   INVITAR AMIGOS — tarjeta reutilizable (Perfil y Social).
+   INVITAR AMIGOS â€” tarjeta reutilizable (Perfil y Social).
    Estilo autocontenido (no depende de las variables de ninguna
    pantalla concreta) para que el componente sea igual en ambas.
    ============================================================ */
@@ -3961,11 +4169,11 @@ button {
 }
 
 /* ============================================================
-   PANEL ADMIN V1 — estilo autocontenido (blanco/negro/gris, mismo
+   PANEL ADMIN V1 â€” estilo autocontenido (blanco/negro/gris, mismo
    lenguaje que el resto de la app). Los formularios reutilizan
-   .auth-form (inputs/labels/botón ya en tema claro); aquí solo se
-   añade lo que .auth-form no cubre: cabecera, tabs, tarjetas de
-   métricas, filas de lista y el botón secundario "Cancelar".
+   .auth-form (inputs/labels/botÃ³n ya en tema claro); aquÃ­ solo se
+   aÃ±ade lo que .auth-form no cubre: cabecera, tabs, tarjetas de
+   mÃ©tricas, filas de lista y el botÃ³n secundario "Cancelar".
    ============================================================ */
 
 .admin-v1 {
@@ -4224,7 +4432,7 @@ button {
 }
 
 /* ============================================================
-   Botón de calendario del DaySelector — opcional, solo aparece si la
+   BotÃ³n de calendario del DaySelector â€” opcional, solo aparece si la
    pantalla pasa onSeleccionarFecha (por ahora, solo Inicio). Social no
    se ve afectado, no pasa esa prop.
    ============================================================ */
@@ -4235,12 +4443,12 @@ button {
 }
 
 /* ============================================================
-   CALENDAR PICKER — bottom sheet propio, sustituye al <input type="date">
-   nativo. Renderizado vía portal a document.body; z-index por encima del
+   CALENDAR PICKER â€” bottom sheet propio, sustituye al <input type="date">
+   nativo. Renderizado vÃ­a portal a document.body; z-index por encima del
    BottomNav (100). Autocontenido (no depende de las variables de ninguna
-   pantalla concreta), reutiliza el negro sólido ya establecido en toda la
+   pantalla concreta), reutiliza el negro sÃ³lido ya establecido en toda la
    app para el estado seleccionado (glass-chip--active, BottomNav activo),
-   y el naranja de acento solo como detalle mínimo para "hoy".
+   y el naranja de acento solo como detalle mÃ­nimo para "hoy".
    ============================================================ */
 
 .calendar-picker-overlay {
@@ -4452,7 +4660,7 @@ button {
   text-align: center;
 }
 
-/* Bottom sheet genérico — mismo estilo visual que calendar-picker-*, con
+/* Bottom sheet genÃ©rico â€” mismo estilo visual que calendar-picker-*, con
    nombres de clase propios para no acoplar este componente reutilizable
    al calendario. */
 .bottom-sheet-overlay {
@@ -4540,7 +4748,7 @@ button {
   outline-offset: 2px;
 }
 
-/* Contenido específico del sheet "Instalar NoctUp" */
+/* Contenido especÃ­fico del sheet "Instalar NoctUp" */
 .instalar-sheet-intro {
   margin: 12px 0 16px;
   font-size: 14px;
@@ -4609,9 +4817,9 @@ button {
 }
 
 /* ============================================================
-   "Tus amigos hoy" — resumen compacto agrupado por local. Reutiliza el
+   "Tus amigos hoy" â€” resumen compacto agrupado por local. Reutiliza el
    mismo lenguaje visual ya establecido en Social (--sv-*, shadow-card,
-   radios) y el patrón .mini-avatares/.mini-avatar ya usado en /hoy.
+   radios) y el patrÃ³n .mini-avatares/.mini-avatar ya usado en /hoy.
    ============================================================ */
 
 .social-v2-amigos-hoy {
@@ -4663,10 +4871,10 @@ button {
 }
 
 /* ============================================================
-   Pantalla Eventos — mismo lenguaje visual que Inicio/Locales/Perfil:
-   fondo claro, tarjetas blancas redondeadas, sombra suave, tipografía ya
-   establecida. Variables propias (--ev-*) siguiendo el mismo patrón que
-   --pv-*/--sv-*/--inicio-*, con los mismos valores reales.
+   Pantalla Eventos â€” mismo lenguaje visual que Inicio/Locales/Perfil:
+   fondo claro, tarjetas blancas redondeadas, sombra suave, tipografÃ­a ya
+   establecida. Variables propias (--ev-*) siguiendo el mismo patrÃ³n que
+   --pv-, --sv- y --inicio-, con los mismos valores reales.
    ============================================================ */
 
 .eventos-v2-seccion-titulo {
@@ -4736,3 +4944,4 @@ button {
   margin: 4px 0 0;
   font-size: 12px;
 }
+

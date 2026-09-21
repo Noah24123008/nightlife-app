@@ -63,8 +63,7 @@ export function AuthProvider({ children }) {
         return
       }
       setCargandoRol(true)
-      const { data, error } = await getMiRol(user.id)
-      
+      const { data } = await getMiRol(user.id)
       if (!activo) return
       setEsAdmin(data?.rol === 'admin')
       setCargandoRol(false)

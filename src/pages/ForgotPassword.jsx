@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { mensajeErrorAuth } from '../lib/errors'
 
 export default function ForgotPassword() {
   const { requestPasswordReset } = useAuth()
@@ -21,7 +22,7 @@ export default function ForgotPassword() {
     setLoading(false)
 
     if (error) {
-      setError(error.message)
+      setError(mensajeErrorAuth(error))
       return
     }
 
@@ -34,7 +35,13 @@ export default function ForgotPassword() {
       <form className="auth-form" onSubmit={handleSubmit}>
         <label>
           Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+          />
         </label>
         {error && <p className="auth-error">{error}</p>}
         {info && <p className="auth-info">{info}</p>}

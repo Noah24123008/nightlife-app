@@ -388,3 +388,40 @@ export async function adminMetricas() {
   const { data, error } = await supabase.rpc('admin_metricas')
   return { data, error }
 }
+
+// --- Aceptación legal (términos/privacidad) ---
+
+// Lectura mínima: solo las 4 columnas necesarias para decidir si hay que
+// mostrar el modal de aceptación pendiente. No trae el resto del perfil
+// (para eso ya existe getOCrearPerfil, usado por Perfil.jsx).
+export async function getAceptacionLegal(usuarioId) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('terminos_aceptados_en, privacidad_informada_en, version_terminos, version_privacidad')
+    .eq('id', usuarioId)
+    .single()
+  return { data, error }
+}
+
+export async function guardarAceptacionLegal(versionTerminos, versionPrivacidad) {
+  // Vía RPC segura (registrar_aceptacion_legal, migración 0028): el
+  // usuario sale exclusivamente de auth.uid() dentro de la función, y los
+  // timestamps se generan con now() en PostgreSQL — nunca se envía un id
+  // ni una fecha desde aquí.
+  const { error } = await supabase.rpc('registrar_aceptacion_legal', {
+    p_version_terminos: versionTerminos,
+    p_version_privacidad: versionPrivacidad,
+  })
+  return { error }
+}
+
+// --- Eliminación de cuenta ---
+
+// Nunca borra nada directamente desde el cliente: invoca la Edge
+// Function, que verifica la identidad a partir del JWT de la sesión
+// actual (adjuntado automáticamente por el SDK) y usa la service role
+// exclusivamente en el servidor para borrar auth.users — nunca aquí.
+export async function eliminarCuenta() {
+  const { data, error } = await supabase.functions.invoke('eliminar-cuenta')
+  return { data, error }
+}

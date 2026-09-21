@@ -8,6 +8,7 @@ import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import { iniciales } from '../lib/iniciales'
 import { normalizarUsername, formatoUsernameValido } from '../lib/username'
 import IconoCandado from '../components/IconoCandado'
+import EliminarCuentaSheet from '../components/EliminarCuentaSheet'
 
 export default function Perfil() {
   const { user, signOut } = useAuth()
@@ -18,6 +19,7 @@ export default function Perfil() {
   const [subiendoFoto, setSubiendoFoto] = useState(false)
   const [error, setError] = useState('')
   const [mensajeExito, setMensajeExito] = useState('')
+  const [sheetEliminarAbierto, setSheetEliminarAbierto] = useState(false)
 
   const [nombre, setNombre] = useState('')
   const [nombreUsuario, setNombreUsuario] = useState('')
@@ -263,7 +265,29 @@ export default function Perfil() {
         <button type="button" className="perfil-salir" onClick={signOut}>
           Cerrar sesión
         </button>
+
+        <div className="perfil-v2-ayuda">
+          <p className="perfil-v2-ayuda-titulo">Ayuda y privacidad</p>
+          <Link to="/privacidad" className="perfil-v2-ayuda-enlace">
+            Política de privacidad
+          </Link>
+          <Link to="/terminos" className="perfil-v2-ayuda-enlace">
+            Términos de uso
+          </Link>
+          <a href="mailto:[EMAIL DE CONTACTO]" className="perfil-v2-ayuda-enlace">
+            Contacto
+          </a>
+          <button
+            type="button"
+            className="perfil-v2-ayuda-enlace perfil-v2-ayuda-enlace--peligro"
+            onClick={() => setSheetEliminarAbierto(true)}
+          >
+            Eliminar mi cuenta
+          </button>
+        </div>
       </div>
+
+      <EliminarCuentaSheet abierto={sheetEliminarAbierto} onCerrar={() => setSheetEliminarAbierto(false)} />
     </div>
   )
 }
