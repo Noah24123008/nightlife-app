@@ -1,12 +1,24 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { VERSION_TERMINOS } from '../lib/legal'
 
 export default function Terminos() {
+  const navigate = useNavigate()
+
+  // Mismo patrón ya usado por BackButton.jsx: ver Privacidad.jsx.
+  function handleVolver() {
+    const idx = window.history.state?.idx
+    if (typeof idx === 'number' && idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+  }
+
   return (
     <div className="legal-page">
-      <Link to="/login" className="legal-page-volver">
+      <button type="button" onClick={handleVolver} className="legal-page-volver">
         ← Volver
-      </Link>
+      </button>
 
       <h1 className="legal-page-titulo">Términos de uso</h1>
       <p className="legal-page-meta">Versión {VERSION_TERMINOS}</p>

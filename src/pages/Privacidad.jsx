@@ -1,12 +1,27 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { VERSION_PRIVACIDAD } from '../lib/legal'
 
 export default function Privacidad() {
+  const navigate = useNavigate()
+
+  // Mismo patrón ya usado por BackButton.jsx: si React Router tiene
+  // registrado un paso anterior real en el historial (idx > 0), vuelve a
+  // él; si la página se abrió directamente (enlace compartido, pestaña
+  // nueva), cae a Inicio en vez de arriesgarse a un estado roto.
+  function handleVolver() {
+    const idx = window.history.state?.idx
+    if (typeof idx === 'number' && idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+  }
+
   return (
     <div className="legal-page">
-      <Link to="/login" className="legal-page-volver">
+      <button type="button" onClick={handleVolver} className="legal-page-volver">
         ← Volver
-      </Link>
+      </button>
 
       <h1 className="legal-page-titulo">Política de privacidad</h1>
       <p className="legal-page-meta">Versión {VERSION_PRIVACIDAD}</p>

@@ -497,10 +497,15 @@ button {
 .legal-page-volver {
   display: inline-block;
   margin-bottom: 16px;
+  border: none;
+  background: none;
+  padding: 0;
   color: #8a8f9c;
   font-size: 14px;
   font-weight: 600;
+  font-family: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .legal-page-titulo {
@@ -4944,4 +4949,5 @@ button {
   margin: 4px 0 0;
   font-size: 12px;
 }
+
 
