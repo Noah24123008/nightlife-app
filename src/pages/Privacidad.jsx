@@ -33,8 +33,8 @@ export default function Privacidad() {
 
       <h2>Responsable del tratamiento</h2>
       <p>
-        [NOMBRE DEL RESPONSABLE], con domicilio en [DOMICILIO O DATOS QUE PROCEDAN], es responsable del tratamiento
-        de los datos personales recogidos a través de NoctUp. Puedes contactar en [EMAIL DE CONTACTO].
+        Noah Fernandez Molinero es responsable del tratamiento de los datos personales recogidos a través de
+        NoctUp. Puedes contactar en noctup00@gmail.com.
       </p>
 
       <h2>Qué datos recoge NoctUp</h2>
@@ -83,7 +83,7 @@ export default function Privacidad() {
       <p>
         Puedes ejercer tus derechos de acceso, rectificación, supresión, portabilidad, limitación y oposición sobre
         tus datos personales. Puedes ejercerlos directamente desde Perfil (editar tus datos, eliminar tu cuenta) o
-        escribiendo a [EMAIL DE CONTACTO].
+        escribiendo a noctup00@gmail.com.
       </p>
 
       <h2>Edad mínima</h2>

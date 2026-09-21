@@ -274,7 +274,7 @@ export default function Perfil() {
           <Link to="/terminos" className="perfil-v2-ayuda-enlace">
             Términos de uso
           </Link>
-          <a href="mailto:[EMAIL DE CONTACTO]" className="perfil-v2-ayuda-enlace">
+          <a href="mailto:noctup00@gmail.com" className="perfil-v2-ayuda-enlace">
             Contacto
           </a>
           <button

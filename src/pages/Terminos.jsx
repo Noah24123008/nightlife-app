@@ -86,7 +86,7 @@ export default function Terminos() {
       </p>
 
       <h2>Contacto</h2>
-      <p>Para cualquier duda sobre estos términos, escribe a [EMAIL DE CONTACTO].</p>
+      <p>Para cualquier duda sobre estos términos, escribe a noctup00@gmail.com.</p>
 
       <p className="legal-page-enlace-final">
         Consulta también la <Link to="/privacidad">Política de privacidad</Link>.
