@@ -85,7 +85,31 @@ export function AuthProvider({ children }) {
 
   const signIn = async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    return { data, error }
+    if (error) return { data, error }
+
+    // signInWithPassword ya deja la sesión establecida internamente en el
+    // cliente de Supabase, pero no es una garantía instantánea observable
+    // desde fuera: confirmamos con una llamada real (no un temporizador
+    // arbitrario) que el cliente tiene la sesión realmente lista antes de
+    // dar el login por completado. Sin esto, Login.jsx podía navegar a un
+    // destino protegido (p. ej. /usuarios/:id) justo antes de que esa
+    // sesión estuviera disponible para la siguiente petición — la RPC de
+    // esa pantalla llegaba a viajar sin (o con) un JWT no del todo
+    // asentado, y Supabase respondía 401 (PGRST303).
+    const { data: sessionData } = await supabase.auth.getSession()
+    if (!sessionData?.session) {
+      return { data, error: { message: 'No se pudo establecer la sesión. Inténtalo de nuevo.' } }
+    }
+
+    // Actualiza el estado de React de inmediato, sin esperar a que
+    // onAuthStateChange dispare su propio callback (que también lo hará,
+    // con el mismo valor, sin efecto adicional) — así cualquier pantalla
+    // que dependa de `user` desde el primer render posterior a la
+    // navegación ya lo tiene disponible, en vez de arrancar con user=null
+    // y depender de un segundo render para corregirse.
+    setUser(sessionData.session.user)
+
+    return { data, error: null }
   }
 
   const signOut = async () => {

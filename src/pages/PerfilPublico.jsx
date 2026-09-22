@@ -170,6 +170,21 @@ export default function PerfilPublico() {
     )
   }
 
+  // Protección explícita: si hubo un error de red/auth (o cualquier otra
+  // vía por la que perfil quedara sin asignar) sin llegar a marcar
+  // noEncontrado, nunca se debe intentar leer perfil.foto_url/nombre/etc.
+  // más abajo — eso es lo que producía la pantalla en blanco.
+  if (!perfil) {
+    return (
+      <div className="app-screen perfil-publico-v2">
+        <div className="perfil-publico-v2-contenido">
+          <BackButton />
+          <p className="auth-error">{error || 'No se pudo cargar este perfil.'}</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="app-screen perfil-publico-v2">
       <div className="perfil-publico-v2-contenido">
