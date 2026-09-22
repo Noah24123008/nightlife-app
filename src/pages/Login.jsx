@@ -29,7 +29,18 @@ export default function Login() {
       return
     }
 
-    navigate(destinoSeguro(from))
+    // replace: true evita que /login quede en la pila del historial tras
+    // un login correcto (_154). entradaPorLogin es una señal adicional,
+    // solo para PerfilPublico: incluso con replace:true, si esa pantalla
+    // llegó a través de un login, su propio botón Atrás debe ir a Inicio
+    // en vez de fiarse de window.history.state.idx — un idx > 0 no
+    // garantiza que la entrada anterior sea una pantalla válida de la
+    // app (puede quedar una /login de navegaciones previas en esa misma
+    // pestaña). No afecta a ningún otro flujo: solo PerfilPublico la lee.
+    navigate(destinoSeguro(from), {
+      replace: true,
+      state: { entradaPorLogin: true },
+    })
   }
 
   return (

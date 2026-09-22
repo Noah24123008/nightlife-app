@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import {
   getPerfilPublico,
@@ -14,14 +14,49 @@ import {
 } from '../lib/api'
 import { getFechaNocturnaActual } from '../lib/dates'
 import ImagenConFallback from '../components/ImagenConFallback'
-import BackButton from '../components/BackButton'
 import { esErrorDeAutenticacion, mensajeError } from '../lib/errors'
 import { iniciales } from '../lib/iniciales'
 import { SkeletonPerfil } from '../components/Skeleton'
 
+// Botón Atrás local de esta pantalla: mismo aspecto visual y misma lógica
+// de base que BackButton global (window.history.state.idx, fallback a
+// Inicio) — pero con una excepción deliberada. Un idx > 0 solo dice que
+// existe una entrada anterior en el historial de esa pestaña, no que sea
+// una pantalla válida de la app: si se llegó aquí a través de un login
+// (enlace de invitación sin sesión -> /login -> de vuelta al perfil), esa
+// entrada anterior puede seguir siendo /login pese al replace:true de
+// Login.jsx (p. ej. por navegaciones previas en la misma pestaña). En ese
+// caso concreto, Atrás va directo a Inicio en vez de fiarse del
+// historial. No se toca BackButton.jsx: ninguna otra pantalla se ve
+// afectada.
+function BotonVolverPerfilPublico({ desdeLogin }) {
+  const navigate = useNavigate()
+
+  function handleClick() {
+    if (desdeLogin) {
+      navigate('/')
+      return
+    }
+    const idx = window.history.state?.idx
+    if (typeof idx === 'number' && idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/')
+    }
+  }
+
+  return (
+    <button type="button" className="glass-btn back-btn" onClick={handleClick}>
+      ← Atrás
+    </button>
+  )
+}
+
 export default function PerfilPublico() {
   const { id } = useParams()
   const { user, signOut } = useAuth()
+  const location = useLocation()
+  const desdeLogin = Boolean(location.state?.entradaPorLogin)
   const hoyISO = useMemo(() => getFechaNocturnaActual(), [])
 
   const [perfil, setPerfil] = useState(null)
@@ -152,7 +187,7 @@ export default function PerfilPublico() {
     return (
       <div className="app-screen perfil-publico-v2">
         <div className="perfil-publico-v2-contenido">
-          <BackButton />
+          <BotonVolverPerfilPublico desdeLogin={desdeLogin} />
           <SkeletonPerfil />
         </div>
       </div>
@@ -163,7 +198,7 @@ export default function PerfilPublico() {
     return (
       <div className="app-screen perfil-publico-v2">
         <div className="perfil-publico-v2-contenido">
-          <BackButton />
+          <BotonVolverPerfilPublico desdeLogin={desdeLogin} />
           <p className="inicio-vacio">Usuario no encontrado.</p>
         </div>
       </div>
@@ -178,7 +213,7 @@ export default function PerfilPublico() {
     return (
       <div className="app-screen perfil-publico-v2">
         <div className="perfil-publico-v2-contenido">
-          <BackButton />
+          <BotonVolverPerfilPublico desdeLogin={desdeLogin} />
           <p className="auth-error">{error || 'No se pudo cargar este perfil.'}</p>
         </div>
       </div>
@@ -188,7 +223,7 @@ export default function PerfilPublico() {
   return (
     <div className="app-screen perfil-publico-v2">
       <div className="perfil-publico-v2-contenido">
-        <BackButton />
+        <BotonVolverPerfilPublico desdeLogin={desdeLogin} />
 
         {error && <p className="auth-error">{error}</p>}
 
