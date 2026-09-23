@@ -13,6 +13,17 @@ export default function Register() {
   const location = useLocation()
   const from = location.state?.from
 
+  // Código de invitación beta, leído de forma segura: prioriza el search
+  // que ProtectedRoute guardó en `from` (caso típico: /?ref=X -> login ->
+  // "Crear cuenta"), y si no hay, usa el search de la propia URL actual
+  // (acceso directo a /registro?ref=X). Se valida con un patrón
+  // conservador antes de usarlo — si no encaja, se descarta sin más,
+  // nunca bloquea el registro.
+  const searchRef = from?.search || location.search
+  const betaRefCandidato = new URLSearchParams(searchRef).get('ref')
+  const betaRef =
+    betaRefCandidato && /^[A-Za-z0-9]{3,20}$/.test(betaRefCandidato.trim()) ? betaRefCandidato.trim() : null
+
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -29,7 +40,7 @@ export default function Register() {
     }
     setError('')
     setLoading(true)
-    const { data, error: errRegistro } = await signUp(nombre, email, password)
+    const { data, error: errRegistro } = await signUp(nombre, email, password, betaRef)
 
     if (errRegistro) {
       setLoading(false)

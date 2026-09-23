@@ -74,11 +74,16 @@ export function AuthProvider({ children }) {
     }
   }, [loading, user?.id])
 
-  const signUp = async (nombre, email, password) => {
+  const signUp = async (nombre, email, password, betaRef) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { nombre } },
+      options: {
+        data: {
+          nombre,
+          ...(betaRef ? { beta_ref: betaRef } : {}),
+        },
+      },
     })
     return { data, error }
   }
