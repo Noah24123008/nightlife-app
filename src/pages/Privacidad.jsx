@@ -31,12 +31,6 @@ export default function Privacidad() {
         asesoramiento legal profesional.
       </p>
 
-      <h2>Responsable del tratamiento</h2>
-      <p>
-        Noah Fernandez Molinero es responsable del tratamiento de los datos personales recogidos a través de
-        NoctUp. Puedes contactar en noctup00@gmail.com.
-      </p>
-
       <h2>Qué datos recoge NoctUp</h2>
       <ul>
         <li>Datos de cuenta: email y contraseña (la contraseña se gestiona de forma cifrada por Supabase Auth; NoctUp nunca la ve en texto plano).</li>
@@ -78,6 +72,12 @@ export default function Privacidad() {
         <li>Supabase — base de datos, autenticación y almacenamiento de archivos.</li>
         <li>Vercel — alojamiento de la aplicación.</li>
       </ul>
+
+      <h2 className="legal-responsable-titulo">Responsable del tratamiento</h2>
+      <p className="legal-responsable">
+        NoctUp es un servicio gestionado por Noah Fernandez Molinero. Para cualquier cuestión relacionada con
+        privacidad puedes contactar en noctup00@gmail.com.
+      </p>
 
       <h2>Tus derechos</h2>
       <p>
